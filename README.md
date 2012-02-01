@@ -119,6 +119,19 @@ Adjusts the Date based on the passed interval, by the passed numeric value.
 
 **Valid intervals are:** year, month, day, hr, min, sec, ms.
 
+```javascript
+
+   var date = new Date( 2012, 0, 1 ); // Date {Sun Jan 01 2012 00:00:00 GMT+0000 (GMT)}
+
+   date.adjust( Date.DAY,   1 );      // Date {Mon Jan 02 2012 00:00:00 GMT+0000 (GMT)}
+   date.adjust( Date.HOUR, -1 );      // Date {Sun Jan 01 2012 23:00:00 GMT+0000 (GMT)}
+   date.adjust( {
+      year  : -1, month : -1, day   : 24,
+      hr    :  1, sec   : -1
+   } );                               // Date {Sat Dec 25 2010 23:59:59 GMT+0000 (GMT)}
+
+```
+
 #### between( date_lower:Date, date_higher:Date ):Boolean
 Checks to see if the Date instance is in between the two passed Dates.
 
