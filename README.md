@@ -51,11 +51,11 @@ As mentioned above d8 extends JavaScript's native `Date` & `Date.prototype`, so 
 ### Static properties
 
 #### filters
-An Object of all the available filters for formatting a Date
+An Object of all the available filters for formatting a Date.
 
 #### formats
 An Object containing some default date formats:
-<table border="0" cellpadding="0" cellspacing="0">
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
 	<tr><td>ISO_8601</td><td>Y-m-d<T>H:i:sP</td>
 	<tr><td>ISO_8601_SHORT</td><td>Y-m-d</td>
 	<tr><td>RFC_850</td><td>l, d-M-y H:i:s T</td>
@@ -86,7 +86,7 @@ An Object containing some default date formats:
 ## Date formatting and parsing options
 
 ### day
-<table border="0" cellpadding="0" cellspacing="0">
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
 	<tr><td>d</td><td>Day of the month, 2 digits with leading zeros</td>
 	<tr><td>D</td><td>A textual representation of a day, three letters</td>
 	<tr><td>j</td><td>Day of the month without leading zeros</td>
@@ -97,11 +97,11 @@ An Object containing some default date formats:
 	<tr><td>z</td><td>The day of the year (starting from 0)</td>
 </table>
 ### week
-<table border="0" cellpadding="0" cellspacing="0">
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
 	<tr><td>W</td><td>ISO-8601 week number of year, weeks starting on Monday</td>
 </table>
 ### month
-<table border="0" cellpadding="0" cellspacing="0">
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
 	<tr><td>F</td><td>A full textual representation of a month</td>
 	<tr><td>m</td><td>Numeric representation of a month, with leading zeros</td>
 	<tr><td>M</td><td>A short textual representation of a month, three letters</td>
@@ -109,14 +109,14 @@ An Object containing some default date formats:
 	<tr><td>t</td><td>Number of days in the given month</td>
 </table>
 ### year
-<table border="0" cellpadding="0" cellspacing="0">
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
 	<tr><td>L</td><td>Whether it's a leap year</td>
 	<tr><td>o</td><td>ISO-8601 year number. This has the same value as Y, except that if the ISO week number (W) belongs to the previous or next year, that year is used instead.</td>
 	<tr><td>Y</td><td>A full numeric representation of a year, 4 digits</td>
 	<tr><td>y</td><td>A two digit representation of a year</td>
 </table>
 ### time
-<table border="0" cellpadding="0" cellspacing="0">
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
 	<tr><td>a</td><td>Lowercase Ante meridiem and Post meridiem</td>
 	<tr><td>A</td><td>Uppercase Ante meridiem and Post meridiem</td>
 	<tr><td>g</td><td>12-hour format of an hour without leading zeros</td>
@@ -128,14 +128,14 @@ An Object containing some default date formats:
 	<tr><td>u</td><td>Milliseconds</td>
 </table>
 ### timezone
-<table border="0" cellpadding="0" cellspacing="0">
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
 	<tr><td>O</td><td>Difference to Greenwich time (GMT) in hours</td>
 	<tr><td>P</td><td>Difference to Greenwich time (GMT) with colon between hours and minutes</td>
 	<tr><td>T</td><td>Timezone abbreviation</td>
 	<tr><td>Z</td><td>Timezone offset in seconds. The offset for timezones west of UTC is always negative, and for those east of UTC is always positive.</td>
 </table>
 ### full date/time
-<table border="0" cellpadding="0" cellspacing="0">
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
 	<tr><td>c</td><td>ISO 8601 date</td>
 	<tr><td>r</td><td>RFC 2822 formatted date</td>
 	<tr><td>U</td><td>Seconds since the Unix Epoch January 1 1970 00:00:00 GMT</td>
