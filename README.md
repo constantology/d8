@@ -80,7 +80,7 @@ Takes a date String and a format String based on the **Date formatting and parsi
 #### filters
 An Object of all the available filters for formatting a Date.
 
-**Don't change this unless you know what you are doing!**
+**IMPORTANT: Don't change these unless you know what you are doing!**
 
 #### formats
 An Object containing some default date formats:
@@ -94,7 +94,7 @@ An Object containing some default date formats:
 
 ### Instance methods
 
-#### GMTOffset( colon:Boolean ):String
+#### GMTOffset( [colon:Boolean] ):String
 Returns the Date instances offset from GMT.
 
 #### ISODay():Number
@@ -112,7 +112,7 @@ Returns the ISO week of the year
 #### ISOWeeksInYear():Number
 Returns the number of weeks in the ISO year.
 
-#### adjust( interval:Object|String, value:Number ):Date
+#### adjust( interval:Object|String[, value:Number] ):Date
 Adjusts the Date based on the passed interval, by the passed numeric value.
 
 **Note:** The method also accepts a single Object param where each key is the interval and each value is the number to adjust the Date by.
