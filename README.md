@@ -126,8 +126,8 @@ Adjusts the Date based on the passed interval, by the passed numeric value.
    date.adjust( Date.DAY,   1 );      // Date {Mon Jan 02 2012 00:00:00 GMT+0000 (GMT)}
    date.adjust( Date.HOUR, -1 );      // Date {Sun Jan 01 2012 23:00:00 GMT+0000 (GMT)}
    date.adjust( {
-      year  : -1, month : -1, day : 24,
-      hr    :  1, sec   : -1
+      year : -1, month : -1, day : 24,
+      hr   :  1, sec   : -1
    } );                               // Date {Sat Dec 25 2010 23:59:59 GMT+0000 (GMT)}
 
 ```
