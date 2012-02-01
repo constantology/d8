@@ -68,6 +68,13 @@ Sets the inlcuded locale's February day count to the correct number of days, bas
 #### toDate( date:String, format:String ):Date
 Takes a date String and a format String based on the **Date formatting and parsing options** described below and returns a – hopefully – correct and valid Date.
 
+```javascript
+
+   Date.toDate( 'Sunday, the 1st of January 2012', 'l, <the> jS <of> F Y' ); // returns => <strong>Date { Sun Jan 01 2012 00:00:00 GMT+0000 (GMT) }</strong>
+   Date.toDate( '2012-01-01T00:00:00+00:00',        Date.formats.ISO_8601 ); // returns => <strong>Date { Sun Jan 01 2012 00:00:00 GMT+0000 (GMT) }</strong>
+
+```
+
 ### Static properties
 
 #### filters
@@ -130,6 +137,18 @@ Returns a Date instance of the first day of this Date instance's month.
 #### format( format:String ):String
 Returns a string representation of the Date instance, based on the passed format. See the **Date formatting and parsing options** below.
 
+You can use predefined formats found in `Date.formats`. **Hint:** You can do:
+
+```javascript
+
+   dir( Date.formats );
+
+```
+
+within your browser's JavaScript console to see a list of available formats.
+
+Previously used formats are also cached to save the overhead of having to create a `new Templ8` everytime you want to format a date.
+
 #### isDST():Boolean
 Returns true if the Date instance is within daylight savings time.
 
@@ -143,6 +162,18 @@ Returns a Date instance of the last day of this Date instance's month.
 Returns the JavaScript engine's Date.prototype.toString() timezone abbreviation.
 
 ## Date formatting and parsing options
+
+### escaping characters
+
+If you want to escape characters that are used by the Date parser you can wrap them between &lt;&gt;.
+
+For example:
+
+```javascript
+
+   ( new Date( 2012, 0, 1 ) ).format( 'l, <the> jS <of> F Y' ); // returns => "Sunday, the 1st of January 2012"
+
+```
 
 ### day
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
