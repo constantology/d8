@@ -17,6 +17,15 @@ but feel free to create a locale for your specific nationality and submit a pull
 
 This is an, as yet, untested and incompletely documented framework. Use at your own risk.
 
+## file size
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+	<tr><td width="256">d8.js</td><td width="48">5.6kb</td><td>deflate</td>
+	<tr><td width="256">d8.min.js</td><td width="48">3.4kb</td><td>uglified + deflate</td>
+	<tr><td width="256">d8.js + Templ8.client.js</td><td width="48">13.2kb</td><td>deflate</td>
+	<tr><td width="256">d8.min.js + Templ8.client.min.js</td><td width="48">8.5kb</td><td>uglified + deflate</td>
+</table>
+
 ## browser usage
 
 ```html
@@ -69,11 +78,11 @@ An Object of all the available filters for formatting a Date.
 #### formats
 An Object containing some default date formats:
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
-	<tr><td width="32">ISO_8601</td><td>Y-m-d<T>H:i:sP</td>
-	<tr><td width="32">ISO_8601_SHORT</td><td>Y-m-d</td>
-	<tr><td width="32">RFC_850</td><td>l, d-M-y H:i:s T</td>
-	<tr><td width="32">RFC_2822</td><td>D, d M Y H:i:s O</td>
-	<tr><td width="32">sortable</td><td>Y-m-d H:i:sO</td>
+	<tr><td width="96">ISO_8601</td><td>Y-m-d<T>H:i:sP</td>
+	<tr><td width="96">ISO_8601_SHORT</td><td>Y-m-d</td>
+	<tr><td width="96">RFC_850</td><td>l, d-M-y H:i:s T</td>
+	<tr><td width="96">RFC_2822</td><td>D, d M Y H:i:s O</td>
+	<tr><td width="96">sortable</td><td>Y-m-d H:i:sO</td>
 </table>
 
 ### Instance methods
