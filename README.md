@@ -48,7 +48,7 @@ This is an, as yet, untested and incompletely documented framework. Use at your 
 
 ```javascript
 
-   require( 'd8/locale/en-GB.js' ); // IMPORTANT: The correct locale must ALSO be loaded before d8!!
+   require( 'd8/locale/en-GB.js' ); // IMPORTANT: The correct locale must be loaded before d8!!
    require( 'd8' );
 
 ```
