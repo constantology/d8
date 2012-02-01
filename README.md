@@ -70,8 +70,8 @@ Takes a date String and a format String based on the **Date formatting and parsi
 
 ```javascript
 
-   Date.toDate( 'Sunday, the 1st of January 2012', 'l, <the> jS <of> F Y' ); // returns => <strong>Date { Sun Jan 01 2012 00:00:00 GMT+0000 (GMT) }</strong>
-   Date.toDate( '2012-01-01T00:00:00+00:00',        Date.formats.ISO_8601 ); // returns => <strong>Date { Sun Jan 01 2012 00:00:00 GMT+0000 (GMT) }</strong>
+   Date.toDate( 'Sunday, the 1st of January 2012', 'l, <the> jS <of> F Y' ); // returns => Date { Sun Jan 01 2012 00:00:00 GMT+0000 (GMT) }
+   Date.toDate( '2012-01-01T00:00:00+00:00',        Date.formats.ISO_8601 ); // returns => Date { Sun Jan 01 2012 00:00:00 GMT+0000 (GMT) }
 
 ```
 
