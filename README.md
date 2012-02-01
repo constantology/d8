@@ -45,13 +45,20 @@ As mentioned above d8 extends JavaScript's native `Date` & `Date.prototype`, so 
 ### Static methods
 
 #### isLeapYear( year:String ):Boolean
+Returns true if the passed **4 digit** year is a leap year.
+
 #### setLeapYear( date:Date ):Void
+Sets the inlcuded locale's February day count to the correct number of days, based on whether or not the date is a leap year or not.
+
 #### toDate( date:String, format:String ):Date
+Takes a date String and a format String based on the **Date formatting and parsing options** described below and returns a – hopefully – correct and valid Date.
 
 ### Static properties
 
 #### filters
 An Object of all the available filters for formatting a Date.
+
+**Don't change this unless you know what you are doing!**
 
 #### formats
 An Object containing some default date formats:
@@ -66,22 +73,59 @@ An Object containing some default date formats:
 ### Instance methods
 
 #### GMTOffset( colon:Boolean ):String
+Returns the Date instances offset from GMT.
+
 #### ISODay():Number
+Returns the ISO day of the week.
+
 #### ISODaysInYear():Number
+Returns the ISO number of days in the year.
+
 #### ISOFirstMondayOfYear():Date
+Returns the ISO first Monday of the year.
+
 #### ISOWeek():Number
+Returns the ISO week of the year
+
 #### ISOWeeksInYear():Number
+Returns the number of weeks in the ISO year.
+
 #### adjust( interval:Object|String, value:Number ):Date
+Adjusts the Date based on the passed interval, by the passed numeric value.
+
+**Note:** The method also accepts a single Object param where each key is the interval and each value is the number to adjust the Date by.
+
+**Valid intervals are:** year, month, day, hr, min, sec, ms.
+
 #### between( date_lower:Date, date_higher:Date ):Boolean
+Checks to see if the Date instance is in between the two passed Dates.
+
 #### clearTime():Date
+Clears the time from the Date instance.
+
 #### clone():Date
+Returns a clone of the current Date.
+
 #### dayOfYear():Number
+Returns the zero based day of the year.
+
 #### firstOfTheMonth():Date
+Returns a Date instance of the first day of this Date instance's month.
+
 #### format( format:String ):String
+Returns a string representation of the Date instance, based on the passed format. See the **Date formatting and parsing options** below.
+
 #### isDST():Boolean
+Returns true if the Date instance is within daylight savings time.
+
 #### isLeapYear():Boolean
+Returns true if the Date instance is a leap year.
+
 #### lastOfTheMonth():Date
+Returns a Date instance of the last day of this Date instance's month.
+
 #### timezone():String
+Returns the JavaScript engine's Date.prototype.toString() timezone abbreviation.
 
 ## Date formatting and parsing options
 
