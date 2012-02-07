@@ -16,8 +16,8 @@ but feel free to create a locale for your specific nationality and submit a pull
 ## file size
 
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
-	<tr><td width="256">d8.js</td><td width="48">5.6kb</td><td>deflate</td>
-	<tr><td width="256">d8.min.js</td><td width="48">3.4kb</td><td>uglified + deflate</td>
+	<tr><td width="256">d8.js</td><td width="48">5.7kb</td><td>deflate</td>
+	<tr><td width="256">d8.min.js</td><td width="48">3.5kb</td><td>uglified + deflate</td>
 </table>
 
 ## WARNING!
