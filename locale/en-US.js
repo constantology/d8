@@ -13,11 +13,11 @@ Date.locale = {
 	},
 	months              : ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
 	ordinal             : ['th', 'st', 'nd', 'rd', 'th'],
-	getOrdinal          : function( d ) { // 1st, 2nd, 3rd, etc.
-		return ( d > 3 && d < 21 ) ? this.ord[0] : this.ord[Math.min( d % 10, 4 )];
-	},
 	ordinal_day_count   : [
 		[0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365],
 		[0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335, 366]
-	]
+	],
+	getOrdinal          : function( d ) { return ( d > 3 && d < 21 ) ? Date.locale.ordinal[0] : Date.locale.ordinal[Math.min( d % 10, 4 )]; },
+	isLeapYear          : function( y ) { return !!( y && ( ( new Date( y, 1, 29 ) ).getDate() == 29 && ( y % 100 || y % 400 == 0 ) ) ); },
+	setLeapYear         : function( d ) { Date.locale.day_count[1] = Date.locale.isLeapYear( d.getFullYear() ) ? 29 : 28; }
 };

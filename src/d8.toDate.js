@@ -19,7 +19,7 @@
 					_k  = pluck( _p.combo, 'k' );
 					_fn = associate( pluck( _p.combo, 'fn' ), _k );
 					keys.push.apply( keys, _k );
-					copy( fn, _fn );
+					copy( fn, _fn, T );
 				}
 				if ( _p.re ) re.push( p1, _p.re, p3 );
 			} );
@@ -51,7 +51,7 @@
 		if ( isNaN( o[YEAR] ) ) o[YEAR] = d.getFullYear();
 
 		if ( isNaN( o[MONTH] ) ) {
-			ly = _ly( o[YEAR] ) ? 1 : 0; odc = LOCALE.ordinal_day_count[ly]; l = odc.length; o[MONTH] = 0;
+			ly = LOCALE.isLeapYear( o[YEAR] ) ? 1 : 0; odc = LOCALE.ordinal_day_count[ly]; l = odc.length; o[MONTH] = 0;
 
 			if ( o[WEEK] && !o[DAYYEAR] ) { // give precedence to the day of the year
 				dw = o[DAYWEEK];

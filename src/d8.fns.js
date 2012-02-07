@@ -2,8 +2,6 @@
 	function _24hrTime( o, res ) { return ( o = Number( o ) ) < 12 && _lc( res.ampm ) == _lc( LOCALE.PM ) ? o += 12 : o; }
 	function _adjust( v, k ) { this.adjust( k, v ); }
 	function _dayOffset( d ) { return Math.floor( ( d - d.ISOFirstMondayOfYear() ) / MS_DAY ); }
-	function _ly( y ) { return !!( y && ( ( new Date( y, 1, 29 ) ).getDate() == 29 && ( y % 100 || y % 400 == 0 ) ) ); }
-	function _setLeapYear( d ) { LOCALE.day_count[1] = d.isLeapYear() ? 29 : 28; }
 	function _timezoneOffset( o ) {
 		var t = o.indexOf( '-' ) == 0 ? F : T,
 			m = o.match( /[\+-]?([0-9]{2}):?([0-9]{2})/ ),
@@ -34,18 +32,22 @@
 	function ISOWeeksInYear() { return Math.round( ( ( new Date( this.getFullYear() + 1, 0, 1 ) ).ISOFirstMondayOfYear() - this.ISOFirstMondayOfYear() ) / MS_WEEK ); }
 
 	function adjust( o, v ) {
-		if ( op.toString.call( o ) == '[object Object]' ) {
+		if ( OP.toString.call( o ) == '[object Object]' ) {
 			forEach( o, _adjust, this );
 			return this;
 		}
-		var day, fn = math_fn[o.toLowerCase()];
+		var day, fn = math_fn[o.toLowerCase()], weekday;
 		if ( !fn || v === 0 ) return this;
-		_setLeapYear( this );
-		if ( fn == math_fn.m ) {
+		LOCALE.setLeapYear( this );
+		if ( fn == math_fn.month ) {
 			day = this.getDate();
 			day < 28 || this.setDate( Math.min( day, this.firstOfTheMonth().adjust( Date.MONTH, v ).lastOfTheMonth() ).getDate() );
 		}
+		if ( fn == math_fn.week ) {
+			weekday = this.getDay();
+		}
 		this[fn[1]]( this[fn[0]]() + v );
+		!weekday || this.setDate( this.getDate() + weekday );
 		return this;
 	}
 
@@ -59,20 +61,24 @@
 	function clone() { return new Date( this.valueOf() ); }
 
 	function dayOfYear() {
-		_setLeapYear( this );
+		LOCALE.setLeapYear( this );
 		return LOCALE.day_count.slice( 0, this.getMonth() ).reduce( sum, 0 ) + this.getDate() - 1;
 	}
 
 	function firstOfTheMonth() { return new Date( this.getFullYear(), this.getMonth(), 1 ); }
 
+	function getWeek() { return Math.floor( this.dayOfYear() / 7 ); }
+
 	function isDST() { return new Date( this.getFullYear(), 0, 1 ).getTimezoneOffset() != this.getTimezoneOffset(); }
 
-	function isLeapYear() { return _ly( this.getFullYear() ); }
+	function isLeapYear() { return LOCALE.isLeapYear( this.getFullYear() ); }
 
 	function lastOfTheMonth() {
-		var m = this.getMonth(); _setLeapYear( this );
+		var m = this.getMonth(); LOCALE.setLeapYear( this );
 		return new Date( this.getFullYear(), m, LOCALE.day_count[m] );
 	}
+
+	function setWeek( v ) { this.setMonth( 0 ); this.setDate( 1 ); return ( this.adjust( Date.DAY, v * 7 ) ).valueOf(); }
 
 	function timezone() {
 		var s = this.toString().split( ' ' );

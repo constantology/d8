@@ -5,8 +5,8 @@
 	function _uc( o ) { return o.toUpperCase(); }
 	function associate( o, k ) { return o.reduce( function( res, v, i ) { res[k[i]] = v; return res; }, {} ); }
 	function between_equalto( v, h, l ) { return v <= h && v >= l; }
-	function copy( d, s ) {
-		for ( var k in s ) !own( s, k ) || ( d[k] = s[k] );
+	function copy( d, s, r ) {
+		for ( var k in s ) !own( s, k ) || own( d, k ) && r !== T || ( d[k] = s[k] );
 		return d;
 	}
 	function forEach( o, fn, ctx ) {
@@ -15,7 +15,7 @@
 		return o;
 	}
 	function nomember( o, k ) { return !( k in o ); }
-	function own( o, k ) { return op.hasOwnProperty.call( o, k ); }
+	function own( o, k ) { return OP.hasOwnProperty.call( o, k ); }
 	function pad( o, len, radix ) {
 		var i = -1, s = o.toString( radix || 10 );
 		len -= s.length;

@@ -8,14 +8,10 @@ As d8 extends JavaScript's native `Date` & `Date.prototype` – the CORRECT way 
 
 currently the only locales available are:
 
-- en-GB
-- en-US
+- en-GB (0.5kb deflated)
+- en-US (0.5kb deflated)
 
 but feel free to create a locale for your specific nationality and submit a pull request! :D
-
-## WARNING!
-
-This is an, as yet, untested framework. Use at your own risk!
 
 ## file size
 
@@ -23,6 +19,10 @@ This is an, as yet, untested framework. Use at your own risk!
 	<tr><td width="256">d8.js</td><td width="48">5.6kb</td><td>deflate</td>
 	<tr><td width="256">d8.min.js</td><td width="48">3.4kb</td><td>uglified + deflate</td>
 </table>
+
+## WARNING!
+
+This is an, as yet, untested framework. Use at your own risk!
 
 ## browser usage
 
@@ -44,7 +44,7 @@ This is an, as yet, untested framework. Use at your own risk!
 
 ```javascript
 
-   require( 'd8/locale/en-GB.js' ); // IMPORTANT: The correct locale must be loaded before d8!!
+   require( 'd8/locale/en-GB' ); // IMPORTANT: The correct locale must be loaded before d8!!
    require( 'd8' );
 
 ```
@@ -58,8 +58,28 @@ As mentioned above d8 extends JavaScript's native `Date` & `Date.prototype`, so 
 #### isLeapYear( year:String ):Boolean
 Returns true if the passed **4 digit** year is a leap year.
 
+**NOTE:** This method is located in the locale file. If your calendar system does not contain leap years, you can simply change the method to only `return false`.
+
+#### getOrdinal( date:Number ):String
+Returns the ordinal for a given date.
+
+##### Example:
+
+```javascript
+
+   Date.getOrdinal( 1 );  // returns => "st"
+   Date.getOrdinal( 10 ); // returns => "th"
+   Date.getOrdinal( 22 ); // returns => "nd"
+   Date.getOrdinal( 33 ); // returns => "rd"
+
+```
+
+**NOTE:** Ordinals and the `getOrdinal` This method is located in the locale file. You can simply change the `ordinal` Array to your specific language; overwrite the `getOrdinal` method or both.
+
 #### setLeapYear( date:Date ):Void
 Sets the inlcuded locale's February day count to the correct number of days, based on whether or not the date is a leap year or not.
+
+**NOTE:** This method is located in the locale file. If your calendar system does not contain leap years, you can simply change the method to do nothing.
 
 #### toDate( date:String, format:String ):Date
 Takes a date String and a format String based on the **Date formatting and parsing options** described below and returns a – hopefully – correct and valid Date.
@@ -109,11 +129,13 @@ Returns the ISO week of the year
 Returns the number of weeks in the ISO year.
 
 #### adjust( interval:Object|String[, value:Number] ):Date
-Adjusts the Date based on the passed interval, by the passed numeric value.
+Your one stop shop for all Date arithmetic. Adjusts the Date based on the passed `interval`, by the passed numeric `value`.
 
 **Note:** The method also accepts a single Object param where each key is the interval and each value is the number to adjust the Date by.
 
-**Valid intervals are:** year, month, day, hr, min, sec, ms.
+**Valid intervals are:** year, month, week, day, hr, min, sec, ms.
+
+##### Example:
 
 ```javascript
 
@@ -158,6 +180,19 @@ within your browser's JavaScript console to see a list of available formats.
 
 Previously used formats are also cached to save the overhead of having to create a `new Function` everytime you want to format a date.
 
+#### getWeek():Number
+Returns the week of the year, based on the `dayOfYear` divided by 7.
+
+##### Example:
+
+```javascript
+
+   ( new Date( 2012, 0, 1 ) ).getWeek();   // returns => 0
+   ( new Date( 2012, 2, 13 ) ).getWeek();  // returns => 10
+   ( new Date( 2012, 11, 31 ) ).getWeek(); // returns => 52
+
+```
+
 #### isDST():Boolean
 Returns true if the Date instance is within daylight savings time.
 
@@ -166,6 +201,19 @@ Returns true if the Date instance is a leap year.
 
 #### lastOfTheMonth():Date
 Returns a Date instance of the last day of this Date instance's month.
+
+#### setWeek():Number(UnixTimeStamp)
+Sets the week of the year from the 1st January.
+
+##### Example:
+
+```javascript
+
+   new Date( ( new Date( 2012, 0, 1 ) ).setWeek( 17 ) ); // returns => Date {Sun Apr 29 2012 00:00:00 GMT+0100 (BST)}
+   ( new Date( 2012, 2, 13 ) ).setWeek( 17 );            // returns => 1335654000000 same as above
+   ( new Date( 2012, 11, 31 ) ).setWeek( 17 );           // returns => 1335654000000
+
+```
 
 #### timezone():String
 Returns the JavaScript engine's Date.prototype.toString() timezone abbreviation.
@@ -176,7 +224,7 @@ Returns the JavaScript engine's Date.prototype.toString() timezone abbreviation.
 
 If you want to escape characters that are used by the Date parser you can wrap them between &lt;&gt;.
 
-For example:
+#### Example:
 
 ```javascript
 

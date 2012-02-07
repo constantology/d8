@@ -1,4 +1,4 @@
-	var F = !1, LOCALE = Date.locale, N = null, T = !0, U,
+	var F = !1, LOCALE = Date.locale, N = null, OP = Object.prototype, T = !0, U,
 // DAY_OFFSETS is the amount of days from the current day to the Monday of the week it belongs to
 		DAY_OFFSETS = [9, 1, 0, -1, -2, 4, 3],    MS_DAY       = 864e5, MS_WEEK = 6048e5,
 		SHORT_DAYS  = LOCALE.days.map( _substr ), SHORT_MONTHS = LOCALE.months.map( _substr ),
@@ -10,13 +10,13 @@
 // cache objects
 		cache_format = {}, cache_parse  = {},
 		date_chars,        date_members = [DAY, DAYWEEK, DAYYEAR, MONTH, WEEK, YEAR],
-		filter,            formats      = {
+		filter,            formats      = copy( {
 			ISO_8601 : 'Y-m-d<T>H:i:sP',   ISO_8601_SHORT : 'Y-m-d',
 			RFC_850  : 'l, d-M-y H:i:s T', RFC_2822       : 'D, d M Y H:i:s O',
 			sortable : 'Y-m-d H:i:sO'
-		},
-		m, math_fn = { day : ['getDate', 'setDate'], hr : ['getHours', 'setHours'], min : ['getMinutes', 'setMinutes'], month : ['getMonth', 'setMonth'], ms : ['getMilliseconds', 'setMilliseconds'], sec : ['getSeconds', 'setSeconds'], year : ['getFullYear', 'setFullYear'] },
-		op         = Object.prototype, parser,
+		}, LOCALE.formats ),
+		m, math_fn = { day : ['getDate', 'setDate'], hr : ['getHours', 'setHours'], min : ['getMinutes', 'setMinutes'], month : ['getMonth', 'setMonth'], ms : ['getMilliseconds', 'setMilliseconds'], sec : ['getSeconds', 'setSeconds'], week : ['getWeek', 'setWeek'], year : ['getFullYear', 'setFullYear'] },
+		parser,
 		re_ampm    = '(am|pm)',
 		re_add_enr = />/g,           re_add_nr = /</g,                  re_compile,
 		re_d1_2    = '([0-9]{1,2})', re_d2     = '([0-9]{2})',          re_d4       = '([0-9]{4})',
@@ -41,7 +41,7 @@
 		m : function( d ) { return pad( ( d.getMonth() + 1 ), 2 ); },                     // Numeric representation of a month, with leading zeros
 		M : function( d ) { return LOCALE.months[d.getMonth()].substring( 0, 3 ); },      // A short textual representation of a month, three letters
 		n : function( d ) { return d.getMonth() + 1; },                                   // Numeric representation of a month, without leading zeros
-		t : function( d ) { _setLeapYear( d ); return LOCALE.day_count[d.getMonth()]; },  // Number of days in the given month
+		t : function( d ) { LOCALE.setLeapYear( d ); return LOCALE.day_count[d.getMonth()]; },  // Number of days in the given month
 // year
 		L : function( d ) { return ( d.isLeapYear() ) ? 1 : 0; },                         // Whether it's a leap year
 		o : function( d ) {                                                               // ISO-8601 year number. This has the same value as Y, except that if the ISO

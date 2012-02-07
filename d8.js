@@ -12,8 +12,8 @@
 	function _uc( o ) { return o.toUpperCase(); }
 	function associate( o, k ) { return o.reduce( function( res, v, i ) { res[k[i]] = v; return res; }, {} ); }
 	function between_equalto( v, h, l ) { return v <= h && v >= l; }
-	function copy( d, s ) {
-		for ( var k in s ) !own( s, k ) || ( d[k] = s[k] );
+	function copy( d, s, r ) {
+		for ( var k in s ) !own( s, k ) || own( d, k ) && r !== T || ( d[k] = s[k] );
 		return d;
 	}
 	function forEach( o, fn, ctx ) {
@@ -22,7 +22,7 @@
 		return o;
 	}
 	function nomember( o, k ) { return !( k in o ); }
-	function own( o, k ) { return op.hasOwnProperty.call( o, k ); }
+	function own( o, k ) { return OP.hasOwnProperty.call( o, k ); }
 	function pad( o, len, radix ) {
 		var i = -1, s = o.toString( radix || 10 );
 		len -= s.length;
@@ -43,8 +43,6 @@
 	function _24hrTime( o, res ) { return ( o = Number( o ) ) < 12 && _lc( res.ampm ) == _lc( LOCALE.PM ) ? o += 12 : o; }
 	function _adjust( v, k ) { this.adjust( k, v ); }
 	function _dayOffset( d ) { return Math.floor( ( d - d.ISOFirstMondayOfYear() ) / MS_DAY ); }
-	function _ly( y ) { return !!( y && ( ( new Date( y, 1, 29 ) ).getDate() == 29 && ( y % 100 || y % 400 == 0 ) ) ); }
-	function _setLeapYear( d ) { LOCALE.day_count[1] = d.isLeapYear() ? 29 : 28; }
 	function _timezoneOffset( o ) {
 		var t = o.indexOf( '-' ) == 0 ? F : T,
 			m = o.match( /[\+-]?([0-9]{2}):?([0-9]{2})/ ),
@@ -75,18 +73,22 @@
 	function ISOWeeksInYear() { return Math.round( ( ( new Date( this.getFullYear() + 1, 0, 1 ) ).ISOFirstMondayOfYear() - this.ISOFirstMondayOfYear() ) / MS_WEEK ); }
 
 	function adjust( o, v ) {
-		if ( op.toString.call( o ) == '[object Object]' ) {
+		if ( OP.toString.call( o ) == '[object Object]' ) {
 			forEach( o, _adjust, this );
 			return this;
 		}
-		var day, fn = math_fn[o.toLowerCase()];
+		var day, fn = math_fn[o.toLowerCase()], weekday;
 		if ( !fn || v === 0 ) return this;
-		_setLeapYear( this );
-		if ( fn == math_fn.m ) {
+		LOCALE.setLeapYear( this );
+		if ( fn == math_fn.month ) {
 			day = this.getDate();
 			day < 28 || this.setDate( Math.min( day, this.firstOfTheMonth().adjust( Date.MONTH, v ).lastOfTheMonth() ).getDate() );
 		}
+		if ( fn == math_fn.week ) {
+			weekday = this.getDay();
+		}
 		this[fn[1]]( this[fn[0]]() + v );
+		!weekday || this.setDate( this.getDate() + weekday );
 		return this;
 	}
 
@@ -100,20 +102,24 @@
 	function clone() { return new Date( this.valueOf() ); }
 
 	function dayOfYear() {
-		_setLeapYear( this );
+		LOCALE.setLeapYear( this );
 		return LOCALE.day_count.slice( 0, this.getMonth() ).reduce( sum, 0 ) + this.getDate() - 1;
 	}
 
 	function firstOfTheMonth() { return new Date( this.getFullYear(), this.getMonth(), 1 ); }
 
+	function getWeek() { return Math.floor( this.dayOfYear() / 7 ); }
+
 	function isDST() { return new Date( this.getFullYear(), 0, 1 ).getTimezoneOffset() != this.getTimezoneOffset(); }
 
-	function isLeapYear() { return _ly( this.getFullYear() ); }
+	function isLeapYear() { return LOCALE.isLeapYear( this.getFullYear() ); }
 
 	function lastOfTheMonth() {
-		var m = this.getMonth(); _setLeapYear( this );
+		var m = this.getMonth(); LOCALE.setLeapYear( this );
 		return new Date( this.getFullYear(), m, LOCALE.day_count[m] );
 	}
+
+	function setWeek( v ) { this.setMonth( 0 ); this.setDate( 1 ); return ( this.adjust( Date.DAY, v * 7 ) ).valueOf(); }
 
 	function timezone() {
 		var s = this.toString().split( ' ' );
@@ -168,7 +174,7 @@
 					_k  = pluck( _p.combo, 'k' );
 					_fn = associate( pluck( _p.combo, 'fn' ), _k );
 					keys.push.apply( keys, _k );
-					copy( fn, _fn );
+					copy( fn, _fn, T );
 				}
 				if ( _p.re ) re.push( p1, _p.re, p3 );
 			} );
@@ -200,7 +206,7 @@
 		if ( isNaN( o[YEAR] ) ) o[YEAR] = d.getFullYear();
 
 		if ( isNaN( o[MONTH] ) ) {
-			ly = _ly( o[YEAR] ) ? 1 : 0; odc = LOCALE.ordinal_day_count[ly]; l = odc.length; o[MONTH] = 0;
+			ly = LOCALE.isLeapYear( o[YEAR] ) ? 1 : 0; odc = LOCALE.ordinal_day_count[ly]; l = odc.length; o[MONTH] = 0;
 
 			if ( o[WEEK] && !o[DAYYEAR] ) { // give precedence to the day of the year
 				dw = o[DAYWEEK];
@@ -242,7 +248,7 @@
 /* end file: /Volumes/enterprise/github/d8/src/d8.toDate.js */
 
 /* begin file: /Volumes/enterprise/github/d8/src/d8.vars.js */
-	var F = !1, LOCALE = Date.locale, N = null, T = !0, U,
+	var F = !1, LOCALE = Date.locale, N = null, OP = Object.prototype, T = !0, U,
 // DAY_OFFSETS is the amount of days from the current day to the Monday of the week it belongs to
 		DAY_OFFSETS = [9, 1, 0, -1, -2, 4, 3],    MS_DAY       = 864e5, MS_WEEK = 6048e5,
 		SHORT_DAYS  = LOCALE.days.map( _substr ), SHORT_MONTHS = LOCALE.months.map( _substr ),
@@ -254,13 +260,13 @@
 // cache objects
 		cache_format = {}, cache_parse  = {},
 		date_chars,        date_members = [DAY, DAYWEEK, DAYYEAR, MONTH, WEEK, YEAR],
-		filter,            formats      = {
+		filter,            formats      = copy( {
 			ISO_8601 : 'Y-m-d<T>H:i:sP',   ISO_8601_SHORT : 'Y-m-d',
 			RFC_850  : 'l, d-M-y H:i:s T', RFC_2822       : 'D, d M Y H:i:s O',
 			sortable : 'Y-m-d H:i:sO'
-		},
-		m, math_fn = { day : ['getDate', 'setDate'], hr : ['getHours', 'setHours'], min : ['getMinutes', 'setMinutes'], month : ['getMonth', 'setMonth'], ms : ['getMilliseconds', 'setMilliseconds'], sec : ['getSeconds', 'setSeconds'], year : ['getFullYear', 'setFullYear'] },
-		op         = Object.prototype, parser,
+		}, LOCALE.formats ),
+		m, math_fn = { day : ['getDate', 'setDate'], hr : ['getHours', 'setHours'], min : ['getMinutes', 'setMinutes'], month : ['getMonth', 'setMonth'], ms : ['getMilliseconds', 'setMilliseconds'], sec : ['getSeconds', 'setSeconds'], week : ['getWeek', 'setWeek'], year : ['getFullYear', 'setFullYear'] },
+		parser,
 		re_ampm    = '(am|pm)',
 		re_add_enr = />/g,           re_add_nr = /</g,                  re_compile,
 		re_d1_2    = '([0-9]{1,2})', re_d2     = '([0-9]{2})',          re_d4       = '([0-9]{4})',
@@ -285,7 +291,7 @@
 		m : function( d ) { return pad( ( d.getMonth() + 1 ), 2 ); },                     // Numeric representation of a month, with leading zeros
 		M : function( d ) { return LOCALE.months[d.getMonth()].substring( 0, 3 ); },      // A short textual representation of a month, three letters
 		n : function( d ) { return d.getMonth() + 1; },                                   // Numeric representation of a month, without leading zeros
-		t : function( d ) { _setLeapYear( d ); return LOCALE.day_count[d.getMonth()]; },  // Number of days in the given month
+		t : function( d ) { LOCALE.setLeapYear( d ); return LOCALE.day_count[d.getMonth()]; },  // Number of days in the given month
 // year
 		L : function( d ) { return ( d.isLeapYear() ) ? 1 : 0; },                         // Whether it's a leap year
 		o : function( d ) {                                                               // ISO-8601 year number. This has the same value as Y, except that if the ISO
@@ -309,7 +315,7 @@
 		P : function( d ) { return d.GMTOffset( T ); },                                   // Difference to Greenwich time (GMT) with colon between hours and minutes
 		T : function( d ) { return d[TIMEZONE](); },                                      // Timezone abbreviation
 		Z : function( d ) { return d.getTimezoneOffset() * -60; },                        // Timezone offset in seconds. The offset for timezones west of UTC
-																						  // is always negative, and for those east of UTC is always positive.
+                                                                                          // is always negative, and for those east of UTC is always positive.
 // full date/time
 		c : function( d ) { return format( d, formats.ISO_8601 ); },                      // ISO 8601 date
 		r : function( d ) { return format( d, formats.RFC_2822 ); },                      // RFC 2822 formatted date
@@ -375,24 +381,25 @@
 /* begin file: /Volumes/enterprise/github/d8/src/d8.expose.js */
 // instance methods
 	Object.defineProperties( Date.prototype, forEach( {
-		GMTOffset            : GMTOffset,            ISODay    : ISODay,    ISODaysInYear   : ISODaysInYear,
-		ISOFirstMondayOfYear : ISOFirstMondayOfYear, ISOWeek   : ISOWeek,   ISOWeeksInYear  : ISOWeeksInYear,
-		adjust               : adjust,               between   : between,   clearTime       : clearTime,
-		clone                : clone,                dayOfYear : dayOfYear, firstOfTheMonth : firstOfTheMonth,
-		format               : format,               isDST     : isDST,     isLeapYear      : isLeapYear,
-		lastOfTheMonth       : lastOfTheMonth,       timezone  : timezone
+		GMTOffset            : GMTOffset,            ISODay         : ISODay,         ISODaysInYear   : ISODaysInYear,
+		ISOFirstMondayOfYear : ISOFirstMondayOfYear, ISOWeek        : ISOWeek,        ISOWeeksInYear  : ISOWeeksInYear,
+		adjust               : adjust,               between        : between,        clearTime       : clearTime,
+		clone                : clone,                dayOfYear      : dayOfYear,      firstOfTheMonth : firstOfTheMonth,
+		format               : format,               getWeek        : getWeek,        isDST           : isDST,
+		isLeapYear           : isLeapYear,           lastOfTheMonth : lastOfTheMonth, setWeek         : setWeek,
+		timezone             : timezone
 	}, todesc ) );
 
 // static methods & properties
 	Object.defineProperties( Date, forEach( {
 // constants used by Date.prototype.adjust
-		DAY : DAY, HOUR : 'hr', MINUTE : MINUTE.substring( 0, 3 ), MILLISECOND : MILLISECOND, MONTH : MONTH, SECOND : SECOND.substring( 0, 3 ), YEAR : YEAR,
+		DAY : DAY, HOUR : 'hr', MINUTE : MINUTE.substring( 0, 3 ), MILLISECOND : MILLISECOND, MONTH : MONTH, SECOND : SECOND.substring( 0, 3 ), WEEK : WEEK, YEAR : YEAR,
 // constants defining milliseconds for different times
 		MS_DAY : MS_DAY, MS_WEEK : MS_WEEK, MS_MONTH : 2592e6, MS_YEAR : 31536e6,
 // filters and formats
 		filters : filter, formats : formats, parsers : parser,
 // static methods
-		isLeapYear : _ly, setLeapYear : _setLeapYear, toDate : toDate
+		getOrdinal : LOCALE.getOrdinal, isLeapYear : LOCALE.isLeapYear, setLeapYear : LOCALE.setLeapYear, toDate : toDate
 	}, todesc ) );
 
 /* end file: /Volumes/enterprise/github/d8/src/d8.expose.js */
