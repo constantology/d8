@@ -19,7 +19,7 @@
 					_k  = pluck( _p.combo, 'k' );
 					_fn = associate( pluck( _p.combo, 'fn' ), _k );
 					keys.push.apply( keys, _k );
-					Templ8.copy( fn, _fn );
+					copy( fn, _fn );
 				}
 				if ( _p.re ) re.push( p1, _p.re, p3 );
 			} );

@@ -34,7 +34,7 @@
 	function ISOWeeksInYear() { return Math.round( ( ( new Date( this.getFullYear() + 1, 0, 1 ) ).ISOFirstMondayOfYear() - this.ISOFirstMondayOfYear() ) / MS_WEEK ); }
 
 	function adjust( o, v ) {
-		if ( Templ8.type( o ) == 'object' ) {
+		if ( op.toString.call( o ) == '[object Object]' ) {
 			forEach( o, _adjust, this );
 			return this;
 		}

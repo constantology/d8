@@ -2,7 +2,7 @@
 
 d8 is a date parsing and formatting micro-framework for modern JavaScript engines.
 
-d8 uses [Templ8](https://github.com/constantology/Templ8) to output a String representation of a Date, based on [php formatting options](http://php.net/manual/en/function.date.php).
+d8 formats Dates into Strings and conversley turns Strings into Dates based on [php formatting options](http://php.net/manual/en/function.date.php).
 
 As d8 extends JavaScript's native `Date` & `Date.prototype` – the CORRECT way – there is no actual global called d8. Instead all static and instance methods are available from the native `Date` & `Date.prototype` respectively.
 
@@ -15,24 +15,20 @@ but feel free to create a locale for your specific nationality and submit a pull
 
 ## WARNING!
 
-This is an, as yet, untested and incompletely documented framework. Use at your own risk.
+This is an, as yet, untested framework. Use at your own risk!
 
 ## file size
 
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
 	<tr><td width="256">d8.js</td><td width="48">5.6kb</td><td>deflate</td>
 	<tr><td width="256">d8.min.js</td><td width="48">3.4kb</td><td>uglified + deflate</td>
-	<tr><td width="256">d8.js + Templ8.client.js</td><td width="48">13.2kb</td><td>deflate</td>
-	<tr><td width="256">d8.min.js + Templ8.client.min.js</td><td width="48">8.5kb</td><td>uglified + deflate</td>
 </table>
 
 ## browser usage
 
 ```html
 
-<!-- IMPORTANT: Templ8 must be loaded before d8 -->
-   <script src="/path/to/Templ8/Templ8.client.min.js" type="text/javascript"></script>
-<!-- IMPORTANT: The correct locale must ALSO be loaded before d8! -->
+<!-- IMPORTANT: The correct locale must be loaded before d8! -->
    <script src="/path/to/d8/locale/en-GB.js" type="text/javascript"></script>
    <script src="/path/to/d8/d8.min.js" type="text/javascript"></script>
 
@@ -160,7 +156,7 @@ You can use predefined formats found in `Date.formats`. **Hint:** You can do:
 
 within your browser's JavaScript console to see a list of available formats.
 
-Previously used formats are also cached to save the overhead of having to create a `new Templ8` everytime you want to format a date.
+Previously used formats are also cached to save the overhead of having to create a `new Function` everytime you want to format a date.
 
 #### isDST():Boolean
 Returns true if the Date instance is within daylight savings time.

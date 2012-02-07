@@ -1,9 +1,6 @@
 
 /* begin file: /Volumes/enterprise/github/d8/src/d8.begin.js */
 !function() {
-	if ( typeof module != 'undefined' && 'exports' in module ) {
-		Templ8 = require( 'Templ8' );
-	}
 
 /* end file: /Volumes/enterprise/github/d8/src/d8.begin.js */
 
@@ -15,6 +12,10 @@
 	function _uc( o ) { return o.toUpperCase(); }
 	function associate( o, k ) { return o.reduce( function( res, v, i ) { res[k[i]] = v; return res; }, {} ); }
 	function between_equalto( v, h, l ) { return v <= h && v >= l; }
+	function copy( d, s ) {
+		for ( var k in s ) !own( s, k ) || ( d[k] = s[k] );
+		return d;
+	}
 	function forEach( o, fn, ctx ) {
 		ctx || ( ctx = o );
 		Object.keys( o ).forEach( function( k, i ) { fn.call( ctx, o[k], k, i, o ); } );
@@ -29,11 +30,11 @@
 		return s;
 	}
 	function pluck( a, k ) { return a.reduce( function( v, o ) { !( k in o ) || v.push( o[k] ); return v; }, [] ); }
+	function retVal( x ) { return x; }
 	function sum( v, i ) { return v + i; }
 	function todesc( v, k, i, o ) {
 		o[k] = { configurable : F, enumerable : F, value : v, writeable : F };
 	}
-	function retVal( x ) { return x; }
 
 /* end file: /Volumes/enterprise/github/d8/src/d8.utils.js */
 
@@ -74,7 +75,7 @@
 	function ISOWeeksInYear() { return Math.round( ( ( new Date( this.getFullYear() + 1, 0, 1 ) ).ISOFirstMondayOfYear() - this.ISOFirstMondayOfYear() ) / MS_WEEK ); }
 
 	function adjust( o, v ) {
-		if ( Templ8.type( o ) == 'object' ) {
+		if ( op.toString.call( o ) == '[object Object]' ) {
 			forEach( o, _adjust, this );
 			return this;
 		}
@@ -125,22 +126,23 @@
 	function buildTemplate( o ) {
 		if ( cache_format[o] ) return cache_format[o];
 
-		var fn = [], p, parts = o.replace( re_add_nr, NOREPLACE_RB ).replace( re_add_enr, NOREPLACE_RE ).split( re_split ), i = -1, l = parts.length;
+		var fn = ['var out=[];'], p, parts = o.replace( re_add_nr, NOREPLACE_RB ).replace( re_add_enr, NOREPLACE_RE ).split( re_split ), i = -1, l = parts.length;
 
 		while( ++i < l ) {
 			p = parts[i];
 			if ( p == NOREPLACE ) {
-				fn.push( parts[++i] ); ++i; continue;
+				fn.push( 'out.push( "' + parts[++i] + '" )' ); ++i; continue;
 			}
 			fn.push( compileTplStr( p ) );
 		}
 
-		return cache_format[o] = new Templ8( fn.join( '' ), Templ8.copy( { id : o }, filter ) );
+		fn.push( 'return out.join( "" );' );
+		return cache_format[o] = new Function( 'filter', 'date', fn.join( '\n' ) );
 	}
 
-	function compileTplStr( o ) { return o.replace( re_compile, function( m, p1, p2, p3 ) { return p1 + '{{date|' + p2 + '}}' + p3; } ); }
+	function compileTplStr( o ) { return o.replace( re_compile, function( m, p0, p1, p2 ) { return 'out.push( "' + p0 + '", filter.' + p1 + '( date ), "' + p2 + '" );'; } ); }
 
-	function format( f ) { return buildTemplate( f ).parse( { date : this } ); }
+	function format( f ) { return buildTemplate( f )( filter, this ); }
 
 /* end file: /Volumes/enterprise/github/d8/src/d8.format.js */
 
@@ -166,7 +168,7 @@
 					_k  = pluck( _p.combo, 'k' );
 					_fn = associate( pluck( _p.combo, 'fn' ), _k );
 					keys.push.apply( keys, _k );
-					Templ8.copy( fn, _fn );
+					copy( fn, _fn );
 				}
 				if ( _p.re ) re.push( p1, _p.re, p3 );
 			} );
@@ -315,7 +317,7 @@
 	};
 
 	date_chars = Object.keys( filter ).sort().join( '' );
-	re_compile = new RegExp( Templ8.format( '([^{0}]*)([{0}])([^{0}]*)', date_chars ), 'g' );
+	re_compile = new RegExp( '([^' + date_chars + ']*)([' + date_chars + '])([^' + date_chars + ']*)', 'g' );
 
 	parser = {
 // day

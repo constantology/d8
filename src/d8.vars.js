@@ -73,7 +73,7 @@
 	};
 
 	date_chars = Object.keys( filter ).sort().join( '' );
-	re_compile = new RegExp( Templ8.format( '([^{0}]*)([{0}])([^{0}]*)', date_chars ), 'g' );
+	re_compile = new RegExp( '([^' + date_chars + ']*)([' + date_chars + '])([^' + date_chars + ']*)', 'g' );
 
 	parser = {
 // day

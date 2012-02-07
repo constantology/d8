@@ -5,6 +5,10 @@
 	function _uc( o ) { return o.toUpperCase(); }
 	function associate( o, k ) { return o.reduce( function( res, v, i ) { res[k[i]] = v; return res; }, {} ); }
 	function between_equalto( v, h, l ) { return v <= h && v >= l; }
+	function copy( d, s ) {
+		for ( var k in s ) !own( s, k ) || ( d[k] = s[k] );
+		return d;
+	}
 	function forEach( o, fn, ctx ) {
 		ctx || ( ctx = o );
 		Object.keys( o ).forEach( function( k, i ) { fn.call( ctx, o[k], k, i, o ); } );
@@ -19,8 +23,8 @@
 		return s;
 	}
 	function pluck( a, k ) { return a.reduce( function( v, o ) { !( k in o ) || v.push( o[k] ); return v; }, [] ); }
+	function retVal( x ) { return x; }
 	function sum( v, i ) { return v + i; }
 	function todesc( v, k, i, o ) {
 		o[k] = { configurable : F, enumerable : F, value : v, writeable : F };
 	}
-	function retVal( x ) { return x; }
