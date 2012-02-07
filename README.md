@@ -4,7 +4,7 @@ d8 is a date parsing and formatting micro-framework for modern JavaScript engine
 
 d8 formats Dates into Strings and conversley turns Strings into Dates based on [php formatting options](http://php.net/manual/en/function.date.php).
 
-As d8 extends JavaScript's native `Date` & `Date.prototype` – the CORRECT way – there is no actual global called d8. Instead all static and instance methods are available from the native `Date` & `Date.prototype` respectively.
+As d8 extends JavaScript's native `Date` & `Date.prototype` – the CORRECT way – there is no actual global called d8. Instead all static and instance methods are available on the native `Date` & `Date.prototype` respectively.
 
 currently the only locales available are:
 

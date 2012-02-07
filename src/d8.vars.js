@@ -65,7 +65,7 @@
 		P : function( d ) { return d.GMTOffset( T ); },                                   // Difference to Greenwich time (GMT) with colon between hours and minutes
 		T : function( d ) { return d[TIMEZONE](); },                                      // Timezone abbreviation
 		Z : function( d ) { return d.getTimezoneOffset() * -60; },                        // Timezone offset in seconds. The offset for timezones west of UTC
-																						  // is always negative, and for those east of UTC is always positive.
+                                                                                          // is always negative, and for those east of UTC is always positive.
 // full date/time
 		c : function( d ) { return format( d, formats.ISO_8601 ); },                      // ISO 8601 date
 		r : function( d ) { return format( d, formats.RFC_2822 ); },                      // RFC 2822 formatted date
