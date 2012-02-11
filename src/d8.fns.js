@@ -58,7 +58,7 @@
 		return this;
 	}
 
-	function clone() { return new Date( this.valueOf() ); }
+	function clone() { return new Date( this.getTime() ); }
 
 	function dayOfYear() {
 		LOCALE.setLeapYear( this );
@@ -78,7 +78,7 @@
 		return new Date( this.getFullYear(), m, LOCALE.day_count[m] );
 	}
 
-	function setWeek( v ) { this.setMonth( 0 ); this.setDate( 1 ); return ( this.adjust( Date.DAY, v * 7 ) ).valueOf(); }
+	function setWeek( v ) { this.setMonth( 0 ); this.setDate( 1 ); return ( this.adjust( Date.DAY, v * 7 ) ).getTime(); }
 
 	function timezone() {
 		var s = this.toString().split( ' ' );
