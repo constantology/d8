@@ -2,8 +2,10 @@
 .git*
 .idea/
 
-Templ8/
 node_modules/
 npm-debug.log
 
 test/
+src/
+build*
+d8.min.js
