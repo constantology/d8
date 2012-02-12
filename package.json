@@ -7,12 +7,15 @@
 	"description"     : "d8 is a date parsing and formatting micro-framework for modern JavaScript engines.",
     "devDependencies" : { "Templ8" : ">= 0.3.0", "mkdirp" : ">= 0.3.0", "uglify-js" : ">= 1.2.5" },
 	"keywords"        : ["date"],
-	"licenses"        : ["MIT"],
+	"licenses"        : [ {
+		"type" : "MIT",
+	     "url" : "https://raw.github.com/constantology/d8/master/LICENSE"
+	} ],
 	"main"            : "./d8.js",
 	"name"            : "d8",
 	"repository"      : {
 		"type"        : "git",
 		"url"         : "git@github.com:constantology/d8.git"
 	},
-	"version"         : "0.0.5"
+	"version"         : "0.0.6"
 }
