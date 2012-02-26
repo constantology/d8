@@ -1,12 +1,12 @@
 // instance methods
 	Object.defineProperties( Date.prototype, forEach( {
-		GMTOffset            : GMTOffset,            ISODay         : ISODay,         ISODaysInYear   : ISODaysInYear,
-		ISOFirstMondayOfYear : ISOFirstMondayOfYear, ISOWeek        : ISOWeek,        ISOWeeksInYear  : ISOWeeksInYear,
-		adjust               : adjust,               between        : between,        clearTime       : clearTime,
-		clone                : clone,                dayOfYear      : dayOfYear,      firstOfTheMonth : firstOfTheMonth,
-		format               : format,               getWeek        : getWeek,        isDST           : isDST,
-		isLeapYear           : isLeapYear,           lastOfTheMonth : lastOfTheMonth, setWeek         : setWeek,
-		timezone             : timezone
+		adjust             : adjust,             between                 : between,                 clearTime    : clearTime,
+		clone              : clone,              format                  : format,                  getDayOfYear : getDayOfYear,
+		getFirstOfTheMonth : getFirstOfTheMonth, getGMTOffset            : getGMTOffset,            getISODay    : getISODay,
+		getISODaysInYear   : getISODaysInYear,   getISOFirstMondayOfYear : getISOFirstMondayOfYear, getISOWeek   : getISOWeek,
+		getISOWeeksInYear  : getISOWeeksInYear,  getLastOfTheMonth       : getLastOfTheMonth,       getWeek      : getWeek,
+		isDST              : isDST,              isLeapYear              : isLeapYear,              setWeek      : setWeek,
+		timezone          : timezone
 	}, todesc ) );
 
 // static methods & properties

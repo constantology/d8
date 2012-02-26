@@ -5,6 +5,6 @@
 	"out"       : { "dir" : "./", "file" : "d8", "min" : "d8.min" },
 	"src"       : {
 		"dir"   : "./src",
-		"files" : ["d8.begin", "d8.utils", "d8.fns", "d8.format", "d8.toDate", "d8.vars", "d8.expose", "d8.end"]
+		"files" : ["$begin", "d8.utils", "d8.fns", "d8.format", "d8.toDate", "d8.vars", "d8.expose", "$end"]
 	}
 }
