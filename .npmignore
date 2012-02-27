@@ -10,3 +10,4 @@ src/
 build*
 d8.min.js
 *shim*
+wedgES/
