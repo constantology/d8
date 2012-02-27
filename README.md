@@ -16,7 +16,7 @@ but feel free to create a locale for your specific nationality and submit a pull
 ## file size
 
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
-	<tr><td width="256">d8.js</td><td width="48">4.5kb</td><td>deflate</td>
+	<tr><td width="256">d8.js</td><td width="48">4.6kb</td><td>deflate</td>
 	<tr><td width="256">d8.min.js</td><td width="48">3.5kb</td><td>uglified + deflate</td>
 </table>
 
@@ -110,24 +110,6 @@ An Object containing some default date formats:
 
 ### Instance methods
 
-#### GMTOffset( [colon:Boolean] ):String
-Returns the Date instances offset from GMT.
-
-#### ISODay():Number
-Returns the ISO day of the week.
-
-#### ISODaysInYear():Number
-Returns the ISO number of days in the year.
-
-#### ISOFirstMondayOfYear():Date
-Returns the ISO first Monday of the year.
-
-#### ISOWeek():Number
-Returns the ISO week of the year
-
-#### ISOWeeksInYear():Number
-Returns the number of weeks in the ISO year.
-
 #### adjust( interval:Object|String[, value:Number] ):Date
 Your one stop shop for all Date arithmetic. Adjusts the Date based on the passed `interval`, by the passed numeric `value`.
 
@@ -159,12 +141,6 @@ Clears the time from the Date instance.
 #### clone():Date
 Returns a clone of the current Date.
 
-#### dayOfYear():Number
-Returns the zero based day of the year.
-
-#### firstOfTheMonth():Date
-Returns a Date instance of the first day of this Date instance's month.
-
 #### format( format:String ):String
 Returns a string representation of the Date instance, based on the passed format. See the **Date formatting and parsing options** below.
 
@@ -179,6 +155,33 @@ You can use predefined formats found in `Date.formats`. **Hint:** You can do:
 within your browser's JavaScript console to see a list of available formats.
 
 Previously used formats are also cached to save the overhead of having to create a `new Function` everytime you want to format a date.
+
+#### getDayOfYear():Number
+Returns the zero based day of the year.
+
+#### getFirstOfTheMonth():Date
+Returns a Date instance of the first day of this Date instance's month.
+
+#### getGMTOffset( [colon:Boolean] ):String
+Returns the Date instances offset from GMT.
+
+#### getISODay():Number
+Returns the ISO day of the week.
+
+#### getISODaysInYear():Number
+Returns the ISO number of days in the year.
+
+#### getISOFirstMondayOfYear():Date
+Returns the ISO first Monday of the year.
+
+#### getISOWeek():Number
+Returns the ISO week of the year
+
+#### getISOWeeksInYear():Number
+Returns the number of weeks in the ISO year.
+
+#### getLastOfTheMonth():Date
+Returns a Date instance of the last day of this Date instance's month.
 
 #### getWeek():Number
 Returns the week of the year, based on the `dayOfYear` divided by 7.
@@ -198,9 +201,6 @@ Returns true if the Date instance is within daylight savings time.
 
 #### isLeapYear():Boolean
 Returns true if the Date instance is a leap year.
-
-#### lastOfTheMonth():Date
-Returns a Date instance of the last day of this Date instance's month.
 
 #### setWeek():Number(UnixTimeStamp)
 Sets the week of the year from the 1st January.

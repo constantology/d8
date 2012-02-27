@@ -6,7 +6,7 @@
 		getISODaysInYear   : getISODaysInYear,   getISOFirstMondayOfYear : getISOFirstMondayOfYear, getISOWeek   : getISOWeek,
 		getISOWeeksInYear  : getISOWeeksInYear,  getLastOfTheMonth       : getLastOfTheMonth,       getWeek      : getWeek,
 		isDST              : isDST,              isLeapYear              : isLeapYear,              setWeek      : setWeek,
-		timezone          : timezone
+		timezone           : timezone
 	}, todesc ) );
 
 // static methods & properties

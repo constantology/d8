@@ -24,7 +24,6 @@
 				if ( _p.re ) re.push( p1, _p.re, p3 );
 			} );
 		}
-
 		return cache_parse[o] = parse.bind( N, new RegExp( re.join( '' ) ), keys, fn );
 	}
 
@@ -84,8 +83,7 @@
 		d.setSeconds( s || 0 ); d.setMilliseconds( ms || 0 );
 	}
 	function parse_setTimezoneOffset( d, tzo ) {
-		if ( !between_equalto( tzo, -43200, 50400 ) ) return;
-		d.adjust( Date[SECOND], ( -d.getTimezoneOffset() * 60 ) - tzo );
+		!between_equalto( tzo, -43200, 50400 ) || d.adjust( Date.SECOND, ( -d.getTimezoneOffset() * 60 ) - tzo );
 	}
 
 	function toDate( s, f ) { return buildParser( f )( s ); }

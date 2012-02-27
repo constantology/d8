@@ -12,24 +12,6 @@
 	function _zeroIndexedInt( o, k ) { return !isNaN( k ) ? k == o ? 0 : Number( k ) : Number( o ) - 1; }
 
 // public methods
-	function getGMTOffset( colon ) {
-		var tz = this.getTimezoneOffset();
-        return [( tz > 0 ? '-' : '+' ), pad( Math.floor( Math.abs( tz ) / 60 ), 2 ), ( colon ? ':' : '' ), pad( Math.abs( tz % 60 ), 2 )].join( '' );
-	}
-
-	function getISODay() { return this.getDay() || 7; }
-	function getISODaysInYear() { return Math.ceil( ( getISOFirstMondayOfYear.call( new Date( this.getFullYear() + 1, 0, 1 ) ) - this.ISOFirstMondayOfYear() ) / MS_DAY ); }
-	function getISOFirstMondayOfYear() {
-		var y = this.getFullYear();
-		return new Date( y, 0, DAY_OFFSETS[new Date( y, 0, 1 ).getDay()] );
-	}
-	function getISOWeek() {
-		var w, y = this.getFullYear();
-		if ( this >= getISOFirstMondayOfYear.call( new Date( y + 1, 0, 1 ) ) ) return 1;
-		w = Math.floor( ( getDayOfYear.call( this ) - getISODay.call( this ) + 10 ) / 7 );
-		return w == 0 ? getISOWeeksInYear.call( new Date( y - 1, 0, 1 ) ) - _weekOffset( this ) : w;
-	}
-	function getISOWeeksInYear() { return Math.round( ( getISOFirstMondayOfYear.call( new Date( this.getFullYear() + 1, 0, 1 ) ) - this.ISOFirstMondayOfYear() ) / MS_WEEK ); }
 
 	function adjust( o, v ) {
 		if ( OP.toString.call( o ) == '[object Object]' ) {
@@ -67,16 +49,35 @@
 
 	function getFirstOfTheMonth() { return new Date( this.getFullYear(), this.getMonth(), 1 ); }
 
-	function getWeek() { return Math.floor( getDayOfYear.call( this ) / 7 ); }
+	function getGMTOffset( colon ) {
+		var tz = this.getTimezoneOffset();
+		return [( tz > 0 ? '-' : '+' ), pad( Math.floor( Math.abs( tz ) / 60 ), 2 ), ( colon ? ':' : '' ), pad( Math.abs( tz % 60 ), 2 )].join( '' );
+	}
 
-	function isDST() { return new Date( this.getFullYear(), 0, 1 ).getTimezoneOffset() != this.getTimezoneOffset(); }
-
-	function isLeapYear() { return LOCALE.isLeapYear( this.getFullYear() ); }
+	function getISODay() { return this.getDay() || 7; }
+	function getISODaysInYear() { return Math.ceil( ( getISOFirstMondayOfYear.call( new Date( this.getFullYear() + 1, 0, 1 ) ) - getISOFirstMondayOfYear.call( this ) ) / MS_DAY ); }
+	function getISOFirstMondayOfYear() {
+		var y = this.getFullYear();
+		return new Date( y, 0, DAY_OFFSETS[new Date( y, 0, 1 ).getDay()] );
+	}
+	function getISOWeek() {
+		var w, y = this.getFullYear();
+		if ( this >= getISOFirstMondayOfYear.call( new Date( y + 1, 0, 1 ) ) ) return 1;
+		w = Math.floor( ( getDayOfYear.call( this ) - getISODay.call( this ) + 10 ) / 7 );
+		return w == 0 ? getISOWeeksInYear.call( new Date( y - 1, 0, 1 ) ) - _weekOffset( this ) : w;
+	}
+	function getISOWeeksInYear() { return Math.round( ( getISOFirstMondayOfYear.call( new Date( this.getFullYear() + 1, 0, 1 ) ) - getISOFirstMondayOfYear.call( this ) ) / MS_WEEK ); }
 
 	function getLastOfTheMonth() {
 		var m = this.getMonth(); LOCALE.setLeapYear( this );
 		return new Date( this.getFullYear(), m, LOCALE.day_count[m] );
 	}
+
+	function getWeek() { return Math.floor( getDayOfYear.call( this ) / 7 ); }
+
+	function isDST() { return new Date( this.getFullYear(), 0, 1 ).getTimezoneOffset() != this.getTimezoneOffset(); }
+
+	function isLeapYear() { return LOCALE.isLeapYear( this.getFullYear() ); }
 
 	function setWeek( v ) { this.setMonth( 0 ); this.setDate( 1 ); return ( this.adjust( Date.DAY, v * 7 ) ).getTime(); }
 

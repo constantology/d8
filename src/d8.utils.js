@@ -4,9 +4,9 @@
 	function _substr( s ) { return s.substring( 0, 3 ); }
 	function _uc( o ) { return o.toUpperCase(); }
 	function associate( o, k ) { return o.reduce( function( res, v, i ) { res[k[i]] = v; return res; }, {} ); }
-	function between_equalto( v, h, l ) { return v <= h && v >= l; }
+	function between_equalto( v, l, h ) { return l <= v && v <= h; }
 	function copy( d, s, r ) {
-		for ( var k in s ) !own( s, k ) || own( d, k ) && r !== T || ( d[k] = s[k] );
+		for ( var k in s ) !has( s, k ) || has( d, k ) && r !== T || ( d[k] = s[k] );
 		return d;
 	}
 	function forEach( o, fn, ctx ) {
@@ -15,7 +15,7 @@
 		return o;
 	}
 	function nomember( o, k ) { return !( k in o ); }
-	function own( o, k ) { return OP.hasOwnProperty.call( o, k ); }
+	function has( o, k ) { return OP.hasOwnProperty.call( o, k ); }
 	function pad( o, len, radix ) {
 		var i = -1, s = o.toString( radix || 10 );
 		len -= s.length;
