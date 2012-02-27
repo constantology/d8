@@ -9,3 +9,4 @@ test/
 src/
 build*
 d8.min.js
+*shim*
