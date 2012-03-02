@@ -33,7 +33,7 @@
 		N : function( d ) { return getISODay.call( d ); },                                      // ISO-8601 numeric representation of the day of the week
 		S : function( d ) { return LOCALE.getOrdinal( d.getDate() ); },                         // English ordinal suffix for the day of the month, 2 characters
 		w : function( d ) { return d.getDay(); },                                               // Numeric representation of the day of the week
-		z : function( d ) { return d.getDayOfYear(); },                                            // The day of the year (starting from 0)
+		z : function( d ) { return d.getDayOfYear(); },                                         // The day of the year (starting from 0)
 // week
 		W : function( d ) { return getISOWeek.call( d ); },                                     // ISO-8601 week number of year, weeks starting on Monday
 // month
