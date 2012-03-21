@@ -1,7 +1,7 @@
 {
 	"author"          : {
 		"name"        : "constantology",
-		"email"       : "constantology@gmail.com",
+		"email"       : "christos@muigui.com",
 		"url"         : "http://muigui.com"
 	},
 	"description"     : "d8 is a date parsing and formatting micro-framework for modern JavaScript engines.",
@@ -17,5 +17,5 @@
 		"type"        : "git",
 		"url"         : "git@github.com:constantology/d8.git"
 	},
-	"version"         : "0.1.1"
+	"version"         : "0.1.2"
 }
