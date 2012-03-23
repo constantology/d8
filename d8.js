@@ -1,4 +1,5 @@
 !function() {
+    "use strict";
     function _indexOf(o, k) {
         var i = o.indexOf(k);
         return i == -1 ? N : i;
@@ -230,7 +231,7 @@
         return d;
     }
     function parse_setDate(d, o) {
-        var dw, ly, odc, i = -1;
+        var dw, l, ly, odc, i = -1;
         if (date_members.every(nomember.bind(N, o))) return;
         if (isNaN(o[YEAR])) o[YEAR] = d.getFullYear();
         if (isNaN(o[MONTH])) {

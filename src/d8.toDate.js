@@ -43,7 +43,7 @@
 	}
 
 	function parse_setDate( d, o ) {
-		var dw, ly, odc, i = -1;
+		var dw, l, ly, odc, i = -1;
 
 		if ( date_members.every( nomember.bind( N, o ) ) ) return; //  only set the date if there's one to set (i.e. the format is not just for time)
 
