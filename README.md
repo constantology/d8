@@ -8,25 +8,37 @@ As d8 extends JavaScript's native `Date` & `Date.prototype` – the CORRECT way 
 
 currently the only locales available are:
 
-- en-GB (0.5kb deflated)
-- en-US (0.5kb deflated)
+- en-GB (0.6kb deflated)
+- en-US (0.6kb deflated)
 
 but feel free to create a locale for your specific nationality and submit a pull request! :D
+
+## Dependencies
+
+d8.js only has one dependency [m8.js](/constantology/m8).
+
+**NOTE:**
+If you are using d8 within a commonjs module, you don't need to require m8 before requiring d8 as this is done internally.
+
+Also, since d8.js simply extends the Native Date Class, a reference to **m8 IS NOT** stored.
 
 ## file size
 
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
 	<tr><td width="256">d8.js</td><td width="48">4.6kb</td><td>deflate</td>
-	<tr><td width="256">d8.min.js</td><td width="48">3.5kb</td><td>uglified + deflate</td>
+	<tr><td width="256">d8.min.js</td><td width="48">3.4kb</td><td>uglified + deflate</td>
 </table>
 
-## WARNING!
+## WARNING!!!
+While **d8** has been tested, the testing framework I've written and used is very much a work in progress.
 
-This is an, as yet, untested framework. Use at your own risk!
+Also I'm currently between virtual machine software – and operating system licenses – so I have only tested on mac osx lion and snow leopard: nodejs – >= v0.613 – as well as current – and beta/ nightly – versions of Chrome, Safari/ Webkit and FireFox.
 
 ## browser usage
 
 ```html
+
+   <script src="/path/to/m8/m8.js" type="text/javascript"></script>
 
 <!-- IMPORTANT: The correct locale must be loaded before d8! -->
    <script src="/path/to/d8/locale/en-GB.js" type="text/javascript"></script>
@@ -46,6 +58,9 @@ This is an, as yet, untested framework. Use at your own risk!
 
    require( 'd8/locale/en-GB' ); // IMPORTANT: The correct locale must be loaded before d8!!
    require( 'd8' );
+
+// if running in a sandboxed environment remember to:
+   require( 'm8' ).x( Date ); // and/ or any other Types that require extending.
 
 ```
 
@@ -148,7 +163,7 @@ You can use predefined formats found in `Date.formats`. **Hint:** You can do:
 
 ```javascript
 
-   dir( Date.formats );
+   console.dir( Date.formats );
 
 ```
 

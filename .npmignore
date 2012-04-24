@@ -7,7 +7,6 @@ npm-debug.log
 
 test/
 src/
+src/.*
 build*
 d8.min.js
-*shim*
-wedgES/

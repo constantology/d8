@@ -19,18 +19,18 @@
 					_k  = pluck( _p.combo, 'k' );
 					_fn = associate( pluck( _p.combo, 'fn' ), _k );
 					keys.push.apply( keys, _k );
-					copy( fn, _fn, T );
+					m8.copy( fn, _fn, true );
 				}
 				if ( _p.re ) re.push( p1, _p.re, p3 );
 			} );
 		}
-		return cache_parse[o] = parse.bind( N, new RegExp( re.join( '' ) ), keys, fn );
+		return cache_parse[o] = parse.bind( null, new RegExp( re.join( '' ) ), keys, fn );
 	}
 
 	function parse( re, keys, fn, s ) {
-		var d = new Date(), m = s.match( re ), o = associate( m.slice( 1 ), keys );
+		var d = new Type(), m = s.match( re ), o = associate( m.slice( 1 ), keys );
 
-		forEach( o, function( v, k ) { if ( fn[k] ) o[k] = fn[k]( v, o ); } );
+		Object.reduce( o, function( n, v, k ) { if ( fn[k] ) o[k] = fn[k]( v, o ); return n; }, null );
 
 		if ( !isNaN( o[UNIX] ) ) d.setTime( o[UNIX] );
 		else {
@@ -45,7 +45,7 @@
 	function parse_setDate( d, o ) {
 		var dw, l, ly, odc, i = -1;
 
-		if ( date_members.every( nomember.bind( N, o ) ) ) return; //  only set the date if there's one to set (i.e. the format is not just for time)
+		if ( date_members.every( m8.has.bind( null, o ) ) ) return; //  only set the date if there's one to set (i.e. the format is not just for time)
 
 		if ( isNaN( o[YEAR] ) ) o[YEAR] = d.getFullYear();
 
@@ -83,7 +83,7 @@
 		d.setSeconds( s || 0 ); d.setMilliseconds( ms || 0 );
 	}
 	function parse_setTimezoneOffset( d, tzo ) {
-		!between_equalto( tzo, -43200, 50400 ) || d.adjust( Date.SECOND, ( -d.getTimezoneOffset() * 60 ) - tzo );
+		!between_equalto( tzo, -43200, 50400 ) || d.adjust( Type.SECOND, ( -d.getTimezoneOffset() * 60 ) - tzo );
 	}
 
 	function toDate( s, f ) { return buildParser( f )( s ); }
