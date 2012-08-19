@@ -14,7 +14,7 @@
 // public methods
 
 	function adjust( o, v ) {
-		if ( m8.nativeType( o ) == 'object' ) {
+		if ( util.nativeType( o ) == 'object' ) {
 			Object.reduce( o, _adjust, this );
 			return this;
 		}

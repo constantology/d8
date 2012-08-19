@@ -1,5 +1,5 @@
-( typeof m8 != 'undefined' ? m8 : require( 'm8' ) ).x.cache( 'Date', function( Type, m8 ) {
-	m8.def( Type, 'locale', m8.describe( { value : {
+( typeof m8 != 'undefined' ? m8 : require( 'm8' ) ).x.cache( 'Date', function( Type, util ) {
+	util.def( Type, 'locale', util.describe( { value : {
 		id                  : 'en-GB',
 		AM                  : 'am',
 		PM                  : 'pm',

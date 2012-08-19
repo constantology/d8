@@ -1,3 +1,3 @@
-;!function( m8 ) {
+;!function( util ) {
 	"use strict";
-	m8.x.cache( 'Date', function( Type ) {
+	util.x.cache( 'Date', function( Type ) {

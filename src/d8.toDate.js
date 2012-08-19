@@ -19,7 +19,7 @@
 					_k  = pluck( _p.combo, 'k' );
 					_fn = associate( pluck( _p.combo, 'fn' ), _k );
 					keys.push.apply( keys, _k );
-					m8.copy( fn, _fn, true );
+					util.copy( fn, _fn, true );
 				}
 				if ( _p.re ) re.push( p1, _p.re, p3 );
 			} );
@@ -45,7 +45,7 @@
 	function parse_setDate( d, o ) {
 		var dw, l, ly, odc, i = -1;
 
-		if ( date_members.every( m8.has.bind( null, o ) ) ) return; //  only set the date if there's one to set (i.e. the format is not just for time)
+		if ( date_members.every( util.has.bind( null, o ) ) ) return; //  only set the date if there's one to set (i.e. the format is not just for time)
 
 		if ( isNaN( o[YEAR] ) ) o[YEAR] = d.getFullYear();
 

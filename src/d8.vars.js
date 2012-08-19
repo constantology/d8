@@ -58,7 +58,7 @@
 			U : function( d ) { return d.getTime(); }                                               // Seconds since the Unix Epoch January 1 1970 00:00:00 GMT
 		},
 		filter_chars = Object.keys( filter ).sort().join( '' ),
-		formats   = m8.copy( {
+		formats   = util.copy( {
 			ISO_8601 : 'Y-m-d<T>H:i:s.u<Z>', ISO_8601_SHORT : 'Y-m-d',
 			RFC_850  : 'l, d-M-y H:i:s T',   RFC_2822       : 'D, d M Y H:i:s O',
 			sortable : 'Y-m-d H:i:sO'
@@ -93,7 +93,7 @@
 			Y : { k  : YEAR,        fn : Number,                               re : re_d4 },
 			y : { k  : YEAR,        fn : function( o ) { o = Number( o ); return o += ( o < 30 ? 2000 : 1900 ); }, re : re_d2 },
 // time
-			a : { k  : AMPM,        fn : m8,                                   re : re_ampm },
+			a : { k  : AMPM,        fn : util,                                   re : re_ampm },
 			A : { k  : AMPM,        fn : _lc,                                  re : _uc( re_ampm ) },
 			g : { k  : HOUR,        fn : _24hrTime,                            re : re_d1_2 },
 			G : { k  : HOUR,        fn : Number,                               re : re_d1_2 },

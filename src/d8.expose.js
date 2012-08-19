@@ -1,5 +1,5 @@
 // instance methods
-	m8.defs( Type.prototype, {
+	util.defs( Type.prototype, {
 		adjust             : adjust,             between                 : between,                 clearTime    : clearTime,
 		clone              : clone,              format                  : format,                  getDayOfYear : getDayOfYear,
 		getFirstOfTheMonth : getFirstOfTheMonth, getGMTOffset            : getGMTOffset,            getISODay    : getISODay,
@@ -10,7 +10,7 @@
 	}, 'r' );
 
 // static methods & properties
-	m8.defs( Type, {
+	util.defs( Type, {
 // constants used by Date.prototype.adjust
 		DAY : DAY, HOUR : 'hr', MINUTE : MINUTE.substring( 0, 3 ), MILLISECOND : MILLISECOND, MONTH : MONTH, SECOND : SECOND.substring( 0, 3 ), WEEK : WEEK, YEAR : YEAR,
 // constants defining milliseconds for different times
