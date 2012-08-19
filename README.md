@@ -22,11 +22,6 @@ If you are using d8 within a commonjs module, you don't need to require m8 befor
 
 Also, since d8.js simply extends the Native Date Class, a reference to **m8 IS NOT** stored.
 
-## WARNING!!!
-While **d8** has been tested, the testing framework I've written and used is very much a work in progress.
-
-Also I'm currently between virtual machine software – and operating system licenses – so I have only tested on mac osx lion and snow leopard: nodejs – >= v0.6.13 – as well as current – and beta/ nightly – versions of Chrome, Safari/ Webkit and FireFox.
-
 ## browser usage
 
 ```html
