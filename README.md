@@ -1,4 +1,4 @@
-[![build status](https://secure.travis-ci.org/constantology/d8.png)](http://travis-ci.org/constantology/d8)
+<!-- [![build status](https://secure.travis-ci.org/constantology/d8.png)](http://travis-ci.org/constantology/d8) -->
 # d8.js
 
 d8 is a date parsing and formatting micro-framework for modern JavaScript engines.
