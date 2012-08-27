@@ -6,7 +6,7 @@
 	},
 	"description"     : "d8 is a date parsing and formatting micro-framework for modern JavaScript engines.",
     "dependencies"    : { "m8"     : ">= 0.1.0" },
-    "devDependencies" : { "Templ8" : ">= 0.3.0", "mkdirp" : ">= 0.3.0", "mocha" : ">= 1.3.0", "uglify-js" : ">= 1.2.5" },
+    "devDependencies" : { "Templ8" : ">= 0.3.0", "expect.js" : ">= 0.1.2", "mkdirp" : ">= 0.3.0", "mocha" : ">= 1.3.0", "uglify-js" : ">= 1.2.5" },
 	"keywords"        : ["date"],
 	"licenses"        : [ {
 		"type"        : "MIT",
@@ -21,5 +21,5 @@
 	"scripts"         : {
 		"test"        : "mocha -c --globals mocha,expect,m8 -R spec -u tdd ./test"
 	},
-	"version"         : "0.3.2"
+	"version"         : "0.3.3"
 }
