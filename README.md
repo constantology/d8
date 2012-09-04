@@ -37,12 +37,6 @@ Also, since d8.js simply extends the Native Date Class, a reference to **m8 IS N
 
 ## nodejs usage
 
-```
-
-   npm install d8
-
-```
-
 ```javascript
 
    require( 'd8/locale/en-GB' ); // IMPORTANT: The correct locale must be loaded before d8!!
@@ -54,6 +48,10 @@ Also, since d8.js simply extends the Native Date Class, a reference to **m8 IS N
 ```
 
 As mentioned above d8 extends JavaScript's native `Date` & `Date.prototype`, so when requiring d8, you don't need to assign it to a variable to use d8's features.
+
+## Support
+
+Tested to work with nodejs, FF4+, Safari 5+, Chrome 7+, IE9+. Should technically work in any browser that supports [ecma 5]( http://kangax.github.com/es5-compat-table/) without throwing any JavaScript errors.
 
 ## API
 

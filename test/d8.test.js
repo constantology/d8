@@ -1,5 +1,7 @@
-typeof m8     !== 'undefined' || ( m8     = require( 'm8' ) );
-typeof expect !== 'undefined' || ( expect = require( 'expect.js' ) );
+typeof m8   !== 'undefined' || ( m8   = require( 'm8' ) );
+typeof chai !== 'undefined' || ( chai = require( 'chai' ) );
+
+expect = chai.expect;
 
 if ( m8.ENV == 'commonjs' ) {
 	require( '../locale/en-GB' );
@@ -53,22 +55,22 @@ suite( 'd8', function() {
 	} );
 
 	test( '<static> Date.isLeapYear verifies whether 4 digit year is a leap year or not', function( done ) {
-		expect( Date.isLeapYear( 1600 ) ).to.be( true );
-		expect( Date.isLeapYear( 1992 ) ).to.be( true );
-		expect( Date.isLeapYear( 2000 ) ).to.be( true );
-		expect( Date.isLeapYear( 2004 ) ).to.be( true );
-		expect( Date.isLeapYear( 2008 ) ).to.be( true );
-		expect( Date.isLeapYear( 2012 ) ).to.be( true );
-		expect( Date.isLeapYear( 2024 ) ).to.be( true );
-		expect( Date.isLeapYear( 2400 ) ).to.be( true );
-		expect( Date.isLeapYear( 1700 ) ).to.be( false );
-		expect( Date.isLeapYear( 1800 ) ).to.be( false );
-		expect( Date.isLeapYear( 1900 ) ).to.be( false );
-		expect( Date.isLeapYear( 1994 ) ).to.be( false );
-		expect( Date.isLeapYear( 2001 ) ).to.be( false );
-		expect( Date.isLeapYear( 2011 ) ).to.be( false );
-		expect( Date.isLeapYear( 2013 ) ).to.be( false );
-		expect( Date.isLeapYear( 2021 ) ).to.be( false );
+		expect( Date.isLeapYear( 1600 ) ).to.be.true;
+		expect( Date.isLeapYear( 1992 ) ).to.be.true;
+		expect( Date.isLeapYear( 2000 ) ).to.be.true;
+		expect( Date.isLeapYear( 2004 ) ).to.be.true;
+		expect( Date.isLeapYear( 2008 ) ).to.be.true;
+		expect( Date.isLeapYear( 2012 ) ).to.be.true;
+		expect( Date.isLeapYear( 2024 ) ).to.be.true;
+		expect( Date.isLeapYear( 2400 ) ).to.be.true;
+		expect( Date.isLeapYear( 1700 ) ).to.be.false;
+		expect( Date.isLeapYear( 1800 ) ).to.be.false;
+		expect( Date.isLeapYear( 1900 ) ).to.be.false;
+		expect( Date.isLeapYear( 1994 ) ).to.be.false;
+		expect( Date.isLeapYear( 2001 ) ).to.be.false;
+		expect( Date.isLeapYear( 2011 ) ).to.be.false;
+		expect( Date.isLeapYear( 2013 ) ).to.be.false;
+		expect( Date.isLeapYear( 2021 ) ).to.be.false;
 		
 		done();
 	} );
@@ -129,15 +131,15 @@ suite( 'd8', function() {
 	} );
 
 	test( 'Date.prototype.between: verifies whether or not a Date instance is between 2 other Dates', function( done ) {
-		expect( new Date( 2010, 0, 1, 1, 10, 10, 10 ).between( new Date( 2010, 0, 1, 1, 9, 10, 10 ), new Date( 2010, 0, 1, 1, 11, 10, 10 ) ) ).to.be( true );
-		expect( new Date( 2010, 0, 1, 1, 10, 10, 10 ).between( new Date( 2010, 0, 1, 1, 10, 10, 9 ), new Date( 2010, 0, 1, 1, 10, 10, 11 ) ) ).to.be( true );
-		expect( new Date( 2010, 0, 1, 1, 10, 10, 10 ).between( new Date( 2010, 0, 1, 1, 10, 10, 10 ), new Date( 2010, 0, 1, 1, 10, 10, 10 ) ) ).to.be( true );
-		expect( new Date( 2010, 0, 1 ).between( new Date( 2009, 11, 31 ), new Date( 2010, 0, 2 ) ) ).to.be( true );
-		expect( new Date( 2010, 0, 1 ).between( new Date( 2009, 4, 1 ), new Date( 2011, 8, 1 ) ) ).to.be( true );
-		expect( new Date( 2010, 0, 1, 1, 10, 10, 10 ).between( new Date( 2010, 0, 1, 1, 11, 10, 10 ), new Date( 2010, 0, 1, 1, 12, 10, 10 ) ) ).to.be( false );
-		expect( new Date( 2010, 0, 1, 1, 10, 10, 10 ).between( new Date( 2010, 0, 1, 1, 10, 10, 11 ), new Date( 2010, 0, 1, 1, 10, 10, 12 ) ) ).to.be( false );
-		expect( new Date( 2010, 0, 1 ).between( new Date( 2010, 0, 2 ), new Date( 2010, 0, 3 ) ) ).to.be( false );
-		expect( new Date( 2010, 0, 1, 1, 10, 10, 10 ).between( new Date( 2009, 4, 1 ), new Date( 2010, 0, 1, 1, 10, 10, 9 ) ) ).to.be( false );
+		expect( new Date( 2010, 0, 1, 1, 10, 10, 10 ).between( new Date( 2010, 0, 1, 1, 9, 10, 10 ), new Date( 2010, 0, 1, 1, 11, 10, 10 ) ) ).to.be.true;
+		expect( new Date( 2010, 0, 1, 1, 10, 10, 10 ).between( new Date( 2010, 0, 1, 1, 10, 10, 9 ), new Date( 2010, 0, 1, 1, 10, 10, 11 ) ) ).to.be.true;
+		expect( new Date( 2010, 0, 1, 1, 10, 10, 10 ).between( new Date( 2010, 0, 1, 1, 10, 10, 10 ), new Date( 2010, 0, 1, 1, 10, 10, 10 ) ) ).to.be.true;
+		expect( new Date( 2010, 0, 1 ).between( new Date( 2009, 11, 31 ), new Date( 2010, 0, 2 ) ) ).to.be.true;
+		expect( new Date( 2010, 0, 1 ).between( new Date( 2009, 4, 1 ), new Date( 2011, 8, 1 ) ) ).to.be.true;
+		expect( new Date( 2010, 0, 1, 1, 10, 10, 10 ).between( new Date( 2010, 0, 1, 1, 11, 10, 10 ), new Date( 2010, 0, 1, 1, 12, 10, 10 ) ) ).to.be.false;
+		expect( new Date( 2010, 0, 1, 1, 10, 10, 10 ).between( new Date( 2010, 0, 1, 1, 10, 10, 11 ), new Date( 2010, 0, 1, 1, 10, 10, 12 ) ) ).to.be.false;
+		expect( new Date( 2010, 0, 1 ).between( new Date( 2010, 0, 2 ), new Date( 2010, 0, 3 ) ) ).to.be.false;
+		expect( new Date( 2010, 0, 1, 1, 10, 10, 10 ).between( new Date( 2009, 4, 1 ), new Date( 2010, 0, 1, 1, 10, 10, 9 ) ) ).to.be.false;
 		
 		done();
 	} );
@@ -154,7 +156,7 @@ suite( 'd8', function() {
 	test( 'Date.prototype.clone: returns a copy of a Date instance', function( done ) {
 		var e = new Date( 2010, 0, 1 ), r = e.clone();
 				
-		expect( r ).not.to.be( e );
+		expect( r ).not.to.equal( e );
 		expect( r ).to.eql( e );
 		
 		done();
@@ -292,16 +294,16 @@ suite( 'd8', function() {
 	} );
 
 	test( 'Date.prototype.isLeapYear: returns true if the Date instance is in a leap year', function( done ) {
-		expect( new Date( 1899, 0, 1 ).isLeapYear() ).to.be( false );
-		expect( new Date( 1900, 0, 1 ).isLeapYear() ).to.be( false );
-		expect( new Date( 1901, 0, 1 ).isLeapYear() ).to.be( false );
-		expect( new Date( 1904, 0, 1 ).isLeapYear() ).to.be( true );
-		expect( new Date( 1996, 0, 1 ).isLeapYear() ).to.be( true );
-		expect( new Date( 2000, 0, 1 ).isLeapYear() ).to.be( true );
-		expect( new Date( 2004, 0, 1 ).isLeapYear() ).to.be( true );
-		expect( new Date( 2010, 0, 1 ).isLeapYear() ).to.be( false );
-		expect( new Date( 2050, 0, 1 ).isLeapYear() ).to.be( false );
-		expect( new Date( 2100, 0, 1 ).isLeapYear() ).to.be( false );
+		expect( new Date( 1899, 0, 1 ).isLeapYear() ).to.be.false;
+		expect( new Date( 1900, 0, 1 ).isLeapYear() ).to.be.false;
+		expect( new Date( 1901, 0, 1 ).isLeapYear() ).to.be.false;
+		expect( new Date( 1904, 0, 1 ).isLeapYear() ).to.be.true;
+		expect( new Date( 1996, 0, 1 ).isLeapYear() ).to.be.true;
+		expect( new Date( 2000, 0, 1 ).isLeapYear() ).to.be.true;
+		expect( new Date( 2004, 0, 1 ).isLeapYear() ).to.be.true;
+		expect( new Date( 2010, 0, 1 ).isLeapYear() ).to.be.false;
+		expect( new Date( 2050, 0, 1 ).isLeapYear() ).to.be.false;
+		expect( new Date( 2100, 0, 1 ).isLeapYear() ).to.be.false;
 		
 		done();
 	} );
