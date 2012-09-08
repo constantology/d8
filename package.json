@@ -30,7 +30,7 @@
 		"url"         : "git@github.com:constantology/d8.git"
 	},
 	"scripts"         : {
-		"test"        : "mocha -c --ignore-leaks -R spec -u tdd ./test/d8.test.js"
+		"test"        : "mocha -c --ignore-leaks -R spec -u tdd ./test/*.test.js"
 	},
-	"version"         : "0.3.4"
+	"version"         : "0.3.5"
 }
