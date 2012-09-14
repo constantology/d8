@@ -1,8 +1,8 @@
-
 ;!function( util ) {
 	"use strict";
 	util.x.cache( 'Date', function( Type ) {
 
+/*~  d8/src/utils.js  ~*/
 // utility methods
 	function _indexOf( o, k ) { var i = o.indexOf( k ); return i == -1 ? null : i; }
 	function _lc( o ) { return o.toLowerCase(); }
@@ -19,6 +19,7 @@
 	function pluck( a, k ) { return a.reduce( function( v, o ) { !( k in o ) || v.push( o[k] ); return v; }, [] ); }
 	function sum( v, i ) { return v + i; }
 
+/*~  d8/src/fns.js  ~*/
 // private methods
 	function _24hrTime( o, res ) { return ( o = Number( o ) ) < 12 && _lc( res.ampm ) == _lc( LOCALE.PM ) ? o += 12 : o; }
 	function _adjust( d, v, k ) { return d.adjust( k, v ); }
@@ -105,6 +106,7 @@
 		return s.splice( 4, s.length ).join( ' ' ).replace( re_tz, '$1' ).replace( re_tz_abbr, '' );
 	}
 
+/*~  d8/src/format.js  ~*/
 	function buildTemplate( o ) {
 		if ( cache_format[o] ) return cache_format[o];
 
@@ -129,6 +131,7 @@
 
 	function tplOut( s ) { return 'out.push( \'' + s + '\' );'; }
 
+/*~  d8/src/toDate.js  ~*/
 	function buildParser( o ) {
 		if ( cache_parse[o] ) return cache_parse[o];
 		var fn = {}, keys = [], i = -1, parts = o.replace( re_add_nr, NOREPLACE_RB ).replace( re_add_enr, NOREPLACE_RE ).split( re_split ),
@@ -219,6 +222,7 @@
 
 	function toDate( s, f ) { return buildParser( f )( s ); }
 
+/*~  d8/src/vars.js  ~*/
 	var LOCALE = Type.locale, U,
 // DAY_OFFSETS is the amount of days from the current day to the Monday of the week it belongs to
 		DAY_OFFSETS = [9, 1, 0, -1, -2, 4, 3],    MS_DAY       = 864e5, MS_WEEK = 6048e5,
@@ -343,6 +347,7 @@
 		re    : [parser.D.re, ', ', parser.d.re, ' ', parser.M.re, ' ', parser.Y.re, ' ', parser.H.re, ':', parser.i.re, ':', parser.s.re, ' ', parser.O.re].join( '' )
 	};
 
+/*~  d8/src/expose.js  ~*/
 // instance methods
 	util.defs( Type.prototype, {
 		adjust             : adjust,             between                 : between,                 clearTime    : clearTime,
