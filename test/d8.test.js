@@ -99,10 +99,12 @@ suite( 'd8', function() {
 		expect( Date.toDate( '2010-01-01T10:10:10+04:00', 'c' ) ).to.eql( new Date( 2010, 0, 1,  6, 10, 10 ) );
 		expect( Date.toDate( '2010-01-01T10:10:10-08:00', 'c' ) ).to.eql( new Date( 2010, 0, 1, 18, 10, 10 ) );
 
-		expect( Date.toDate( '2010-08-30T10:10:10+00:00', 'Y-m-d<T>H:i:sP' ) ).to.eql( new Date( 2010, 7, 30, 11, 10, 10 ) );
-		expect( Date.toDate( '2010-08-30T10:10:10+00:00', 'c' ) ).to.eql( new Date( 2010, 7, 30, 11, 10, 10 ) );
-		expect( Date.toDate( '2010-08-30T10:10:10+04:00', 'c' ) ).to.eql( new Date( 2010, 7, 30,  7, 10, 10 ) );
-		expect( Date.toDate( '2010-08-30T10:10:10-08:00', 'c' ) ).to.eql( new Date( 2010, 7, 30, 19, 10, 10 ) );
+		var date   = Date.toDate( '2010-08-30T10:10:10+00:00', 'Y-m-d<T>H:i:sP' ),
+			offset = date.isDST() ? 1 : 0;
+		expect( Date.toDate( '2010-08-30T10:10:10+00:00', 'Y-m-d<T>H:i:sP' ) ).to.eql( new Date( 2010, 7, 30, ( 10 + offset ), 10, 10 ) );
+		expect( Date.toDate( '2010-08-30T10:10:10+00:00', 'c' ) ).to.eql( new Date( 2010, 7, 30, 10 + offset, 10, 10 ) );
+		expect( Date.toDate( '2010-08-30T10:10:10+04:00', 'c' ) ).to.eql( new Date( 2010, 7, 30,  6 + offset, 10, 10 ) );
+		expect( Date.toDate( '2010-08-30T10:10:10-08:00', 'c' ) ).to.eql( new Date( 2010, 7, 30, 18 + offset, 10, 10 ) );
 		
 		done();
 	} );
