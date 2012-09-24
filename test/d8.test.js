@@ -5,7 +5,7 @@ expect = chai.expect;
 
 if ( m8.ENV == 'commonjs' ) {
 	require( '../locale/en-GB' );
-	require( 'd8' );
+	require( '../d8' );
 }
 
 suite( 'd8', function() {
