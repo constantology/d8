@@ -8,8 +8,8 @@ As d8 extends JavaScript's native `Date` & `Date.prototype` – the CORRECT way 
 
 currently the only locales available are:
 
-- en-GB (0.6kb deflated)
-- en-US (0.6kb deflated)
+- en-GB (0.9kb gzipped)
+- en-US (0.9kb gzipped)
 
 but feel free to create a locale for your specific nationality and submit a pull request! :D
 
@@ -38,11 +38,11 @@ Also, since d8.js simply extends the Native Date Class, a reference to **m8 IS N
 
 ```javascript
 
-   require( 'd8/locale/en-GB' ); // IMPORTANT: The correct locale must be loaded before d8!!
-   require( 'd8' );
+    require( 'd8/locale/en-GB' ); // IMPORTANT: The correct locale must be loaded before d8!!
+    require( 'd8' );
 
-// if running in a sandboxed environment remember to:
-   require( 'm8' ).x( Date ); // and/ or any other Types that require extending.
+ // if running in a sandboxed environment remember to:
+    require( 'm8' ).x( Date ); // and/ or any other Types that require extending.
 
 ```
 
@@ -68,10 +68,10 @@ Returns the ordinal for a given date.
 
 ```javascript
 
-   Date.getOrdinal( 1 );  // returns => "st"
-   Date.getOrdinal( 10 ); // returns => "th"
-   Date.getOrdinal( 22 ); // returns => "nd"
-   Date.getOrdinal( 33 ); // returns => "rd"
+     Date.getOrdinal( 1 );  // returns => "st"
+     Date.getOrdinal( 10 ); // returns => "th"
+     Date.getOrdinal( 22 ); // returns => "nd"
+     Date.getOrdinal( 33 ); // returns => "rd"
 
 ```
 
@@ -87,8 +87,8 @@ Takes a date String and a format String based on the **Date formatting and parsi
 
 ```javascript
 
-   Date.toDate( 'Sunday, the 1st of January 2012', 'l, <the> jS <of> F Y' ); // returns => Date { Sun Jan 01 2012 00:00:00 GMT+0000 (GMT) }
-   Date.toDate( '2012-01-01T00:00:00+00:00',        Date.formats.ISO_8601 ); // returns => Date { Sun Jan 01 2012 00:00:00 GMT+0000 (GMT) }
+    Date.toDate( 'Sunday, the 1st of January 2012', 'l, <the> jS <of> F Y' ); // returns => Date { Sun Jan 01 2012 00:00:00 GMT+0000 (GMT) }
+    Date.toDate( '2012-01-01T00:00:00+00:00',        Date.formats.ISO_8601 ); // returns => Date { Sun Jan 01 2012 00:00:00 GMT+0000 (GMT) }
 
 ```
 
@@ -122,19 +122,31 @@ Your one stop shop for all Date arithmetic. Adjusts the Date based on the passed
 
 ```javascript
 
-   var date = new Date( 2012, 0, 1 ); // Date {Sun Jan 01 2012 00:00:00 GMT+0000 (GMT)}
+    var date = new Date( 2012, 0, 1 ); // Date {Sun Jan 01 2012 00:00:00 GMT+0000 (GMT)}
 
-   date.adjust( Date.DAY,   1 );      // Date {Mon Jan 02 2012 00:00:00 GMT+0000 (GMT)}
-   date.adjust( Date.HOUR, -1 );      // Date {Sun Jan 01 2012 23:00:00 GMT+0000 (GMT)}
-   date.adjust( {
-      year : -1, month : -1, day : 24,
-      hr   :  1, sec   : -1
-   } );                               // Date {Sat Dec 25 2010 23:59:59 GMT+0000 (GMT)}
+    date.adjust( Date.DAY,   1 );      // Date {Mon Jan 02 2012 00:00:00 GMT+0000 (GMT)}
+    date.adjust( Date.HOUR, -1 );      // Date {Sun Jan 01 2012 23:00:00 GMT+0000 (GMT)}
+    date.adjust( {
+       year : -1, month : -1, day : 24,
+       hr   :  1, sec   : -1
+    } );                               // Date {Sat Dec 25 2010 23:59:59 GMT+0000 (GMT)}
 
 ```
 
 #### between( date_lower:Date, date_higher:Date ):Boolean
 Checks to see if the Date instance is in between the two passed Dates.
+
+##### Example:
+
+```javascript
+
+    var date = new Date( 2012, 0, 1 );
+
+    date.between( new Date( 2011, 0, 1 ), new Date( 2013, 0, 1 ) ); // returns => true;
+
+    date.between( new Date( 2013, 0, 1 ), new Date( 2011, 0, 1 ) ); // returns => false;
+
+```
 
 #### clearTime():Date
 Clears the time from the Date instance.
@@ -142,14 +154,76 @@ Clears the time from the Date instance.
 #### clone():Date
 Returns a clone of the current Date.
 
+#### diff( [date:Date, exclude:String] ):Object
+Returns an Object describing the difference between the Date instance and now — or the optionally passed Date.
+
+The Object will contain any or all of the following properties:
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+	<thead>
+		<tr><th width="32">Prop</th><th width="48">Type</th><th>Description</th></tr>
+	</thead>
+	<tbody>
+		<tr><td width="48"><code>tense</code></td><td width="48">Number</td><td>This will either be:
+			<dl>
+				<dt><code>-1</code></dt><dd>The Date instance is less than now or the passed Date, i.e. in the past</dd>
+				<dt><code>0</code></dt><dd>The Date instance is euqal to now or the passed Date, i.e. in the present.<br /><strong>NOTE:</strong> If <code>tense</code> is <code>0</code> then the Object will most probably have no other properties.</dd>
+				<dt><code>1</code></dt><dd>The Date instance is greater than now or the passed Date,  i.e. in the future</dd>
+			</dl>
+			<strong>NOTE:</strong> All other properties Numbers will be positive Numbers as you will know if the <code>diff</code> is in the past, present or future by using this property.
+		</td></tr>
+		<tr><td width="48"><code>value</code></td><td width="48">Number</td><td>The — absolute — number of milliseconds difference between the two Dates.</td></tr>
+		<tr><td width="48"><code>years</code></td><td width="48">Number</td><td>The number of years the Date instance is ahead or behind the passed Date.</td></tr>
+		<tr><td width="48"><code>months</code></td><td width="48">Number</td><td>The months of years the Date instance is ahead or behind the passed Date.</td></tr>
+		<tr><td width="48"><code>weeks</code></td><td width="48">Number</td><td>The weeks of years the Date instance is ahead or behind the passed Date.</td></tr>
+		<tr><td width="48"><code>days</code></td><td width="48">Number</td><td>The days of years the Date instance is ahead or behind the passed Date.</td></tr>
+		<tr><td width="48"><code>hours</code></td><td width="48">Number</td><td>The hours of years the Date instance is ahead or behind the passed Date.</td></tr>
+		<tr><td width="48"><code>minutes</code></td><td width="48">Number</td><td>The minutes of years the Date instance is ahead or behind the passed Date.</td></tr>
+		<tr><td width="48"><code>seconds</code></td><td width="48">Number</td><td>The seconds of years the Date instance is ahead or behind the passed Date.</td></tr>
+		<tr><td width="48"><code>milliseconds</code></td><td width="48">Number</td><td>The milliseconds of years the Date instance is ahead or behind the passed Date.</td></tr>
+	</tbody>
+</table>
+
+**NOTE:** If any of the properties — other than `tense` — is zero it will be removed from the `diff` Object.
+
+**NOTE:** You can supply a **space delimited** a String defining which properties you want to exclude from the result and `diff` will try and round off to the nearest time frame.
+
+##### Example:
+
+```javascript
+
+     ( new Date( 2012, 0, 1 ) ).diff( new Date( 2012, 0, 1 ) )             // returns => { tense :  0 }
+
+     ( new Date( 2012, 0, 1 ) ).diff( new Date( 2012, 0, 2 ) )             // returns => { tense : -1, days : 1 }
+
+     ( new Date( 2012, 0, 2 ) ).diff( new Date( 2012, 0, 1 ) )             // returns => { tense :  1, days : 1 }
+
+     ( new Date( 2012, 0, 1 ) ).diff( new Date( 2010, 9, 8, 7, 6, 5, 4 ) ) // returns => { tense :  1, years : 1, months : 9, weeks : 2, days : 1, hours : 17, minutes : 6, seconds : 54, ms : 4 }
+
+```
+
+
+
 #### format( format:String ):String
-Returns a string representation of the Date instance, based on the passed format. See the **Date formatting and parsing options** below.
+Returns a string representation of the Date instance, based on the passed format. See the [Date formatting and parsing options](#date-formatting-and-parsing-options) below.
+
+##### Example:
+
+```javascript
+
+    ( new Date( 2012, 0, 1 ) ).format( 'c' );                   // returns => "2012-01-01T00:00:00.000Z"
+ // which is a short hand format for:
+    ( new Date( 2012, 0, 1 ) ).format( 'Y-m-d<T>H:i:s.u<Z>' );  // returns => "2012-01-01T00:00:00.000Z"
+
+    ( new Date( 2012, 0, 1 ) ).format( 'l, <the> nS <of> F Y' ) // returns => "Sunday, the 1st of January 2012"
+
+```
 
 You can use predefined formats found in `Date.formats`. **Hint:** You can do:
 
 ```javascript
 
-   console.dir( Date.formats );
+    console.dir( Date.formats );
 
 ```
 
@@ -191,9 +265,9 @@ Returns the week of the year, based on the `dayOfYear` divided by 7.
 
 ```javascript
 
-   ( new Date( 2012, 0, 1 ) ).getWeek();   // returns => 0
-   ( new Date( 2012, 2, 13 ) ).getWeek();  // returns => 10
-   ( new Date( 2012, 11, 31 ) ).getWeek(); // returns => 52
+    ( new Date( 2012, 0, 1 ) ).getWeek();   // returns => 0
+    ( new Date( 2012, 2, 13 ) ).getWeek();  // returns => 10
+    ( new Date( 2012, 11, 31 ) ).getWeek(); // returns => 52
 
 ```
 
@@ -210,9 +284,11 @@ Sets the week of the year from the 1st January.
 
 ```javascript
 
-   new Date( ( new Date( 2012, 0, 1 ) ).setWeek( 17 ) ); // returns => Date {Sun Apr 29 2012 00:00:00 GMT+0100 (BST)}
-   ( new Date( 2012, 2, 13 ) ).setWeek( 17 );            // returns => 1335654000000 same as above
-   ( new Date( 2012, 11, 31 ) ).setWeek( 17 );           // returns => 1335654000000
+    new Date( ( new Date( 2012, 0, 1 ) ).setWeek( 17 ) ); // returns => Date {Sun Apr 29 2012 00:00:00 GMT+0100 (BST)}
+
+    ( new Date( 2012, 2, 13 ) ).setWeek( 17 );            // returns => 1335654000000 same as above
+
+    ( new Date( 2012, 11, 31 ) ).setWeek( 17 );           // returns => 1335654000000
 
 ```
 
@@ -229,65 +305,70 @@ If you want to escape characters that are used by the Date parser you can wrap t
 
 ```javascript
 
-   ( new Date( 2012, 0, 1 ) ).format( 'l, <the> jS <of> F Y' ); // returns => "Sunday, the 1st of January 2012"
+    ( new Date( 2012, 0, 1 ) ).format( 'l, <the> jS <of> F Y' ); // returns => "Sunday, the 1st of January 2012"
 
 ```
 
 ### day
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
-	<tr><td width="32">d</td><td>Day of the month, 2 digits with leading zeros</td>
-	<tr><td width="32">D</td><td>A textual representation of a day, three letters</td>
-	<tr><td width="32">j</td><td>Day of the month without leading zeros</td>
-	<tr><td width="32">l</td><td>A full textual representation of the day of the week</td>
-	<tr><td width="32">N</td><td>ISO-8601 numeric representation of the day of the week</td>
-	<tr><td width="32">S</td><td>English ordinal suffix for the day of the month, 2 characters</td>
-	<tr><td width="32">w</td><td>Numeric representation of the day of the week</td>
-	<tr><td width="32">z</td><td>The day of the year (starting from 0)</td>
+	<tr><td width="32">d</td><td>Day of the month, 2 digits with leading zeros</td></tr>
+	<tr><td width="32">D</td><td>A textual representation of a day, three letters</td></tr>
+	<tr><td width="32">j</td><td>Day of the month without leading zeros</td></tr>
+	<tr><td width="32">l</td><td>A full textual representation of the day of the week</td></tr>
+	<tr><td width="32">N</td><td>ISO-8601 numeric representation of the day of the week</td></tr>
+	<tr><td width="32">S</td><td>English ordinal suffix for the day of the month, 2 characters</td></tr>
+	<tr><td width="32">w</td><td>Numeric representation of the day of the week</td></tr>
+	<tr><td width="32">z</td><td>The day of the year (starting from 0)</td></tr>
 </table>
 ### week
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
-	<tr><td width="32">W</td><td>ISO-8601 week number of year, weeks starting on Monday</td>
+	<tr><td width="32">W</td><td>ISO-8601 week number of year, weeks starting on Monday</td></tr>
 </table>
 ### month
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
-	<tr><td width="32">F</td><td>A full textual representation of a month</td>
-	<tr><td width="32">m</td><td>Numeric representation of a month, with leading zeros</td>
-	<tr><td width="32">M</td><td>A short textual representation of a month, three letters</td>
-	<tr><td width="32">n</td><td>Numeric representation of a month, without leading zeros</td>
-	<tr><td width="32">t</td><td>Number of days in the given month</td>
+	<tr><td width="32">F</td><td>A full textual representation of a month</td></tr>
+	<tr><td width="32">m</td><td>Numeric representation of a month, with leading zeros</td></tr>
+	<tr><td width="32">M</td><td>A short textual representation of a month, three letters</td></tr>
+	<tr><td width="32">n</td><td>Numeric representation of a month, without leading zeros</td></tr>
+	<tr><td width="32">t</td><td>Number of days in the given month</td></tr>
 </table>
 ### year
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
-	<tr><td width="32">L</td><td>Whether it's a leap year</td>
-	<tr><td width="32">o</td><td>ISO-8601 year number. This has the same value as Y, except that if the ISO week number (W) belongs to the previous or next year, that year is used instead.</td>
-	<tr><td width="32">Y</td><td>A full numeric representation of a year, 4 digits</td>
-	<tr><td width="32">y</td><td>A two digit representation of a year</td>
+	<tr><td width="32">L</td><td>Whether it's a leap year</td></tr>
+	<tr><td width="32">o</td><td>ISO-8601 year number. This has the same value as Y, except that if the ISO week number (W) belongs to the previous or next year, that year is used instead.</td></tr>
+	<tr><td width="32">Y</td><td>A full numeric representation of a year, 4 digits</td></tr>
+	<tr><td width="32">y</td><td>A two digit representation of a year</td></tr>
 </table>
 ### time
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
-	<tr><td width="32">a</td><td>Lowercase Ante meridiem and Post meridiem</td>
-	<tr><td width="32">A</td><td>Uppercase Ante meridiem and Post meridiem</td>
-	<tr><td width="32">g</td><td>12-hour format of an hour without leading zeros</td>
-	<tr><td width="32">G</td><td>24-hour format of an hour without leading zeros</td>
-	<tr><td width="32">h</td><td>12-hour format of an hour with leading zeros</td>
-	<tr><td width="32">H</td><td>24-hour format of an hour with leading zeros</td>
-	<tr><td width="32">i</td><td>Minutes with leading zeros</td>
-	<tr><td width="32">s</td><td>Seconds, with leading zeros</td>
-	<tr><td width="32">u</td><td>Milliseconds</td>
+	<tr><td width="32">a</td><td>Lowercase Ante meridiem and Post meridiem</td></tr>
+	<tr><td width="32">A</td><td>Uppercase Ante meridiem and Post meridiem</td></tr>
+	<tr><td width="32">g</td><td>12-hour format of an hour without leading zeros</td></tr>
+	<tr><td width="32">G</td><td>24-hour format of an hour without leading zeros</td></tr>
+	<tr><td width="32">h</td><td>12-hour format of an hour with leading zeros</td></tr>
+	<tr><td width="32">H</td><td>24-hour format of an hour with leading zeros</td></tr>
+	<tr><td width="32">i</td><td>Minutes with leading zeros</td></tr>
+	<tr><td width="32">s</td><td>Seconds, with leading zeros</td></tr>
+	<tr><td width="32">u</td><td>Milliseconds</td></tr>
 </table>
 ### timezone
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
-	<tr><td width="32">O</td><td>Difference to Greenwich time (GMT) in hours</td>
-	<tr><td width="32">P</td><td>Difference to Greenwich time (GMT) with colon between hours and minutes</td>
-	<tr><td width="32">T</td><td>Timezone abbreviation</td>
-	<tr><td width="32">Z</td><td>Timezone offset in seconds. The offset for timezones west of UTC is always negative, and for those east of UTC is always positive.</td>
+	<tr><td width="32">O</td><td>Difference to Greenwich time (GMT) in hours</td></tr>
+	<tr><td width="32">P</td><td>Difference to Greenwich time (GMT) with colon between hours and minutes</td></tr>
+	<tr><td width="32">T</td><td>Timezone abbreviation</td></tr>
+	<tr><td width="32">Z</td><td>Timezone offset in seconds. The offset for timezones west of UTC is always negative, and for those east of UTC is always positive.</td></tr>
 </table>
 ### full date/time
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
-	<tr><td width="32">c</td><td>ISO 8601 date</td>
-	<tr><td width="32">r</td><td>RFC 2822 formatted date</td>
-	<tr><td width="32">U</td><td>Seconds since the Unix Epoch January 1 1970 00:00:00 GMT</td>
+	<tr><td width="32">c</td><td>ISO 8601 date</td></tr>
+	<tr><td width="32">r</td><td>RFC 2822 formatted date</td></tr>
+	<tr><td width="32">U</td><td>Seconds since the Unix Epoch January 1 1970 00:00:00 GMT</td></tr>
 </table>
+
+## File size
+
+- d8.js ≅ 6.8kb (gzipped)
+- d8.min.js ≅ 3.9kb (minzipped)
 
 ## License
 
