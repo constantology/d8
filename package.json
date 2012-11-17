@@ -6,7 +6,7 @@
 	},
 	"description"     : "d8 is a date parsing and formatting micro-framework for modern JavaScript engines.",
     "dependencies"    : {
-    	"m8"          : ">= 0.2.7"
+    	"m8"          : ">= 0.3.1"
     },
 	"devDependencies" : {
 		"catn8"       : ">= 0.0.2",
@@ -14,7 +14,7 @@
 		"mocha"       : ">= 1.4.2"
 	},
 	"engines"         : {
-		"node"        : ">= 0.4.x"
+		"node"        : ">= 0.8.x"
 	},
 	"keywords"        : ["date"],
 	"licenses"        : [ {
@@ -30,5 +30,5 @@
 	"scripts"         : {
 		"test"        : "mocha -c --ignore-leaks -R spec -u tdd ./test/*.test.js"
 	},
-	"version"         : "0.3.7"
+	"version"         : "0.3.8"
 }

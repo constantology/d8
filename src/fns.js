@@ -14,7 +14,7 @@
 // public methods
 
 	function adjust( o, v ) {
-		if ( util.nativeType( o ) == 'object' ) {
+		if ( util.ntype( o ) == 'object' ) {
 			Object.reduce( o, _adjust, this );
 			return this;
 		}
@@ -23,7 +23,7 @@
 		LOCALE.setLeapYear( this );
 		if ( fn == adjust_by.month ) {
 			day = this.getDate();
-			day < 28 || this.setDate( Math.min( day, getLastOfTheMonth.call( getFirstOfTheMonth.call( this ).adjust( Type.MONTH, v ) ) ).getDate() );
+			day < 28 || this.setDate( Math.min( day, getLastOfTheMonth.call( getFirstOfTheMonth.call( this ).adjust( Type.MONTH, v ) ).getDate() ) );
 		}
 		fn != adjust_by.week || ( weekday = this.getDay() );
 		this[fn[1]]( this[fn[0]]() + v );

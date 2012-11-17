@@ -1,6 +1,7 @@
 	var LOCALE = Type.locale, U,
 // DAY_OFFSETS is the amount of days from the current day to the Monday of the week it belongs to
-		DAY_OFFSETS = [9, 1, 0, -1, -2, 4, 3],    MS_DAY       = 864e5, MS_WEEK = 6048e5,
+		DAY_OFFSETS = [9, 1, 0, -1, -2, 4, 3],    MS_DAY       = 864e5,  MS_HOUR = 3600000, MS_MINUTE = 60000,
+		MS_MONTH    = 2592e6, MS_SECOND = 1000,   MS_WEEK      = 6048e5, MS_YEAR = 31536e6,
 		SHORT_DAYS  = LOCALE.days.map( _substr ), SHORT_MONTHS = LOCALE.months.map( _substr ),
 // parser keys
 		AMPM  = 'ampm',  DAY    = 'day',    DAYWEEK  = 'dayweek',  DAYYEAR = 'dayyear', HOUR = 'hour', MILLISECOND = 'ms', MINUTE ='minute',
@@ -10,6 +11,17 @@
 		adjust_by = { day : ['getDate', 'setDate'], hr : ['getHours', 'setHours'], min : ['getMinutes', 'setMinutes'], month : ['getMonth', 'setMonth'], ms : ['getMilliseconds', 'setMilliseconds'], sec : ['getSeconds', 'setSeconds'], week : ['getWeek', 'setWeek'], year : ['getFullYear', 'setFullYear'] },
 // cache objects
 		cache_format = {}, cache_parse  = {}, date_members = [DAY, DAYWEEK, DAYYEAR, MONTH, WEEK, YEAR],
+		diff_calc = [                 // the order of this Array is important as it is the remainder of the larger
+			[YEAR   + 's', MS_YEAR],  // time unit that gets passed to the following time unit — as such we want
+			[MONTH  + 's', MS_MONTH], // to keep the order in case we want to exclude time units from the diff
+			[WEEK   + 's', MS_WEEK],
+			[DAY    + 's', MS_DAY],
+			[HOUR   + 's', MS_HOUR],
+			[MINUTE + 's', MS_MINUTE],
+			[SECOND + 's', MS_SECOND],
+			[MILLISECOND,  1]
+		],
+		diff_props   = diff_calc.map( function( calc ) { return calc[0]; } ),
 		filter       = {
 // day
 			d : function( d ) { return pad( d.getDate(), 2 ); },                                    // Day of the month, 2 digits with leading zeros
@@ -29,7 +41,7 @@
 			n : function( d ) { return d.getMonth() + 1; },                                         // Numeric representation of a month, without leading zeros
 			t : function( d ) { LOCALE.setLeapYear( d ); return LOCALE.day_count[d.getMonth()]; },  // Number of days in the given month
 // year
-			L : function( d ) { return ( d.isLeapYear() ) ? 1 : 0; },                               // Whether it's a leap year
+			L : function( d ) { return d.isLeapYear() ? 1 : 0; },                                   // Whether it's a leap year
 			o : function( d ) {                                                                     // ISO-8601 year number. This has the same value as Y, except that if the ISO
 				var m = d.getMonth(), w = getISOWeek.call( d );                                     // week number (W) belongs to the previous or next year, that year is used instead.
 				return ( d.getFullYear() + ( w == 1 && m > 0 ? 1 : ( w >= 52 && m < 11 ? -1 : 0 ) ) );
@@ -114,8 +126,8 @@
 	formats.atom = formats.ISO_8601; formats.cookie = formats.RFC_850; formats.rss = formats.RFC_2822;
 
 	parser.c = {
-		combo : [parser.Y, parser.m, parser.d, parser.H, parser.i, parser.s, parser.P],
-		re    : [parser.Y.re, '-', parser.m.re, '-', parser.d.re, 'T', parser.H.re, ':', parser.i.re, ':', parser.s.re, parser.P.re].join( '' )
+		combo : [parser.Y, parser.m, parser.d, parser.H, parser.i, parser.s, parser.u, parser.P],
+		re    : [parser.Y.re, '-', parser.m.re, '-', parser.d.re, 'T', parser.H.re, ':', parser.i.re, ':', parser.s.re, '(?:\\.', parser.u.re, '){0,1}', parser.P.re, '{0,1}'].join( '' )
 	};
 	parser.r = {
 		combo : [parser.D, parser.d, parser.M, parser.Y, parser.H, parser.i, parser.s, parser.O],

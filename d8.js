@@ -2,7 +2,7 @@
 	"use strict";
 	util.x.cache( 'Date', function( Type ) {
 
-/*~  d8/src/utils.js  ~*/
+/*~  src/utils.js  ~*/
 // utility methods
 	function _indexOf( o, k ) { var i = o.indexOf( k ); return i == -1 ? null : i; }
 	function _lc( o ) { return o.toLowerCase(); }
@@ -19,7 +19,7 @@
 	function pluck( a, k ) { return a.reduce( function( v, o ) { !( k in o ) || v.push( o[k] ); return v; }, [] ); }
 	function sum( v, i ) { return v + i; }
 
-/*~  d8/src/fns.js  ~*/
+/*~  src/fns.js  ~*/
 // private methods
 	function _24hrTime( o, res ) { return ( o = Number( o ) ) < 12 && _lc( res.ampm ) == _lc( LOCALE.PM ) ? o += 12 : o; }
 	function _adjust( d, v, k ) { return d.adjust( k, v ); }
@@ -36,7 +36,7 @@
 // public methods
 
 	function adjust( o, v ) {
-		if ( util.nativeType( o ) == 'object' ) {
+		if ( util.ntype( o ) == 'object' ) {
 			Object.reduce( o, _adjust, this );
 			return this;
 		}
@@ -45,7 +45,7 @@
 		LOCALE.setLeapYear( this );
 		if ( fn == adjust_by.month ) {
 			day = this.getDate();
-			day < 28 || this.setDate( Math.min( day, getLastOfTheMonth.call( getFirstOfTheMonth.call( this ).adjust( Type.MONTH, v ) ) ).getDate() );
+			day < 28 || this.setDate( Math.min( day, getLastOfTheMonth.call( getFirstOfTheMonth.call( this ).adjust( Type.MONTH, v ) ).getDate() ) );
 		}
 		fn != adjust_by.week || ( weekday = this.getDay() );
 		this[fn[1]]( this[fn[0]]() + v );
@@ -106,23 +106,25 @@
 		return s.splice( 4, s.length ).join( ' ' ).replace( re_tz, '$1' ).replace( re_tz_abbr, '' );
 	}
 
-/*~  d8/src/format.js  ~*/
-	function buildTemplate( o ) {
-		if ( cache_format[o] ) return cache_format[o];
+/*~  src/format.js  ~*/
+	function buildTemplate( date_format ) {
+		if ( cache_format[date_format] ) return cache_format[date_format];
 
-		var fn = ['var out=[];'], i = -1, p, parts = o.replace( re_add_nr, NOREPLACE_RB ).replace( re_add_enr, NOREPLACE_RE ).split( re_split ), re_invalid = /^[^A-Za-z]*$/g, l = parts.length;
+		var fn         = ['var out=[];'], i = -1, part,
+			parts      = date_format.replace( re_add_nr, NOREPLACE_RB ).replace( re_add_enr, NOREPLACE_RE ).split( re_split ),
+			re_invalid = /^[^A-Za-z]*$/g, l = parts.length;
 
 		while( ++i < l ) {
-			p = parts[i];
-			p == NOREPLACE ? ( fn.push( tplOut( parts[++i] ) ), ++i )
-						   :   re_invalid.test( p )
-						   ?   fn.push( tplOut( p ) )
-						   :   fn.push( compileTplStr( p ) );
+			part = parts[i];
+			part == NOREPLACE ? ( fn.push( tplOut( parts[++i] ) ), ++i )
+						   :   re_invalid.test( part )
+						   ?   fn.push( tplOut( part ) )
+						   :   fn.push( compileTplStr( part ) );
 		}
 
-		fn.push( 'return out.join( "" );' );
+		fn.push( 'return out.join( "" );\n//@ sourceURL=d8/format/' + date_format );
 
-		return cache_format[o] = new Function( 'filter', 'date', fn.join( '\n' ) );
+		return cache_format[date_format] = new Function( 'filter', 'date', fn.join( '\n' ) );
 	}
 
 	function format( f ) { return buildTemplate( f )( filter, this ); }
@@ -131,101 +133,248 @@
 
 	function tplOut( s ) { return 'out.push( \'' + s + '\' );'; }
 
-/*~  d8/src/toDate.js  ~*/
-	function buildParser( o ) {
-		if ( cache_parse[o] ) return cache_parse[o];
-		var fn = {}, keys = [], i = -1, parts = o.replace( re_add_nr, NOREPLACE_RB ).replace( re_add_enr, NOREPLACE_RE ).split( re_split ),
-			l = parts.length, p, re = [];
+/*~  src/toDate.js  ~*/
+	function buildParser( date_format ) {
+		if ( cache_parse[date_format] ) return cache_parse[date_format];
+		var parsers = {}, keys = [], i = -1, part,
+			parts   = date_format.replace( re_add_nr, NOREPLACE_RB ).replace( re_add_enr, NOREPLACE_RE ).split( re_split ),
+			l       = parts.length, re = [];
 
 		while ( ++i < l ) {
-			p = parts[i];
-			if ( p == NOREPLACE ) {
-				re.push( parts[++i] ); ++i; continue;
+			part = parts[i];
+			if ( part == NOREPLACE ) {
+				re.push( parts[++i] ); ++i;
+				continue;
 			}
-			p.replace( re_compile, function( m, p1, p2, p3 ) {
+			part.replace( re_compile, function( m, p1, p2, p3 ) {
 				var _fn, _k, _p;
 				if ( !( _p = parser[p2] ) ) return;
 				if ( _p.k ) {
 					keys.push( _p.k );
-					if ( _p.fn ) fn[_p.k] = _p.fn;
+					if ( _p.fn ) parsers[_p.k] = _p.fn;
 				}
 				if ( _p.combo ) {
 					_k  = pluck( _p.combo, 'k' );
 					_fn = associate( pluck( _p.combo, 'fn' ), _k );
 					keys.push.apply( keys, _k );
-					util.copy( fn, _fn, true );
+					util.copy( parsers, _fn, true );
 				}
 				if ( _p.re ) re.push( p1, _p.re, p3 );
 			} );
 		}
-		return cache_parse[o] = parse.bind( null, new RegExp( re.join( '' ) ), keys, fn );
+		return cache_parse[date_format] = parse.bind( null, new RegExp( re.join( '' ) ), keys, parsers );
 	}
 
 	function parse( re, keys, fn, s ) {
-		var d = new Type(), m = s.match( re ), o = associate( m.slice( 1 ), keys );
+		var date    = new Type(), parts = s.match( re ),
+			parsers = associate( parts.slice( 1 ), keys );
 
-		Object.reduce( o, function( n, v, k ) { if ( fn[k] ) o[k] = fn[k]( v, o ); return n; }, null );
+		Object.reduce( parsers, function( n, v, k ) {
+			if ( typeof v == 'string' && fn[k] )
+				parsers[k] = fn[k]( v, parsers );
+			return n;
+		}, null );
 
-		if ( !isNaN( o[UNIX] ) ) d.setTime( o[UNIX] );
+		if ( !isNaN( parsers[UNIX] ) ) date.setTime( parsers[UNIX] );
 		else {
-			parse_setTime( d, o[HOUR], o[MINUTE], o[SECOND], o[MILLISECOND] );
-			parse_setDate( d, o );
-			parse_setTimezoneOffset( d, o[TIMEZONE] );
+			parse_setTime( date, parsers[HOUR], parsers[MINUTE], parsers[SECOND], parsers[MILLISECOND] );
+			parse_setDate( date, parsers );
+			parse_setTimezoneOffset( date, parsers[TIMEZONE] );
 		}
 
-		return d;
+		return date;
 	}
 
-	function parse_setDate( d, o ) {
-		var dw, l, ly, odc, i = -1;
+	function parse_setDate( date, parsers ) {
+		var dayweek, i = -1, l, leapyr, ordinal;
 
-		if ( date_members.every( util.has.bind( null, o ) ) ) return; //  only set the date if there's one to set (i.e. the format is not just for time)
+		if ( date_members.every( util.has.bind( null, parsers ) ) ) return; //  only set the date if there's one to set (i.e. the format is not just for time)
 
-		if ( isNaN( o[YEAR] ) ) o[YEAR] = d.getFullYear();
+		if ( isNaN( parsers[YEAR] ) ) parsers[YEAR] = date.getFullYear();
 
-		if ( isNaN( o[MONTH] ) ) {
-			ly = LOCALE.isLeapYear( o[YEAR] ) ? 1 : 0; odc = LOCALE.ordinal_day_count[ly]; l = odc.length; o[MONTH] = 0;
+		if ( isNaN( parsers[MONTH] ) ) {
+			leapyr  = LOCALE.isLeapYear( parsers[YEAR] ) ? 1 : 0;
+			ordinal = LOCALE.ordinal_day_count[leapyr];
+			l       = ordinal.length;
+			parsers[MONTH] = 0;
 
-			if ( o[WEEK] && !o[DAYYEAR] ) { // give precedence to the day of the year
-				dw = o[DAYWEEK];
-				dw = isNaN( dw ) ? 0 : !dw ? 7 : dw;
-				o[DAYYEAR] = ( o[WEEK] * 7 ) - ( 4 - dw );
+			if ( parsers[WEEK] && !parsers[DAYYEAR] ) { // give precedence to the day of the year
+				dayweek = parsers[DAYWEEK];
+				dayweek = isNaN( dayweek ) ? 0 : !dayweek ? 7 : dayweek;
+				parsers[DAYYEAR] = ( parsers[WEEK] * 7 ) - ( 4 - dayweek );
 			}
 
-			if ( !isNaN( o[DAYYEAR] ) ) {
-				if ( o[DAYYEAR] > odc[odc.length - 1] ) {
-					o[DAYYEAR] -= odc[odc.length - 1];
-					++o[YEAR];
+			if ( !isNaN( parsers[DAYYEAR] ) ) {
+				if ( parsers[DAYYEAR] > ordinal[ordinal.length - 1] ) {
+					parsers[DAYYEAR] -= ordinal[ordinal.length - 1];
+					++parsers[YEAR];
 				}
 				while( ++i < l ) {
-					if ( between_equalto( o[DAYYEAR], odc[i], odc[i+1] ) ) {
-						o[MONTH] = i;
-						o[DAY] = odc[i] == 0 ? o[DAYYEAR] : ( o[DAYYEAR] - odc[i] );
+					if ( between_equalto( parsers[DAYYEAR], ordinal[i], ordinal[i+1] ) ) {
+						parsers[MONTH] = i;
+						parsers[DAY] = ordinal[i] == 0 ? parsers[DAYYEAR] : ( parsers[DAYYEAR] - ordinal[i] );
 						break;
 					}
 				}
 			}
 		}
 
-		if ( isNaN( o[DAY] ) ) o[DAY] = 1;
+		if ( isNaN( parsers[DAY] ) ) parsers[DAY] = 1;
 
-		d.setYear( o[YEAR] ); d.setMonth( o[MONTH] ); d.setDate( o[DAY] );
+		date.setYear( parsers[YEAR] ); date.setMonth( parsers[MONTH] ); date.setDate( parsers[DAY] );
 
 	}
-	function parse_setTime( d, h, m, s, ms ) {
-		d.setHours( h || 0 );   d.setMinutes( m || 0 );
-		d.setSeconds( s || 0 ); d.setMilliseconds( ms || 0 );
+	function parse_setTime( date, hr, min, sec, ms ) {
+		date.setHours( hr || 0 );   date.setMinutes( min || 0 );
+		date.setSeconds( sec || 0 ); date.setMilliseconds( ms || 0 );
 	}
-	function parse_setTimezoneOffset( d, tzo ) {
-		!between_equalto( tzo, -43200, 50400 ) || d.adjust( Type.SECOND, ( -d.getTimezoneOffset() * 60 ) - tzo );
+	function parse_setTimezoneOffset( date, tzoffset ) {
+		!between_equalto( tzoffset, -43200, 50400 ) || date.adjust( Type.SECOND, ( -date.getTimezoneOffset() * 60 ) - tzoffset );
 	}
 
-	function toDate( s, f ) { return buildParser( f )( s ); }
+	function toDate( date_str, date_format ) {
+		return buildParser( date_format )( date_str );
+	}
 
-/*~  d8/src/vars.js  ~*/
+/*~  src/diff.js  ~*/
+/*
+ todo: diff_eval should pass value to either the previous or next item if the current is an exclusion and is rounded up or down, respectively
+ todo: date_1.diff( date_2, '-weeks >hours' )
+ todo: date_1.diff( date_2, 'years months days time' ) === date_1.diff( date_2, '-weeks' )
+ todo: date_1.diff( date_2, '-time' ) === date_1.diff( date_2, '>hours' );
+ todo: date_1.diff( date_2, 'time' );
+* */
+
+	function diff( now, props ) { //noinspection FallthroughInSwitchStatementJS
+		switch ( util.ntype( now ) ) {
+			case 'string' :
+				if ( isNaN( +( new Date( now ) ) ) ) {
+					if ( props ) {
+						now = Date.now();
+						break;
+					}
+				}
+				else {
+					now = new Date( now );
+					break;
+				}                                                        // allow [specific] fall-through
+			case 'array'  : case 'object' :
+				props   = now;
+				now     = Date.now();
+				break;
+			case 'date'   : if ( !isNaN( +( new Date( now ) ) ) ) break; // allow fall-through if not a valid date
+			default       : now = Date.now();
+
+		}
+
+		var ddiiff,
+			ms    = now - ( +this ),
+			tense = ms < 0 ? 1 : ms > 0 ? -1 : 0;
+
+		ddiiff = tense === 0 ? util.obj() : diff_get( Math.abs( ms ), diff_get_exclusions( props ) );
+
+		ddiiff.tense = tense;
+
+		return ddiiff;
+	}
+
+	function diff_eval( ddiiff, calc, i, calcs ) {
+		var time;
+		if ( ddiiff.__ms__ ) {
+			if ( !ddiiff.excl[calc[0]] ) {
+				if ( ddiiff.__ms__ >= calc[1] ) {
+
+					time = ddiiff.__ms__ / calc[1];
+
+					if ( !( calc[0] in ddiiff.val ) ) {
+						ddiiff.__ms__       = ( time % 1 ) * calc[1];
+						ddiiff.val[calc[0]] = Math.floor( time );
+					}
+					else {
+						time                 = Math.floor( time );
+						ddiiff.__ms__       -= time * calc[1];
+						ddiiff.val[calc[0]] += time;
+					}
+
+				}
+				return ddiiff;
+			}
+// round up or down depending on what's available
+			if ( calcs[i + 1] ) return ddiiff;
+			else if ( calc = calcs[i - 1] ) {
+				time          = ddiiff.__ms__ / calc[1];
+				ddiiff.__ms__ = ( Math.round( time ) * calc[1] ) + ( ( ( ddiiff.__ms__ / calcs[i][1] ) % 1 ) * calcs[i][1] );
+				return diff_eval( ddiiff, calc, i - 1, [] );
+			}
+			return ddiiff;
+		}
+		return ddiiff;
+	}
+
+	function diff_get( ms, excl ) {
+		var ddiiff = diff_calc.reduce( diff_eval, {
+				__ms__ : ms,
+				excl   : excl,
+				val    : util.obj()
+			} ).val;
+
+		ddiiff.value = ms;
+
+		return ddiiff;
+	}
+
+	function diff_get_exclusions( props ) {
+		var excl = util.obj(), incl_remaining = true;
+
+		if ( props ) { //noinspection FallthroughInSwitchStatementJS
+			switch ( util.ntype( props ) ) {
+				case 'object' : incl_remaining = false; break;
+				case 'string' : props          = props.split( ' ' ); // allow fall-through
+				case 'array'  : props          = props.reduce( diff_excl, excl );
+								incl_remaining = !!util.len( excl );
+			}
+		}
+
+		diff_props.map( function( prop ) {
+			if ( !( prop in this ) )
+				this[prop] = !incl_remaining;
+		}, excl );
+
+		return excl;
+	}
+
+	function diff_excl( excl, val ) {
+		var prop = ( val = String( val ).toLowerCase() ).substring( 1 );
+
+		switch ( val.charAt( 0 ) ) {
+			case '-' : excl[prop] = true;  break;
+			case '+' : excl[prop] = false; break;
+			case '>' :
+				diff_calc.map( diff_excl_iter, excl, { excl : excl, prop : prop, val : true } );
+				delete excl.SET_VALID;
+				break;
+			case '<' :
+				diff_calc.slice().reverse().map( diff_excl_iter, { excl : excl, prop : prop, val : false } );
+				delete excl.SET_VALID;
+				break;
+			default  : excl[val]  = false;
+		}
+
+		return excl;
+	}
+
+	function diff_excl_iter( calc ) {
+		if ( calc[0] === this.prop )
+			this.SET_VALID = true;
+		if ( this.SET_VALID )
+			this.excl[calc[0]] = this.val;
+	}
+
+/*~  src/vars.js  ~*/
 	var LOCALE = Type.locale, U,
 // DAY_OFFSETS is the amount of days from the current day to the Monday of the week it belongs to
-		DAY_OFFSETS = [9, 1, 0, -1, -2, 4, 3],    MS_DAY       = 864e5, MS_WEEK = 6048e5,
+		DAY_OFFSETS = [9, 1, 0, -1, -2, 4, 3],    MS_DAY       = 864e5,  MS_HOUR = 3600000, MS_MINUTE = 60000,
+		MS_MONTH    = 2592e6, MS_SECOND = 1000,   MS_WEEK      = 6048e5, MS_YEAR = 31536e6,
 		SHORT_DAYS  = LOCALE.days.map( _substr ), SHORT_MONTHS = LOCALE.months.map( _substr ),
 // parser keys
 		AMPM  = 'ampm',  DAY    = 'day',    DAYWEEK  = 'dayweek',  DAYYEAR = 'dayyear', HOUR = 'hour', MILLISECOND = 'ms', MINUTE ='minute',
@@ -235,6 +384,17 @@
 		adjust_by = { day : ['getDate', 'setDate'], hr : ['getHours', 'setHours'], min : ['getMinutes', 'setMinutes'], month : ['getMonth', 'setMonth'], ms : ['getMilliseconds', 'setMilliseconds'], sec : ['getSeconds', 'setSeconds'], week : ['getWeek', 'setWeek'], year : ['getFullYear', 'setFullYear'] },
 // cache objects
 		cache_format = {}, cache_parse  = {}, date_members = [DAY, DAYWEEK, DAYYEAR, MONTH, WEEK, YEAR],
+		diff_calc = [                 // the order of this Array is important as it is the remainder of the larger
+			[YEAR   + 's', MS_YEAR],  // time unit that gets passed to the following time unit — as such we want
+			[MONTH  + 's', MS_MONTH], // to keep the order in case we want to exclude time units from the diff
+			[WEEK   + 's', MS_WEEK],
+			[DAY    + 's', MS_DAY],
+			[HOUR   + 's', MS_HOUR],
+			[MINUTE + 's', MS_MINUTE],
+			[SECOND + 's', MS_SECOND],
+			[MILLISECOND,  1]
+		],
+		diff_props   = diff_calc.map( function( calc ) { return calc[0]; } ),
 		filter       = {
 // day
 			d : function( d ) { return pad( d.getDate(), 2 ); },                                    // Day of the month, 2 digits with leading zeros
@@ -254,7 +414,7 @@
 			n : function( d ) { return d.getMonth() + 1; },                                         // Numeric representation of a month, without leading zeros
 			t : function( d ) { LOCALE.setLeapYear( d ); return LOCALE.day_count[d.getMonth()]; },  // Number of days in the given month
 // year
-			L : function( d ) { return ( d.isLeapYear() ) ? 1 : 0; },                               // Whether it's a leap year
+			L : function( d ) { return d.isLeapYear() ? 1 : 0; },                                   // Whether it's a leap year
 			o : function( d ) {                                                                     // ISO-8601 year number. This has the same value as Y, except that if the ISO
 				var m = d.getMonth(), w = getISOWeek.call( d );                                     // week number (W) belongs to the previous or next year, that year is used instead.
 				return ( d.getFullYear() + ( w == 1 && m > 0 ? 1 : ( w >= 52 && m < 11 ? -1 : 0 ) ) );
@@ -339,24 +499,24 @@
 	formats.atom = formats.ISO_8601; formats.cookie = formats.RFC_850; formats.rss = formats.RFC_2822;
 
 	parser.c = {
-		combo : [parser.Y, parser.m, parser.d, parser.H, parser.i, parser.s, parser.P],
-		re    : [parser.Y.re, '-', parser.m.re, '-', parser.d.re, 'T', parser.H.re, ':', parser.i.re, ':', parser.s.re, parser.P.re].join( '' )
+		combo : [parser.Y, parser.m, parser.d, parser.H, parser.i, parser.s, parser.u, parser.P],
+		re    : [parser.Y.re, '-', parser.m.re, '-', parser.d.re, 'T', parser.H.re, ':', parser.i.re, ':', parser.s.re, '(?:\\.', parser.u.re, '){0,1}', parser.P.re, '{0,1}'].join( '' )
 	};
 	parser.r = {
 		combo : [parser.D, parser.d, parser.M, parser.Y, parser.H, parser.i, parser.s, parser.O],
 		re    : [parser.D.re, ', ', parser.d.re, ' ', parser.M.re, ' ', parser.Y.re, ' ', parser.H.re, ':', parser.i.re, ':', parser.s.re, ' ', parser.O.re].join( '' )
 	};
 
-/*~  d8/src/expose.js  ~*/
+/*~  src/expose.js  ~*/
 // instance methods
 	util.defs( Type.prototype, {
-		adjust             : adjust,             between                 : between,                 clearTime    : clearTime,
-		clone              : clone,              format                  : format,                  getDayOfYear : getDayOfYear,
-		getFirstOfTheMonth : getFirstOfTheMonth, getGMTOffset            : getGMTOffset,            getISODay    : getISODay,
-		getISODaysInYear   : getISODaysInYear,   getISOFirstMondayOfYear : getISOFirstMondayOfYear, getISOWeek   : getISOWeek,
-		getISOWeeksInYear  : getISOWeeksInYear,  getLastOfTheMonth       : getLastOfTheMonth,       getWeek      : getWeek,
-		isDST              : isDST,              isLeapYear              : isLeapYear,              setWeek      : setWeek,
-		timezone           : timezone
+		adjust       : adjust,       between            : between,            clearTime               : clearTime,
+		clone        : clone,        diff               : diff,               format                  : format,
+		getDayOfYear : getDayOfYear, getFirstOfTheMonth : getFirstOfTheMonth, getGMTOffset            : getGMTOffset,
+		getISODay    : getISODay,    getISODaysInYear   : getISODaysInYear,   getISOFirstMondayOfYear : getISOFirstMondayOfYear,
+		getISOWeek   : getISOWeek,   getISOWeeksInYear  : getISOWeeksInYear,  getLastOfTheMonth       : getLastOfTheMonth,
+		getWeek      : getWeek,      isDST              : isDST,              isLeapYear              : isLeapYear,
+		setWeek      : setWeek,      timezone           : timezone
 	}, 'r' );
 
 // static methods & properties
@@ -364,7 +524,7 @@
 // constants used by Date.prototype.adjust
 		DAY : DAY, HOUR : 'hr', MINUTE : MINUTE.substring( 0, 3 ), MILLISECOND : MILLISECOND, MONTH : MONTH, SECOND : SECOND.substring( 0, 3 ), WEEK : WEEK, YEAR : YEAR,
 // constants defining milliseconds for different times
-		MS_DAY : MS_DAY, MS_WEEK : MS_WEEK, MS_MONTH : 2592e6, MS_YEAR : 31536e6,
+		MS_DAY : MS_DAY, MS_HOUR : MS_HOUR, MS_MINUTE : MS_MINUTE, MS_MONTH : MS_MONTH, MS_SECOND : MS_SECOND, MS_WEEK : MS_WEEK, MS_YEAR : MS_YEAR,
 // filters and formats
 		filters : { value : filter }, formats : { value : formats }, parsers : { value : parser },
 // static methods

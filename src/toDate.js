@@ -1,89 +1,101 @@
-	function buildParser( o ) {
-		if ( cache_parse[o] ) return cache_parse[o];
-		var fn = {}, keys = [], i = -1, parts = o.replace( re_add_nr, NOREPLACE_RB ).replace( re_add_enr, NOREPLACE_RE ).split( re_split ),
-			l = parts.length, p, re = [];
+	function buildParser( date_format ) {
+		if ( cache_parse[date_format] ) return cache_parse[date_format];
+		var parsers = {}, keys = [], i = -1, part,
+			parts   = date_format.replace( re_add_nr, NOREPLACE_RB ).replace( re_add_enr, NOREPLACE_RE ).split( re_split ),
+			l       = parts.length, re = [];
 
 		while ( ++i < l ) {
-			p = parts[i];
-			if ( p == NOREPLACE ) {
-				re.push( parts[++i] ); ++i; continue;
+			part = parts[i];
+			if ( part == NOREPLACE ) {
+				re.push( parts[++i] ); ++i;
+				continue;
 			}
-			p.replace( re_compile, function( m, p1, p2, p3 ) {
+			part.replace( re_compile, function( m, p1, p2, p3 ) {
 				var _fn, _k, _p;
 				if ( !( _p = parser[p2] ) ) return;
 				if ( _p.k ) {
 					keys.push( _p.k );
-					if ( _p.fn ) fn[_p.k] = _p.fn;
+					if ( _p.fn ) parsers[_p.k] = _p.fn;
 				}
 				if ( _p.combo ) {
 					_k  = pluck( _p.combo, 'k' );
 					_fn = associate( pluck( _p.combo, 'fn' ), _k );
 					keys.push.apply( keys, _k );
-					util.copy( fn, _fn, true );
+					util.copy( parsers, _fn, true );
 				}
 				if ( _p.re ) re.push( p1, _p.re, p3 );
 			} );
 		}
-		return cache_parse[o] = parse.bind( null, new RegExp( re.join( '' ) ), keys, fn );
+		return cache_parse[date_format] = parse.bind( null, new RegExp( re.join( '' ) ), keys, parsers );
 	}
 
 	function parse( re, keys, fn, s ) {
-		var d = new Type(), m = s.match( re ), o = associate( m.slice( 1 ), keys );
+		var date    = new Type(), parts = s.match( re ),
+			parsers = associate( parts.slice( 1 ), keys );
 
-		Object.reduce( o, function( n, v, k ) { if ( fn[k] ) o[k] = fn[k]( v, o ); return n; }, null );
+		Object.reduce( parsers, function( n, v, k ) {
+			if ( typeof v == 'string' && fn[k] )
+				parsers[k] = fn[k]( v, parsers );
+			return n;
+		}, null );
 
-		if ( !isNaN( o[UNIX] ) ) d.setTime( o[UNIX] );
+		if ( !isNaN( parsers[UNIX] ) ) date.setTime( parsers[UNIX] );
 		else {
-			parse_setTime( d, o[HOUR], o[MINUTE], o[SECOND], o[MILLISECOND] );
-			parse_setDate( d, o );
-			parse_setTimezoneOffset( d, o[TIMEZONE] );
+			parse_setTime( date, parsers[HOUR], parsers[MINUTE], parsers[SECOND], parsers[MILLISECOND] );
+			parse_setDate( date, parsers );
+			parse_setTimezoneOffset( date, parsers[TIMEZONE] );
 		}
 
-		return d;
+		return date;
 	}
 
-	function parse_setDate( d, o ) {
-		var dw, l, ly, odc, i = -1;
+	function parse_setDate( date, parsers ) {
+		var dayweek, i = -1, l, leapyr, ordinal;
 
-		if ( date_members.every( util.has.bind( null, o ) ) ) return; //  only set the date if there's one to set (i.e. the format is not just for time)
+		if ( date_members.every( util.has.bind( null, parsers ) ) ) return; //  only set the date if there's one to set (i.e. the format is not just for time)
 
-		if ( isNaN( o[YEAR] ) ) o[YEAR] = d.getFullYear();
+		if ( isNaN( parsers[YEAR] ) ) parsers[YEAR] = date.getFullYear();
 
-		if ( isNaN( o[MONTH] ) ) {
-			ly = LOCALE.isLeapYear( o[YEAR] ) ? 1 : 0; odc = LOCALE.ordinal_day_count[ly]; l = odc.length; o[MONTH] = 0;
+		if ( isNaN( parsers[MONTH] ) ) {
+			leapyr  = LOCALE.isLeapYear( parsers[YEAR] ) ? 1 : 0;
+			ordinal = LOCALE.ordinal_day_count[leapyr];
+			l       = ordinal.length;
+			parsers[MONTH] = 0;
 
-			if ( o[WEEK] && !o[DAYYEAR] ) { // give precedence to the day of the year
-				dw = o[DAYWEEK];
-				dw = isNaN( dw ) ? 0 : !dw ? 7 : dw;
-				o[DAYYEAR] = ( o[WEEK] * 7 ) - ( 4 - dw );
+			if ( parsers[WEEK] && !parsers[DAYYEAR] ) { // give precedence to the day of the year
+				dayweek = parsers[DAYWEEK];
+				dayweek = isNaN( dayweek ) ? 0 : !dayweek ? 7 : dayweek;
+				parsers[DAYYEAR] = ( parsers[WEEK] * 7 ) - ( 4 - dayweek );
 			}
 
-			if ( !isNaN( o[DAYYEAR] ) ) {
-				if ( o[DAYYEAR] > odc[odc.length - 1] ) {
-					o[DAYYEAR] -= odc[odc.length - 1];
-					++o[YEAR];
+			if ( !isNaN( parsers[DAYYEAR] ) ) {
+				if ( parsers[DAYYEAR] > ordinal[ordinal.length - 1] ) {
+					parsers[DAYYEAR] -= ordinal[ordinal.length - 1];
+					++parsers[YEAR];
 				}
 				while( ++i < l ) {
-					if ( between_equalto( o[DAYYEAR], odc[i], odc[i+1] ) ) {
-						o[MONTH] = i;
-						o[DAY] = odc[i] == 0 ? o[DAYYEAR] : ( o[DAYYEAR] - odc[i] );
+					if ( between_equalto( parsers[DAYYEAR], ordinal[i], ordinal[i+1] ) ) {
+						parsers[MONTH] = i;
+						parsers[DAY] = ordinal[i] == 0 ? parsers[DAYYEAR] : ( parsers[DAYYEAR] - ordinal[i] );
 						break;
 					}
 				}
 			}
 		}
 
-		if ( isNaN( o[DAY] ) ) o[DAY] = 1;
+		if ( isNaN( parsers[DAY] ) ) parsers[DAY] = 1;
 
-		d.setYear( o[YEAR] ); d.setMonth( o[MONTH] ); d.setDate( o[DAY] );
+		date.setYear( parsers[YEAR] ); date.setMonth( parsers[MONTH] ); date.setDate( parsers[DAY] );
 
 	}
-	function parse_setTime( d, h, m, s, ms ) {
-		d.setHours( h || 0 );   d.setMinutes( m || 0 );
-		d.setSeconds( s || 0 ); d.setMilliseconds( ms || 0 );
+	function parse_setTime( date, hr, min, sec, ms ) {
+		date.setHours( hr || 0 );   date.setMinutes( min || 0 );
+		date.setSeconds( sec || 0 ); date.setMilliseconds( ms || 0 );
 	}
-	function parse_setTimezoneOffset( d, tzo ) {
-		!between_equalto( tzo, -43200, 50400 ) || d.adjust( Type.SECOND, ( -d.getTimezoneOffset() * 60 ) - tzo );
+	function parse_setTimezoneOffset( date, tzoffset ) {
+		!between_equalto( tzoffset, -43200, 50400 ) || date.adjust( Type.SECOND, ( -date.getTimezoneOffset() * 60 ) - tzoffset );
 	}
 
-	function toDate( s, f ) { return buildParser( f )( s ); }
+	function toDate( date_str, date_format ) {
+		return buildParser( date_format )( date_str );
+	}

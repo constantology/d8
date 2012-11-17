@@ -105,6 +105,11 @@ suite( 'd8', function() {
 		expect( Date.toDate( '2010-08-30T10:10:10+00:00', 'c' ) ).to.eql( new Date( 2010, 7, 30, 10 + offset, 10, 10 ) );
 		expect( Date.toDate( '2010-08-30T10:10:10+04:00', 'c' ) ).to.eql( new Date( 2010, 7, 30,  6 + offset, 10, 10 ) );
 		expect( Date.toDate( '2010-08-30T10:10:10-08:00', 'c' ) ).to.eql( new Date( 2010, 7, 30, 18 + offset, 10, 10 ) );
+
+		expect( Date.toDate( '2010-08-30T10:10:10.010+00:00Z', 'Y-m-d<T>H:i:s.uP<Z>' ) ).to.eql( new Date( 2010, 7, 30, ( 10 + offset ), 10, 10, 10 ) );
+		expect( Date.toDate( '2010-08-30T10:10:10.010+00:00Z', 'c' ) ).to.eql( new Date( 2010, 7, 30, 10 + offset, 10, 10, 10 ) );
+		expect( Date.toDate( '2010-08-30T10:10:10.010+04:00Z', 'c' ) ).to.eql( new Date( 2010, 7, 30,  6 + offset, 10, 10, 10 ) );
+		expect( Date.toDate( '2010-08-30T10:10:10.010-08:00Z', 'c' ) ).to.eql( new Date( 2010, 7, 30, 18 + offset, 10, 10, 10 ) );
 		
 		done();
 	} );
@@ -128,7 +133,10 @@ suite( 'd8', function() {
 		expect( r.adjust( Date.MILLISECOND, -1 ) ).to.eql( new Date( 2010, 0, 1 ) );
 		expect( r.adjust( { day :  1, hr :  1, min :  1, month :  1, ms :  1, sec :  1, year :  1 } ) ).to.eql( new Date( 2011, 1, 2, 1, 1, 1, 1 ) );
 		expect( r.adjust( { day : -1, hr : -1, min : -1, month : -1, ms : -1, sec : -1, year : -1 } ) ).to.eql( new Date( 2010, 0, 1 ) );
-		
+
+		expect( new Date( 2012, 1, 29 ).adjust( Date.MONTH,  1 ) ).to.eql( new Date( 2012, 2, 29 ) );
+		expect( new Date( 2012, 1, 29 ).adjust( Date.MONTH, -1 ) ).to.eql( new Date( 2012, 0, 29 ) );
+
 		done();
 	} );
 
@@ -161,6 +169,98 @@ suite( 'd8', function() {
 		expect( r ).not.to.equal( e );
 		expect( r ).to.eql( e );
 		
+		done();
+	} );
+
+	test( 'Date.prototype.diff with no exclusions', function( done ) {
+		var date_1, date_2, diff, now = Date.now();
+
+		expect( new Date( now ).diff( new Date( now ) ) ).to.eql( { tense : 0 } );
+
+		expect( new Date( now ).diff( new Date( now ).adjust( Date.YEAR, 1 ) ) ).to.eql( { tense : -1, value : Date.MS_YEAR, years : 1 } );
+		expect( new Date( 2012, 0, 1 ).diff( new Date( 2011, 0, 1 ) ) ).to.eql( { tense : 1, value : Date.MS_YEAR, years : 1 } );
+
+		expect( new Date( now ).diff( new Date( now ).adjust( Date.MONTH, 1 ) ) ).to.eql( { tense : -1, value : Date.MS_MONTH, months : 1 } );
+		expect( new Date( 2012, 9, 1 ).diff( new Date( 2012, 8, 1 ) ) ).to.eql( { tense : 1, value : Date.MS_MONTH, months : 1 } );
+
+		expect( new Date( now ).diff( new Date( now ).adjust( Date.WEEK, 1 ) ) ).to.eql( { tense : -1, value : Date.MS_WEEK, weeks : 1 } );
+		expect( new Date( 2012, 0, 8 ).diff( new Date( 2012, 0, 1 ) ) ).to.eql( { tense : 1, value : Date.MS_WEEK, weeks : 1 } );
+
+		expect( new Date( now ).diff( new Date( now ).adjust( Date.DAY, 1 ) ) ).to.eql( { tense : -1, value : Date.MS_DAY, days : 1 } );
+		expect( new Date( 2012, 0, 2 ).diff( new Date( 2012, 0, 1 ) ) ).to.eql( { tense : 1, value : Date.MS_DAY, days : 1 } );
+
+		expect( new Date( now ).diff( new Date( now ).adjust( Date.HOUR, 1 ) ) ).to.eql( { tense : -1, value : Date.MS_HOUR, hours : 1 } );
+		expect( new Date( 2012, 0, 1, 1 ).diff( new Date( 2012, 0, 1 ) ) ).to.eql( { tense : 1, value : Date.MS_HOUR, hours : 1 } );
+
+		expect( new Date( now ).diff( new Date( now ).adjust( Date.MINUTE, 1 ) ) ).to.eql( { tense : -1, value : Date.MS_MINUTE, minutes : 1 } );
+		expect( new Date( 2012, 0, 1, 0, 1 ).diff( new Date( 2012, 0, 1 ) ) ).to.eql( { tense : 1, value : Date.MS_MINUTE, minutes : 1 } );
+
+		expect( new Date( now ).diff( new Date( now ).adjust( Date.SECOND, 1 ) ) ).to.eql( { tense : -1, value : Date.MS_SECOND, seconds : 1 } );
+		expect( new Date( 2012, 0, 1, 0, 0, 1 ).diff( new Date( 2012, 0, 1 ) ) ).to.eql( { tense : 1, value : Date.MS_SECOND, seconds : 1 } );
+
+		expect( new Date( now ).diff( new Date( now ).adjust( Date.MILLISECOND, 100 ) ) ).to.eql( { tense : -1, value : 100, ms : 100 } );
+		expect( new Date( 2012, 0, 1, 0, 0, 0, 100 ).diff( new Date( 2012, 0, 1 ) ) ).to.eql( { tense : 1, value : 100, ms : 100 } );
+
+		date_1 = new Date( 2012, 11, 10, 9, 8, 7, 600 );
+		date_2 = date_1.clone().adjust( { year : 1, month : 1, week : 1, day : 1, hr : 1, min : 1, sec : 1, ms : 100 } );
+		diff   = date_1.diff( date_2 );
+
+		expect( diff.value ).to.eql( Math.abs( +date_1 - +date_2 ) );
+		expect( diff.tense ).to.eql( -1 );
+		expect( diff.years ).to.eql( 1 );
+		expect( diff.months ).to.eql( 1 );
+		expect( diff.weeks ).to.eql( 1 );
+		expect( diff.days ).to.eql( 5 );
+		expect( diff.hours ).to.eql( 1 );
+		expect( diff.minutes ).to.eql( 1 );
+		expect( diff.seconds ).to.eql( 1 );
+		expect( diff.ms ).to.eql( 99 );
+
+		diff   = date_2.diff( date_1 );
+		expect( diff.value ).to.eql( Math.abs( +date_2 - +date_1 ) );
+		expect( diff.tense ).to.eql( 1 );
+		expect( diff.years ).to.eql( 1 );
+		expect( diff.months ).to.eql( 1 );
+		expect( diff.weeks ).to.eql( 1 );
+		expect( diff.days ).to.eql( 5 );
+		expect( diff.hours ).to.eql( 1 );
+		expect( diff.minutes ).to.eql( 1 );
+		expect( diff.seconds ).to.eql( 1 );
+		expect( diff.ms ).to.eql( 99 );
+
+		done();
+	} );
+
+	test( 'Date.prototype.diff with exclusions', function( done ) {
+		var date_1, date_2, diff, now = Date.now();
+
+		date_1 = new Date( 2012, 11, 10, 9, 8, 7, 600 );
+		date_2 = date_1.clone().adjust( { year : 1, month : 1, week : 1, day : 1, hr : 1, min : 1, sec : 1, ms : 100 } );
+		diff   = date_1.diff( date_2, '-weeks' );
+
+		expect( diff.value ).to.eql( Math.abs( +date_1 - +date_2 ) );
+		expect( diff.tense ).to.eql( -1 );
+		expect( diff.years ).to.eql( 1 );
+		expect( diff.months ).to.eql( 1 );
+		expect( diff.weeks ).to.be.undefined;
+		expect( diff.days ).to.eql( 12 );
+		expect( diff.hours ).to.eql( 1 );
+		expect( diff.minutes ).to.eql( 1 );
+		expect( diff.seconds ).to.eql( 1 );
+		expect( diff.ms ).to.eql( 99 );
+
+		diff   = date_2.diff( date_1 );
+		expect( diff.value ).to.eql( Math.abs( +date_2 - +date_1 ) );
+		expect( diff.tense ).to.eql( 1 );
+		expect( diff.years ).to.eql( 1 );
+		expect( diff.months ).to.eql( 1 );
+		expect( diff.weeks ).to.eql( 1 );
+		expect( diff.days ).to.eql( 5 );
+		expect( diff.hours ).to.eql( 1 );
+		expect( diff.minutes ).to.eql( 1 );
+		expect( diff.seconds ).to.eql( 1 );
+		expect( diff.ms ).to.eql( 99 );
+
 		done();
 	} );
 

@@ -1,19 +1,21 @@
-	function buildTemplate( o ) {
-		if ( cache_format[o] ) return cache_format[o];
+	function buildTemplate( date_format ) {
+		if ( cache_format[date_format] ) return cache_format[date_format];
 
-		var fn = ['var out=[];'], i = -1, p, parts = o.replace( re_add_nr, NOREPLACE_RB ).replace( re_add_enr, NOREPLACE_RE ).split( re_split ), re_invalid = /^[^A-Za-z]*$/g, l = parts.length;
+		var fn         = ['var out=[];'], i = -1, part,
+			parts      = date_format.replace( re_add_nr, NOREPLACE_RB ).replace( re_add_enr, NOREPLACE_RE ).split( re_split ),
+			re_invalid = /^[^A-Za-z]*$/g, l = parts.length;
 
 		while( ++i < l ) {
-			p = parts[i];
-			p == NOREPLACE ? ( fn.push( tplOut( parts[++i] ) ), ++i )
-						   :   re_invalid.test( p )
-						   ?   fn.push( tplOut( p ) )
-						   :   fn.push( compileTplStr( p ) );
+			part = parts[i];
+			part == NOREPLACE ? ( fn.push( tplOut( parts[++i] ) ), ++i )
+						   :   re_invalid.test( part )
+						   ?   fn.push( tplOut( part ) )
+						   :   fn.push( compileTplStr( part ) );
 		}
 
-		fn.push( 'return out.join( "" );' );
+		fn.push( 'return out.join( "" );\n//@ sourceURL=d8/format/' + date_format );
 
-		return cache_format[o] = new Function( 'filter', 'date', fn.join( '\n' ) );
+		return cache_format[date_format] = new Function( 'filter', 'date', fn.join( '\n' ) );
 	}
 
 	function format( f ) { return buildTemplate( f )( filter, this ); }
