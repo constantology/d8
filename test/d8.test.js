@@ -217,7 +217,6 @@ suite( 'd8', function() {
 		expect( diff.ms ).to.eql( 99 );
 
 		diff   = date_2.diff( date_1 );
-		expect( diff.value ).to.eql( Math.abs( +date_2 - +date_1 ) );
 		expect( diff.tense ).to.eql( 1 );
 		expect( diff.years ).to.eql( 1 );
 		expect( diff.months ).to.eql( 1 );
@@ -236,7 +235,7 @@ suite( 'd8', function() {
 
 		date_1 = new Date( 2012, 11, 10, 9, 8, 7, 600 );
 		date_2 = date_1.clone().adjust( { year : 1, month : 1, week : 1, day : 1, hr : 1, min : 1, sec : 1, ms : 100 } );
-		diff   = date_1.diff( date_2, '-weeks' );
+		diff   = date_1.diff( date_2, '-weeks >hours' );
 
 		expect( diff.value ).to.eql( Math.abs( +date_1 - +date_2 ) );
 		expect( diff.tense ).to.eql( -1 );
@@ -244,22 +243,33 @@ suite( 'd8', function() {
 		expect( diff.months ).to.eql( 1 );
 		expect( diff.weeks ).to.be.undefined;
 		expect( diff.days ).to.eql( 12 );
-		expect( diff.hours ).to.eql( 1 );
-		expect( diff.minutes ).to.eql( 1 );
-		expect( diff.seconds ).to.eql( 1 );
-		expect( diff.ms ).to.eql( 99 );
+		expect( diff.hours ).to.be.undefined;
+		expect( diff.minutes ).to.be.undefined;
+		expect( diff.seconds ).to.be.undefined;
+		expect( diff.ms ).to.be.undefined;
 
-		diff   = date_2.diff( date_1 );
-		expect( diff.value ).to.eql( Math.abs( +date_2 - +date_1 ) );
+		diff   = date_2.diff( date_1, '-weeks >minutes' );
 		expect( diff.tense ).to.eql( 1 );
 		expect( diff.years ).to.eql( 1 );
 		expect( diff.months ).to.eql( 1 );
-		expect( diff.weeks ).to.eql( 1 );
-		expect( diff.days ).to.eql( 5 );
+		expect( diff.weeks ).to.be.undefined;
+		expect( diff.days ).to.eql( 12 );
 		expect( diff.hours ).to.eql( 1 );
-		expect( diff.minutes ).to.eql( 1 );
-		expect( diff.seconds ).to.eql( 1 );
-		expect( diff.ms ).to.eql( 99 );
+		expect( diff.minutes ).to.be.undefined;
+		expect( diff.seconds ).to.be.undefined;
+		expect( diff.ms ).to.be.undefined;
+
+		date_1 = new Date( 2012, 11, 10, 9, 8, 7, 600 );
+		date_2 = date_1.clone().adjust( { month : 11 } );
+		diff   = date_1.diff( date_2, '>months' );
+
+		expect( diff.value ).to.eql( Math.abs( +date_2 - +date_1 ) );
+		expect( diff.tense ).to.eql( -1 );
+		expect( diff.years ).to.eql( 1 );
+
+		diff   = date_1.diff( date_2, '-years -months -weeks' );
+		expect( diff.tense ).to.eql( -1 );
+		expect( diff.days ).to.eql( 370 );
 
 		done();
 	} );

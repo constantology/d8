@@ -61,7 +61,7 @@
 				return ddiiff;
 			}
 // round up or down depending on what's available
-			if ( ( calc = calcs[i + 1] ) || ( calc = calcs[i - 1] ) ) {
+			if ( ( !calcs[i + 1] || ddiiff.excl[calcs[i + 1][0]] ) && ( calc = calcs[i - 1] ) ) {
 				time          = ddiiff.__ms__ / calc[1];
 				ddiiff.__ms__ = ( Math.round( time ) * calc[1] ) + ( ( ( ddiiff.__ms__ / calcs[i][1] ) % 1 ) * calcs[i][1] );
 				return diff_eval( ddiiff, calc, i - 1, [] );
@@ -110,12 +110,10 @@
 			case '-' : excl[prop] = true;  break;
 			case '+' : excl[prop] = false; break;
 			case '>' :
-				diff_calc.map( diff_excl_iter, excl, { excl : excl, prop : prop, val : true } );
-				delete excl.SET_VALID;
+				diff_calc.map( diff_excl_iter, { excl : excl, prop : prop, val : true } );
 				break;
 			case '<' :
 				diff_calc.slice().reverse().map( diff_excl_iter, { excl : excl, prop : prop, val : false } );
-				delete excl.SET_VALID;
 				break;
 			default  : excl[val]  = false;
 		}
