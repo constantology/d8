@@ -26,7 +26,8 @@
 	function adjust( o, v ) {
 		var date = this, day, fn, weekday;              // noinspection FallthroughInSwitchStatementJS
 		switch ( util.ntype( o ) ) {
-		case 'number' : o = _adjust_toobj( arguments ); // allow fall-through
+		case 'number' : o = arguments;                  // allow fall-through
+		case 'array'  : o = _adjust_toobj( o );         // allow fall-through
 		case 'object' : Object.reduce( o, _adjust, date ); break;
 		case 'string' :
 			fn = adjust_by[o.toLowerCase()];
