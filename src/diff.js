@@ -1,11 +1,3 @@
-/*
- todo: diff_eval should pass value to either the previous or next item if the current is an exclusion and is rounded up or down, respectively
- todo: date_1.diff( date_2, '-weeks >hours' )
- todo: date_1.diff( date_2, 'years months days time' ) === date_1.diff( date_2, '-weeks' )
- todo: date_1.diff( date_2, '-time' ) === date_1.diff( date_2, '>hours' );
- todo: date_1.diff( date_2, 'time' );
-* */
-
 	function diff( now, props ) { //noinspection FallthroughInSwitchStatementJS
 		switch ( util.ntype( now ) ) {
 			case 'string' :
