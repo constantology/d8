@@ -1,6 +1,16 @@
 // private methods
 	function _24hrTime( o, res ) { return ( o = Number( o ) ) < 12 && _lc( res.ampm ) == _lc( LOCALE.PM ) ? o += 12 : o; }
 	function _adjust( d, v, k ) { return d.adjust( k, v ); }
+	function _adjust_toobj( a ) {
+		return adjust_order.reduce( function( v, k, i ) {
+			var delta = parseFloat( a[i] );
+
+			if ( !isNaN( delta ) && delta !== 0 )
+				v[k] = delta;
+
+			return v;
+		}, util.obj() );
+	}
 	function _dayOffset( d ) { return Math.floor( ( d - getISOFirstMondayOfYear.call( d ) ) / MS_DAY ); }
 	function _timezoneOffset( o ) {
 		var t = !!o.indexOf( '-' ),
@@ -14,21 +24,29 @@
 // public methods
 
 	function adjust( o, v ) {
-		if ( util.ntype( o ) == 'object' ) {
-			Object.reduce( o, _adjust, this );
-			return this;
+		var date = this, day, fn, weekday;              // noinspection FallthroughInSwitchStatementJS
+		switch ( util.ntype( o ) ) {
+		case 'number' : o = _adjust_toobj( arguments ); // allow fall-through
+		case 'object' : Object.reduce( o, _adjust, date ); break;
+		case 'string' :
+			fn = adjust_by[o.toLowerCase()];
+			if ( fn && v !== 0 ) {
+				LOCALE.setLeapYear( date );
+
+				if ( fn == adjust_by.month ) {
+					day = date.getDate();
+					day < 28 || date.setDate( Math.min( day, getLastOfTheMonth.call( getFirstOfTheMonth.call( date ).adjust( Type.MONTH, v ) ).getDate() ) );
+				}
+
+				fn != adjust_by.week || ( weekday = date.getDay() );
+
+				date[fn[1]]( date[fn[0]]() + v );
+
+				!weekday || date.setDate( date.getDate() + weekday );
+			}
 		}
-		var day, fn = adjust_by[o.toLowerCase()], weekday;
-		if ( !fn || v === 0 ) return this;
-		LOCALE.setLeapYear( this );
-		if ( fn == adjust_by.month ) {
-			day = this.getDate();
-			day < 28 || this.setDate( Math.min( day, getLastOfTheMonth.call( getFirstOfTheMonth.call( this ).adjust( Type.MONTH, v ) ).getDate() ) );
-		}
-		fn != adjust_by.week || ( weekday = this.getDay() );
-		this[fn[1]]( this[fn[0]]() + v );
-		!weekday || this.setDate( this.getDate() + weekday );
-		return this;
+
+		return date;
 	}
 
 	function between( l, h ) { return this >= l && this <= h; }

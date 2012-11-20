@@ -23,6 +23,16 @@
 // private methods
 	function _24hrTime( o, res ) { return ( o = Number( o ) ) < 12 && _lc( res.ampm ) == _lc( LOCALE.PM ) ? o += 12 : o; }
 	function _adjust( d, v, k ) { return d.adjust( k, v ); }
+	function _adjust_toobj( a ) {
+		return adjust_order.reduce( function( v, k, i ) {
+			var delta = parseFloat( a[i] );
+
+			if ( !isNaN( delta ) && delta !== 0 )
+				v[k] = delta;
+
+			return v;
+		}, util.obj() );
+	}
 	function _dayOffset( d ) { return Math.floor( ( d - getISOFirstMondayOfYear.call( d ) ) / MS_DAY ); }
 	function _timezoneOffset( o ) {
 		var t = !!o.indexOf( '-' ),
@@ -36,21 +46,30 @@
 // public methods
 
 	function adjust( o, v ) {
-		if ( util.ntype( o ) == 'object' ) {
-			Object.reduce( o, _adjust, this );
-			return this;
+		var date = this, day, fn, weekday;              // noinspection FallthroughInSwitchStatementJS
+		switch ( util.ntype( o ) ) {
+		case 'number' : o = arguments;                  // allow fall-through
+		case 'array'  : o = _adjust_toobj( o );         // allow fall-through
+		case 'object' : Object.reduce( o, _adjust, date ); break;
+		case 'string' :
+			fn = adjust_by[o.toLowerCase()];
+			if ( fn && v !== 0 ) {
+				LOCALE.setLeapYear( date );
+
+				if ( fn == adjust_by.month ) {
+					day = date.getDate();
+					day < 28 || date.setDate( Math.min( day, getLastOfTheMonth.call( getFirstOfTheMonth.call( date ).adjust( Type.MONTH, v ) ).getDate() ) );
+				}
+
+				fn != adjust_by.week || ( weekday = date.getDay() );
+
+				date[fn[1]]( date[fn[0]]() + v );
+
+				!weekday || date.setDate( date.getDate() + weekday );
+			}
 		}
-		var day, fn = adjust_by[o.toLowerCase()], weekday;
-		if ( !fn || v === 0 ) return this;
-		LOCALE.setLeapYear( this );
-		if ( fn == adjust_by.month ) {
-			day = this.getDate();
-			day < 28 || this.setDate( Math.min( day, getLastOfTheMonth.call( getFirstOfTheMonth.call( this ).adjust( Type.MONTH, v ) ).getDate() ) );
-		}
-		fn != adjust_by.week || ( weekday = this.getDay() );
-		this[fn[1]]( this[fn[0]]() + v );
-		!weekday || this.setDate( this.getDate() + weekday );
-		return this;
+
+		return date;
 	}
 
 	function between( l, h ) { return this >= l && this <= h; }
@@ -377,11 +396,12 @@
 		AMPM  = 'ampm',  DAY    = 'day',    DAYWEEK  = 'dayweek',  DAYYEAR = 'dayyear', HOUR = 'hour', MILLISECOND = 'ms', MINUTE ='minute',
 		MONTH = 'month', SECOND = 'second', TIMEZONE = 'timezone', UNIX    = 'unix',    WEEK = 'week', YEAR        = 'year',
 // used by Date.prototype.format && Date.toDate to replace escaped chars
-		NOREPLACE = 'NOREPLACE', NOREPLACE_RB = '<' + NOREPLACE + '<', NOREPLACE_RE   = '>END' + NOREPLACE + '>',
-		adjust_by = { day : ['getDate', 'setDate'], hr : ['getHours', 'setHours'], min : ['getMinutes', 'setMinutes'], month : ['getMonth', 'setMonth'], ms : ['getMilliseconds', 'setMilliseconds'], sec : ['getSeconds', 'setSeconds'], week : ['getWeek', 'setWeek'], year : ['getFullYear', 'setFullYear'] },
+		NOREPLACE    = 'NOREPLACE', NOREPLACE_RB = '<' + NOREPLACE + '<', NOREPLACE_RE   = '>END' + NOREPLACE + '>',
+		adjust_by    = { day : ['getDate', 'setDate'], hr : ['getHours', 'setHours'], min : ['getMinutes', 'setMinutes'], month : ['getMonth', 'setMonth'], ms : ['getMilliseconds', 'setMilliseconds'], sec : ['getSeconds', 'setSeconds'], week : ['getWeek', 'setWeek'], year : ['getFullYear', 'setFullYear'] },
+		adjust_order = [YEAR, MONTH, WEEK, DAY, 'hr', MINUTE.substring( 0, 3 ), SECOND.substring( 0, 3 ), MILLISECOND],
 // cache objects
 		cache_format = {}, cache_parse  = {}, date_members = [DAY, DAYWEEK, DAYYEAR, MONTH, WEEK, YEAR],
-		diff_calc = [                 // the order of this Array is important as it is the remainder of the larger
+		diff_calc    = [                 // the order of this Array is important as it is the remainder of the larger
 			[YEAR   + 's', MS_YEAR],  // time unit that gets passed to the following time unit — as such we want
 			[MONTH  + 's', MS_MONTH], // to keep the order in case we want to exclude time units from the diff
 			[WEEK   + 's', MS_WEEK],

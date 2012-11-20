@@ -260,7 +260,7 @@ suite( 'd8', function() {
 		expect( diff.ms ).to.be.undefined;
 
 		date_1 = new Date( 2012, 11, 10, 9, 8, 7, 600 );
-		date_2 = date_1.clone().adjust( { month : 11 } );
+		date_2 = date_1.clone().adjust( 0, 11 );
 		diff   = date_1.diff( date_2, '>months' );
 
 		expect( diff.value ).to.eql( Math.abs( +date_2 - +date_1 ) );
@@ -270,6 +270,22 @@ suite( 'd8', function() {
 		diff   = date_1.diff( date_2, '-years -months -weeks' );
 		expect( diff.tense ).to.eql( -1 );
 		expect( diff.days ).to.eql( 370 );
+
+		date_1 = new Date( 2012, 11, 10, 9, 8, 7, 600 );
+		date_2 = date_1.clone().adjust( 1, 11, 1, 1, 1, 1, 1, 10 );
+		diff   = date_1.diff( date_2, '>months' );
+
+		expect( diff.value ).to.eql( Math.abs( +date_2 - +date_1 ) );
+		expect( diff.tense ).to.eql( -1 );
+		expect( diff.years ).to.eql( 2 );
+
+		diff   = date_1.diff( date_2, '-years -months -weeks' );
+		expect( diff.tense ).to.eql( -1 );
+		expect( diff.days ).to.eql( 744 );
+		expect( diff.hours ).to.eql( 1 );
+		expect( diff.minutes ).to.eql( 1 );
+		expect( diff.seconds ).to.eql( 1 );
+		expect( diff.ms ).to.eql( 9 );
 
 		done();
 	} );

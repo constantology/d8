@@ -7,11 +7,12 @@
 		AMPM  = 'ampm',  DAY    = 'day',    DAYWEEK  = 'dayweek',  DAYYEAR = 'dayyear', HOUR = 'hour', MILLISECOND = 'ms', MINUTE ='minute',
 		MONTH = 'month', SECOND = 'second', TIMEZONE = 'timezone', UNIX    = 'unix',    WEEK = 'week', YEAR        = 'year',
 // used by Date.prototype.format && Date.toDate to replace escaped chars
-		NOREPLACE = 'NOREPLACE', NOREPLACE_RB = '<' + NOREPLACE + '<', NOREPLACE_RE   = '>END' + NOREPLACE + '>',
-		adjust_by = { day : ['getDate', 'setDate'], hr : ['getHours', 'setHours'], min : ['getMinutes', 'setMinutes'], month : ['getMonth', 'setMonth'], ms : ['getMilliseconds', 'setMilliseconds'], sec : ['getSeconds', 'setSeconds'], week : ['getWeek', 'setWeek'], year : ['getFullYear', 'setFullYear'] },
+		NOREPLACE    = 'NOREPLACE', NOREPLACE_RB = '<' + NOREPLACE + '<', NOREPLACE_RE   = '>END' + NOREPLACE + '>',
+		adjust_by    = { day : ['getDate', 'setDate'], hr : ['getHours', 'setHours'], min : ['getMinutes', 'setMinutes'], month : ['getMonth', 'setMonth'], ms : ['getMilliseconds', 'setMilliseconds'], sec : ['getSeconds', 'setSeconds'], week : ['getWeek', 'setWeek'], year : ['getFullYear', 'setFullYear'] },
+		adjust_order = [YEAR, MONTH, WEEK, DAY, 'hr', MINUTE.substring( 0, 3 ), SECOND.substring( 0, 3 ), MILLISECOND],
 // cache objects
 		cache_format = {}, cache_parse  = {}, date_members = [DAY, DAYWEEK, DAYYEAR, MONTH, WEEK, YEAR],
-		diff_calc = [                 // the order of this Array is important as it is the remainder of the larger
+		diff_calc    = [                 // the order of this Array is important as it is the remainder of the larger
 			[YEAR   + 's', MS_YEAR],  // time unit that gets passed to the following time unit — as such we want
 			[MONTH  + 's', MS_MONTH], // to keep the order in case we want to exclude time units from the diff
 			[WEEK   + 's', MS_WEEK],
