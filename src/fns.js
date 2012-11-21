@@ -102,3 +102,5 @@
 		var s = this.toString().split( ' ' );
 		return s.splice( 4, s.length ).join( ' ' ).replace( re_tz, '$1' ).replace( re_tz_abbr, '' );
 	}
+
+	function valid( date ) { return util.ntype( date ) == 'date' && !isNaN( +date ); }

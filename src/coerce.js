@@ -1,3 +1,7 @@
+	function coerce( date_str, date_format ) {
+		return buildParser( date_format )( date_str );
+	}
+
 	function buildParser( date_format ) {
 		if ( cache_parse[date_format] ) return cache_parse[date_format];
 		var parsers = {}, keys = [], i = -1, part,
@@ -94,8 +98,4 @@
 	}
 	function parse_setTimezoneOffset( date, tzoffset ) {
 		!between_equalto( tzoffset, -43200, 50400 ) || date.adjust( Type.SECOND, ( -date.getTimezoneOffset() * 60 ) - tzoffset );
-	}
-
-	function toDate( date_str, date_format ) {
-		return buildParser( date_format )( date_str );
 	}

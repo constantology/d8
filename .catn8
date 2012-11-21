@@ -1,7 +1,7 @@
 {
 	"source"    : {
 		"dir"   : "./src",
-		"files" : ["utils", "fns", "format", "toDate", "diff", "vars", "expose"]
+		"files" : ["utils", "coerce", "diff", "display", "fns", "format", "vars", "expose"]
 	},
 	"target"    : {
 		"dir"   : "{pwd}"

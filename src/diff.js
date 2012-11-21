@@ -1,22 +1,22 @@
 	function diff( now, props ) { //noinspection FallthroughInSwitchStatementJS
 		switch ( util.ntype( now ) ) {
 			case 'string' :
-				if ( isNaN( +( new Date( now ) ) ) ) {
-					if ( props ) {
-						now = Date.now();
-						break;
-					}
-				}
+				if ( valid( new Type( now ) ) )
+					now = new Type( now );
 				else {
-					now = new Date( now );
+					if ( !props )
+						props = now;
+
+					now = new Type( now );
+
 					break;
-				}                                                        // allow [specific] fall-through
+				}                                                  // allow [specific] fall-through
 			case 'array'  : case 'object' :
 				props   = now;
-				now     = Date.now();
+				now     = Type.now();
 				break;
-			case 'date'   : if ( !isNaN( +( new Date( now ) ) ) ) break; // allow fall-through if not a valid date
-			default       : now = Date.now();
+			case 'date'   : if ( valid( new Type( now ) ) ) break; // allow fall-through if not a valid date
+			default       : now = Type.now();
 
 		}
 

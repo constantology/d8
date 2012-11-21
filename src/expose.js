@@ -6,17 +6,21 @@
 		getISODay    : getISODay,    getISODaysInYear   : getISODaysInYear,   getISOFirstMondayOfYear : getISOFirstMondayOfYear,
 		getISOWeek   : getISOWeek,   getISOWeeksInYear  : getISOWeeksInYear,  getLastOfTheMonth       : getLastOfTheMonth,
 		getWeek      : getWeek,      isDST              : isDST,              isLeapYear              : isLeapYear,
-		setWeek      : setWeek,      timezone           : timezone
+		setWeek      : setWeek,      timezone           : timezone,           valid                   : function() { return Type.valid( this ); }
 	}, 'r' );
 
 // static methods & properties
 	util.defs( Type, {
 // constants used by Date.prototype.adjust
-		DAY : DAY, HOUR : 'hr', MINUTE : MINUTE.substring( 0, 3 ), MILLISECOND : MILLISECOND, MONTH : MONTH, SECOND : SECOND.substring( 0, 3 ), WEEK : WEEK, YEAR : YEAR,
+		DAY         : DAY,                      HOUR       : 'hr',                     MINUTE      : MINUTE.substring( 0, 3 ),
+		MILLISECOND : MILLISECOND,              MONTH      : MONTH,                    SECOND      : SECOND.substring( 0, 3 ),
+		WEEK        : WEEK,                     YEAR       : YEAR,
 // constants defining milliseconds for different times
-		MS_DAY : MS_DAY, MS_HOUR : MS_HOUR, MS_MINUTE : MS_MINUTE, MS_MONTH : MS_MONTH, MS_SECOND : MS_SECOND, MS_WEEK : MS_WEEK, MS_YEAR : MS_YEAR,
+		MS_DAY      : MS_DAY,                   MS_HOUR    : MS_HOUR,                  MS_MINUTE   : MS_MINUTE,   MS_MONTH : MS_MONTH,
+		MS_SECOND   : MS_SECOND,                MS_WEEK    : MS_WEEK,                  MS_YEAR     : MS_YEAR,
 // filters and formats
-		filters : { value : filter }, formats : { value : formats }, parsers : { value : parser },
+		filters     : { value : filter },       formats    : { value : formats },      parsers     : { value : parser },
 // static methods
-		getOrdinal : LOCALE.getOrdinal, isLeapYear : LOCALE.isLeapYear, setLeapYear : LOCALE.setLeapYear, toDate : toDate
+		coerce      : coerce,                   getOrdinal : LOCALE.getOrdinal,        isLeapYear  : LOCALE.isLeapYear,
+		setLeapYear : LOCALE.setLeapYear,       toDate     : coerce,                   valid       : valid
 	}, 'r' );
