@@ -6,16 +6,13 @@ expect = chai.expect;
 
 if ( m8.ENV == 'commonjs' ) {
 	delete Date.locale;
-	require( '../d8' );
-	require( '../locale/en-GB' );
-	require( '../locale/en-US' );
-	require( '../locale/GR' );
-
-	require( './locale/en-US.test.js' );
-	require( './locale/GR.test.js' );
+	require( '../../d8' );
+	require( '../../locale/en-GB' );
+	require( '../../locale/en-US' );
+	require( '../../locale/GR' );
 }
 
-suite( 'd8 (en-GB/default)', function() {
+suite( 'd8 (en-US)', function() {
 	function MockDate( o ) { for ( var k in o ) !Object.prototype.hasOwnProperty.call( o, k ) || ( this[k] = o[k] ); }
 	MockDate.prototype = {
 		getDate           : function() { return this.date;  }, getDay     : function() { return this.day;    },
@@ -33,11 +30,11 @@ suite( 'd8 (en-GB/default)', function() {
 	var DP = Date.prototype, slice = [].slice;
 
 	setup( function( done ) {
-		Date.localize( 'en-GB' );
+		Date.localize( 'en-US' );
 		done();
 	} );
 
-	test( '<static> Date.locale.getOrdinal returns the ordinal of a number', function( done ) {
+	test( '<static> Date.getOrdinal returns the ordinal of a number', function( done ) {
 		expect( Date.getOrdinal(  1 ) ).to.eql( 'st' );
 		expect( Date.getOrdinal(  2 ) ).to.eql( 'nd' );
 		expect( Date.getOrdinal(  3 ) ).to.eql( 'rd' );
@@ -61,7 +58,7 @@ suite( 'd8 (en-GB/default)', function() {
 		expect( Date.getOrdinal( 21 ) ).to.eql( 'st' );
 		expect( Date.getOrdinal( 22 ) ).to.eql( 'nd' );
 		expect( Date.getOrdinal( 23 ) ).to.eql( 'rd' );
-		
+
 		done();
 	} );
 
@@ -82,7 +79,7 @@ suite( 'd8 (en-GB/default)', function() {
 		expect( Date.isLeapYear( 2011 ) ).to.be.false;
 		expect( Date.isLeapYear( 2013 ) ).to.be.false;
 		expect( Date.isLeapYear( 2021 ) ).to.be.false;
-		
+
 		done();
 	} );
 
@@ -189,25 +186,25 @@ suite( 'd8 (en-GB/default)', function() {
 		expect( new Date( 2010, 0, 1, 1, 10, 10, 10 ).between( new Date( 2010, 0, 1, 1, 10, 10, 11 ), new Date( 2010, 0, 1, 1, 10, 10, 12 ) ) ).to.be.false;
 		expect( new Date( 2010, 0, 1 ).between( new Date( 2010, 0, 2 ), new Date( 2010, 0, 3 ) ) ).to.be.false;
 		expect( new Date( 2010, 0, 1, 1, 10, 10, 10 ).between( new Date( 2009, 4, 1 ), new Date( 2010, 0, 1, 1, 10, 10, 9 ) ) ).to.be.false;
-		
+
 		done();
 	} );
 
 	test( 'Date.prototype.clearTime: clears the hours, minutes, seconds and milliseconds from a Date instance', function( done ) {
 		var e = new Date( 2010, 0, 1 ), r = new Date( 2010, 0, 1, 1, 10, 10, 10 );
-			
+
 		expect( r ).not.to.eql( e );
 		expect( r.clone().clearTime() ).to.eql( e );
-		
+
 		done();
 	} );
 
 	test( 'Date.prototype.clone: returns a copy of a Date instance', function( done ) {
 		var e = new Date( 2010, 0, 1 ), r = e.clone();
-				
+
 		expect( r ).not.to.equal( e );
 		expect( r ).to.eql( e );
-		
+
 		done();
 	} );
 
@@ -392,7 +389,7 @@ suite( 'd8 (en-GB/default)', function() {
 		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.SECOND,  30 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '30 seconds from now' );
 		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.SECOND, -60 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 minute ago' );
 		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.SECOND,  60 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 minute from now' );
-		
+
 		expect( ( new Date( 2012, 0, 1 ) ).adjust( { year : -1, month : -1, week : -1, day : -1, hr : -1, min : -1, sec : -1 } ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 year, 1 month, 1 week, 4 days, 1 hour and 1 minute ago' );
 		expect( ( new Date( 2012, 0, 1 ) ).adjust( { year :  1, month :  1, week :  1, day :  1, hr :  1, min :  1, sec :  1 } ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 year, 1 month, 1 week, 5 days, 1 hour, 1 minute and 1 second from now' );
 
@@ -422,7 +419,7 @@ suite( 'd8 (en-GB/default)', function() {
 		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.WEEK,  5 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'just over 1 month from now' );
 		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.WEEK, -7 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'about 1 and a half months ago' );
 		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.WEEK,  7 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'about 1 and a half months from now' );
-		
+
 		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY, -1 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'yesterday' );
 		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY,  1 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'tomorrow' );
 		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY, -2 ).adjust( Date.HOUR, -6 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'almost 2 and a half days ago' );
@@ -503,7 +500,7 @@ suite( 'd8 (en-GB/default)', function() {
 
 	test( 'Date.prototype.getGMTOffset: returns the GMT offset of a Date instance', function( done ) {
 		var fn = 'getGMTOffset';
-			
+
 		expect( call( fn, new MockDate( { tzo :    0 } ) ) ).to.eql( '+0000' );
 		expect( call( fn, new MockDate( { tzo :  -60 } ) ) ).to.eql( '+0100' );
 		expect( call( fn, new MockDate( { tzo :   60 } ) ) ).to.eql( '-0100' );
@@ -514,7 +511,7 @@ suite( 'd8 (en-GB/default)', function() {
 		expect( call( fn, new MockDate( { tzo :   60 } ), true ) ).to.eql( '-01:00' );
 		expect( call( fn, new MockDate( { tzo : -600 } ), true ) ).to.eql( '+10:00' );
 		expect( call( fn, new MockDate( { tzo :  600 } ), true ) ).to.eql( '-10:00' );
-		
+
 		done();
 	} );
 
@@ -526,13 +523,13 @@ suite( 'd8 (en-GB/default)', function() {
 		expect( new Date( 2007,  0,  4 ).getISODay() ).to.eql( 4 );
 		expect( new Date( 2007,  0,  5 ).getISODay() ).to.eql( 5 );
 		expect( new Date( 2007,  0,  6 ).getISODay() ).to.eql( 6 );
-		
+
 		done();
 	} );
 
 	test( 'Date.prototype.getISODaysInYear: returns the ISO-8601 number of days in the year', function( done ) {
 		var r = [364, 364, 364, 364, 371, 371, 357, 364, 364, 371, 364];
-			
+
 		[2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010].forEach( function( y, i ) {
 			expect( new Date( y, 1, 1 ).getISODaysInYear() ).to.eql( r[i] );
 		} );
@@ -546,7 +543,7 @@ suite( 'd8 (en-GB/default)', function() {
 		[2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010].forEach( function( y, i ) {
 			expect( new Date( y, 1, 1 ).getISOFirstMondayOfYear().format( 'Y-m-d' ) ).to.eql( r[i].format( 'Y-m-d' ) );
 		} );
-		
+
 		done();
 	} );
 
@@ -562,7 +559,7 @@ suite( 'd8 (en-GB/default)', function() {
 			expect( new Date( y,  7, 30 ).getISOWeek() ).to.eql( aug30[i] );
 			expect( new Date( y, 11, 31 ).getISOWeek() ).to.eql( dec31[i] );
 		} );
-		
+
 		done();
 	} );
 
@@ -572,7 +569,7 @@ suite( 'd8 (en-GB/default)', function() {
 		[2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010].forEach( function( y, i ) {
 			expect( new Date( y, 1, 1 ).getISOWeeksInYear() ).to.eql( r[i] );
 		} );
-				
+
 		done();
 	} );
 
@@ -615,7 +612,7 @@ suite( 'd8 (en-GB/default)', function() {
 		expect( new Date( 2010, 0, 1 ).isLeapYear() ).to.be.false;
 		expect( new Date( 2050, 0, 1 ).isLeapYear() ).to.be.false;
 		expect( new Date( 2100, 0, 1 ).isLeapYear() ).to.be.false;
-		
+
 		done();
 	} );
 
@@ -658,4 +655,3 @@ suite( 'd8 (en-GB/default)', function() {
 		done();
 	} );
 } );
-

@@ -1,5 +1,5 @@
 // private methods
-	function _24hrTime( o, res ) { return ( o = Number( o ) ) < 12 && _lc( res.ampm ) == _lc( LOCALE.PM ) ? o += 12 : o; }
+	function _24hrTime( o, res ) { return ( o = Number( o ) ) < 12 && _lc( res.ampm ) == _lc( Type.locale.PM ) ? o += 12 : o; }
 	function _adjust( d, v, k ) { return d.adjust( k, v ); }
 	function _adjust_toobj( a ) {
 		return adjust_order.reduce( function( v, k, i ) {
@@ -32,7 +32,7 @@
 		case 'string' :
 			fn = adjust_by[o.toLowerCase()];
 			if ( fn && v !== 0 ) {
-				LOCALE.setLeapYear( date );
+				Type.locale.setLeapYear( date );
 
 				if ( fn == adjust_by.month ) {
 					day = date.getDate();
@@ -60,8 +60,9 @@
 	function clone() { return new Type( this.getTime() ); }
 
 	function getDayOfYear() {
-		LOCALE.setLeapYear( this );
-		return LOCALE.day_count.slice( 0, this.getMonth() ).reduce( sum, 0 ) + this.getDate() - 1;
+		var L = Type.locale;
+		L.setLeapYear( this );
+		return L.day_count.slice( 0, this.getMonth() ).reduce( sum, 0 ) + this.getDate() - 1;
 	}
 
 	function getFirstOfTheMonth() { return new Type( this.getFullYear(), this.getMonth(), 1 ); }
@@ -86,15 +87,15 @@
 	function getISOWeeksInYear() { return Math.round( ( getISOFirstMondayOfYear.call( new Type( this.getFullYear() + 1, 0, 1 ) ) - getISOFirstMondayOfYear.call( this ) ) / MS_WEEK ); }
 
 	function getLastOfTheMonth() {
-		var m = this.getMonth(); LOCALE.setLeapYear( this );
-		return new Type( this.getFullYear(), m, LOCALE.day_count[m] );
+		var L = Type.locale, m = this.getMonth(); L.setLeapYear( this );
+		return new Type( this.getFullYear(), m, L.day_count[m] );
 	}
 
 	function getWeek() { return Math.floor( getDayOfYear.call( this ) / 7 ); }
 
 	function isDST() { return new Type( this.getFullYear(), 0, 1 ).getTimezoneOffset() != this.getTimezoneOffset(); }
 
-	function isLeapYear() { return LOCALE.isLeapYear( this.getFullYear() ); }
+	function isLeapYear() { return Type.locale.isLeapYear( this.getFullYear() ); }
 
 	function setWeek( v ) { this.setMonth( 0 ); this.setDate( 1 ); return ( this.adjust( Type.DAY, v * 7 ) ).getTime(); }
 

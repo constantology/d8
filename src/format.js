@@ -1,9 +1,12 @@
 	function buildTemplate( date_format ) {
-		if ( cache_format[date_format] ) return cache_format[date_format];
+		var LID = Type.locale.id, fn, i, l, part, parts, re_invalid;
 
-		var fn         = ['var out=[];'], i = -1, part,
-			parts      = date_format.replace( re_add_nr, NOREPLACE_RB ).replace( re_add_enr, NOREPLACE_RE ).split( re_split ),
-			re_invalid = /^[^A-Za-z]*$/g, l = parts.length;
+		if ( cache_format[LID][date_format] ) return cache_format[LID][date_format];
+
+		fn         = ['\tvar out=[];'];
+		parts      = date_format.replace( re_add_nr, NOREPLACE_RB ).replace( re_add_enr, NOREPLACE_RE ).split( re_split ),
+		re_invalid = /^[^A-Za-z]*$/g;
+		i = -1;  l = parts.length;
 
 		while( ++i < l ) {
 			part = parts[i];
@@ -13,9 +16,9 @@
 						   :   fn.push( compileTplStr( part ) );
 		}
 
-		fn.push( 'return out.join( "" );\n//@ sourceURL=d8/format/' + date_format );
+		fn.push( 'return out.join( "" );\n\t//@ sourceURL=d8/format/' + LID + '/' + date_format );
 
-		return cache_format[date_format] = new Function( 'filter', 'date', fn.join( '\n' ) );
+		return cache_format[LID][date_format] = new Function( 'filter', 'date', fn.join( '\n\n\t' ) );
 	}
 
 	function format( f ) { return buildTemplate( f )( filter, this ); }

@@ -1,4 +1,3 @@
-// 481
 typeof m8   !== 'undefined' || ( m8   = require( 'm8' ) );
 typeof chai !== 'undefined' || ( chai = require( 'chai' ) );
 
@@ -6,16 +5,13 @@ expect = chai.expect;
 
 if ( m8.ENV == 'commonjs' ) {
 	delete Date.locale;
-	require( '../d8' );
-	require( '../locale/en-GB' );
-	require( '../locale/en-US' );
-	require( '../locale/GR' );
-
-	require( './locale/en-US.test.js' );
-	require( './locale/GR.test.js' );
+	require( '../../d8' );
+	require( '../../locale/en-GB' );
+	require( '../../locale/en-US' );
+	require( '../../locale/GR' );
 }
 
-suite( 'd8 (en-GB/default)', function() {
+suite( 'd8 (greek-"ish")', function() {
 	function MockDate( o ) { for ( var k in o ) !Object.prototype.hasOwnProperty.call( o, k ) || ( this[k] = o[k] ); }
 	MockDate.prototype = {
 		getDate           : function() { return this.date;  }, getDay     : function() { return this.day;    },
@@ -33,35 +29,35 @@ suite( 'd8 (en-GB/default)', function() {
 	var DP = Date.prototype, slice = [].slice;
 
 	setup( function( done ) {
-		Date.localize( 'en-GB' );
+		Date.localize( 'GR' );
 		done();
 	} );
 
-	test( '<static> Date.locale.getOrdinal returns the ordinal of a number', function( done ) {
-		expect( Date.getOrdinal(  1 ) ).to.eql( 'st' );
-		expect( Date.getOrdinal(  2 ) ).to.eql( 'nd' );
-		expect( Date.getOrdinal(  3 ) ).to.eql( 'rd' );
-		expect( Date.getOrdinal(  4 ) ).to.eql( 'th' );
-		expect( Date.getOrdinal(  5 ) ).to.eql( 'th' );
-		expect( Date.getOrdinal(  6 ) ).to.eql( 'th' );
-		expect( Date.getOrdinal(  7 ) ).to.eql( 'th' );
-		expect( Date.getOrdinal(  8 ) ).to.eql( 'th' );
-		expect( Date.getOrdinal(  9 ) ).to.eql( 'th' );
-		expect( Date.getOrdinal( 10 ) ).to.eql( 'th' );
-		expect( Date.getOrdinal( 11 ) ).to.eql( 'th' );
-		expect( Date.getOrdinal( 12 ) ).to.eql( 'th' );
-		expect( Date.getOrdinal( 13 ) ).to.eql( 'th' );
-		expect( Date.getOrdinal( 14 ) ).to.eql( 'th' );
-		expect( Date.getOrdinal( 15 ) ).to.eql( 'th' );
-		expect( Date.getOrdinal( 16 ) ).to.eql( 'th' );
-		expect( Date.getOrdinal( 17 ) ).to.eql( 'th' );
-		expect( Date.getOrdinal( 18 ) ).to.eql( 'th' );
-		expect( Date.getOrdinal( 19 ) ).to.eql( 'th' );
-		expect( Date.getOrdinal( 20 ) ).to.eql( 'th' );
-		expect( Date.getOrdinal( 21 ) ).to.eql( 'st' );
-		expect( Date.getOrdinal( 22 ) ).to.eql( 'nd' );
-		expect( Date.getOrdinal( 23 ) ).to.eql( 'rd' );
-		
+	test( '<static> Date.getOrdinal returns the ordinal of a number', function( done ) {
+		expect( Date.getOrdinal(  1 ) ).to.eql( 'ος' );
+		expect( Date.getOrdinal(  2 ) ).to.eql( 'ος' );
+		expect( Date.getOrdinal(  3 ) ).to.eql( 'ος' );
+		expect( Date.getOrdinal(  4 ) ).to.eql( 'ος' );
+		expect( Date.getOrdinal(  5 ) ).to.eql( 'ος' );
+		expect( Date.getOrdinal(  6 ) ).to.eql( 'ος' );
+		expect( Date.getOrdinal(  7 ) ).to.eql( 'ος' );
+		expect( Date.getOrdinal(  8 ) ).to.eql( 'ος' );
+		expect( Date.getOrdinal(  9 ) ).to.eql( 'ος' );
+		expect( Date.getOrdinal( 10 ) ).to.eql( 'ος' );
+		expect( Date.getOrdinal( 11 ) ).to.eql( 'η' );
+		expect( Date.getOrdinal( 12 ) ).to.eql( 'η' );
+		expect( Date.getOrdinal( 13 ) ).to.eql( 'η' );
+		expect( Date.getOrdinal( 14 ) ).to.eql( 'η' );
+		expect( Date.getOrdinal( 15 ) ).to.eql( 'η' );
+		expect( Date.getOrdinal( 16 ) ).to.eql( 'η' );
+		expect( Date.getOrdinal( 17 ) ).to.eql( 'η' );
+		expect( Date.getOrdinal( 18 ) ).to.eql( 'η' );
+		expect( Date.getOrdinal( 19 ) ).to.eql( 'η' );
+		expect( Date.getOrdinal( 20 ) ).to.eql( 'η' );
+		expect( Date.getOrdinal( 21 ) ).to.eql( 'η' );
+		expect( Date.getOrdinal( 22 ) ).to.eql( 'η' );
+		expect( Date.getOrdinal( 23 ) ).to.eql( 'η' );
+
 		done();
 	} );
 
@@ -82,14 +78,14 @@ suite( 'd8 (en-GB/default)', function() {
 		expect( Date.isLeapYear( 2011 ) ).to.be.false;
 		expect( Date.isLeapYear( 2013 ) ).to.be.false;
 		expect( Date.isLeapYear( 2021 ) ).to.be.false;
-		
+
 		done();
 	} );
 
 	test( '<static> Date.coerce turns a Date String into a Date instance based on the passed format', function( done ) {
-		expect( Date.coerce( 'Fri, 01 Jan 2010 00:00:00', 'D, d M Y H:i:s' ) ).to.eql( new Date( 2010, 0, 1 ) );
-		expect( Date.coerce( 'Fri, 01 Jan 2010 00:00:00 GMT+0400',  'D, d M Y H:i:s <GMT>O' ) ).to.eql( new Date( 2009, 11, 31, 20 ) );
-		expect( Date.coerce( 'Fri, 01 Jan 2010 00:00:00 GMT-08:00', 'D, d M Y H:i:s <GMT>P' ) ).to.eql( new Date( 2010,  0,  1,  8 ) );
+		expect( Date.coerce( 'Παρ, 01 Ιαν 2010 00:00:00', 'D, d M Y H:i:s' ) ).to.eql( new Date( 2010, 0, 1 ) );
+		expect( Date.coerce( 'Παρ, 01 Ιαν 2010 00:00:00 GMT+0400',  'D, d M Y H:i:s <GMT>O' ) ).to.eql( new Date( 2009, 11, 31, 20 ) );
+		expect( Date.coerce( 'Παρ, 01 Ιαν 2010 00:00:00 GMT-08:00', 'D, d M Y H:i:s <GMT>P' ) ).to.eql( new Date( 2010,  0,  1,  8 ) );
 
 		expect( Date.coerce( '1262304000000', 'U' ) ).to.eql( new Date( 2010,  0,  1 ) );
 
@@ -189,25 +185,25 @@ suite( 'd8 (en-GB/default)', function() {
 		expect( new Date( 2010, 0, 1, 1, 10, 10, 10 ).between( new Date( 2010, 0, 1, 1, 10, 10, 11 ), new Date( 2010, 0, 1, 1, 10, 10, 12 ) ) ).to.be.false;
 		expect( new Date( 2010, 0, 1 ).between( new Date( 2010, 0, 2 ), new Date( 2010, 0, 3 ) ) ).to.be.false;
 		expect( new Date( 2010, 0, 1, 1, 10, 10, 10 ).between( new Date( 2009, 4, 1 ), new Date( 2010, 0, 1, 1, 10, 10, 9 ) ) ).to.be.false;
-		
+
 		done();
 	} );
 
-	test( 'Date.prototype.clearTime: clears the hours, minutes, seconds and milliseconds from a Date instance', function( done ) {
+	test( 'Date.prototype.clearTime: clears the hours, minutes, seconds και milliseconds from a Date instance', function( done ) {
 		var e = new Date( 2010, 0, 1 ), r = new Date( 2010, 0, 1, 1, 10, 10, 10 );
-			
+
 		expect( r ).not.to.eql( e );
 		expect( r.clone().clearTime() ).to.eql( e );
-		
+
 		done();
 	} );
 
 	test( 'Date.prototype.clone: returns a copy of a Date instance', function( done ) {
 		var e = new Date( 2010, 0, 1 ), r = e.clone();
-				
+
 		expect( r ).not.to.equal( e );
 		expect( r ).to.eql( e );
-		
+
 		done();
 	} );
 
@@ -330,169 +326,173 @@ suite( 'd8 (en-GB/default)', function() {
 	} );
 
 	test( 'Date.prototype.lexicalize `exact`', function( done ) {
-		expect( ( new Date ).lexicalize( 'exact' ) ).to.equal( 'just now' );
+		expect( ( new Date ).lexicalize( 'exact' ) ).to.equal( 'μόλις τώρα' );
 
-		expect( ( new Date( 2011, 0, 1 ) ).lexicalize( new Date( 2012,  0,  1 ), 'exact' ) ).to.equal( '1 year ago' );
-		expect( ( new Date( 2012, 0, 1 ) ).lexicalize( new Date( 2011,  0,  1 ), 'exact' ) ).to.equal( '1 year from now' );
-		expect( ( new Date( 2001, 0, 1 ) ).lexicalize( new Date( 2011, 11, 30 ), 'exact' ) ).to.equal( '11 years ago' );
-		expect( ( new Date( 2011, 11, 30 ) ).lexicalize( new Date( 2001,  0,  1 ), 'exact' ) ).to.equal( '11 years from now' );
+		expect( ( new Date( 2011, 0, 1 ) ).lexicalize( new Date( 2012,  0,  1 ), 'exact' ) ).to.equal( '1 χρόνος πριν' );
 
-		expect( ( new Date( 2012, 0, 31 ) ).lexicalize( new Date( 2012, 2,  1 ), 'exact' ) ).to.equal( '1 month ago' );
-		expect( ( new Date( 2012, 2,  1 ) ).lexicalize( new Date( 2012, 0, 31 ), 'exact' ) ).to.equal( '1 month from now' );
-		expect( ( new Date( 2012, 0,  1 ) ).lexicalize( ( new Date( 2012, 3,  1 ) ).adjust( Date.HOUR, -23 ), 'exact' ) ).to.equal( '3 months ago' );
-		expect( ( new Date( 2012, 3,  1 ) ).adjust( Date.HOUR, -23 ).lexicalize( new Date( 2012, 0,  1 ), 'exact' ) ).to.equal( '3 months from now' );
+		expect( ( new Date( 2012, 0, 1 ) ).lexicalize( new Date( 2011,  0,  1 ), 'exact' ) ).to.equal( '1 χρόνος από τώρα' );
+		expect( ( new Date( 2001, 0, 1 ) ).lexicalize( new Date( 2011, 11, 30 ), 'exact' ) ).to.equal( '11 χρόνια πριν' );
+		expect( ( new Date( 2011, 11, 30 ) ).lexicalize( new Date( 2001,  0,  1 ), 'exact' ) ).to.equal( '11 χρόνια από τώρα' );
 
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.WEEK, -1 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 week ago' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.WEEK,  1 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 week from now' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.WEEK, -3 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '3 weeks ago' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.WEEK,  3 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '3 weeks from now' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.WEEK, -5 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 month and 5 days ago' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.WEEK,  5 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 month and 5 days from now' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.WEEK, -7 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 month, 2 weeks and 5 days ago' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.WEEK,  7 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 month, 2 weeks and 5 days from now' );
+		expect( ( new Date( 2012, 0, 31 ) ).lexicalize( new Date( 2012, 2,  1 ), 'exact' ) ).to.equal( '1 μήνα πριν' );
+		expect( ( new Date( 2012, 2,  1 ) ).lexicalize( new Date( 2012, 0, 31 ), 'exact' ) ).to.equal( '1 μήνα από τώρα' );
+		expect( ( new Date( 2012, 0,  1 ) ).lexicalize( ( new Date( 2012, 3,  1 ) ).adjust( Date.HOUR, -23 ), 'exact' ) ).to.equal( '3 μήνες πριν' );
+		expect( ( new Date( 2012, 3,  1 ) ).adjust( Date.HOUR, -23 ).lexicalize( new Date( 2012, 0,  1 ), 'exact' ) ).to.equal( '3 μήνες από τώρα' );
 
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY, -1 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 day ago' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY,  1 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 day from now' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY, -2 ).adjust( Date.HOUR, -6 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '2 days and 6 hours ago' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY,  2 ).adjust( Date.HOUR,  6 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '2 days and 6 hours from now' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY, -3 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '3 days ago' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY,  3 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '3 days from now' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY, -4 ).adjust( Date.HOUR, -12 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '4 days and 12 hours ago' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY,  4 ).adjust( Date.HOUR,  12 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '4 days and 12 hours from now' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY, -5 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '5 days ago' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY,  5 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '5 days from now' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY, -6 ).adjust( Date.HOUR, -18 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '6 days and 18 hours ago' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY,  6 ).adjust( Date.HOUR,  18 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '6 days and 18 hours from now' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY, -7 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 week ago' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY,  7 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 week from now' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY, -8 ).adjust( Date.HOUR, -22 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 week, 1 day, 21 hours, 59 minutes and 59 seconds ago' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY,  8 ).adjust( Date.HOUR,  22 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 week, 1 day, 21 hours, 59 minutes and 59 seconds from now' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY, -9 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 week and 2 days ago' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY,  9 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 week and 2 days from now' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY, -10 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 week and 3 days ago' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY,  10 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 week and 3 days from now' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.WEEK, -1 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 εβδομάδα πριν' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.WEEK,  1 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 εβδομάδα από τώρα' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.WEEK, -3 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '3 εβδομάδες πριν' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.WEEK,  3 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '3 εβδομάδες από τώρα' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.WEEK, -5 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 μήνα και 5 ημέρες πριν' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.WEEK,  5 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 μήνα και 5 ημέρες από τώρα' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.WEEK, -7 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 μήνα, 2 εβδομάδες και 5 ημέρες πριν' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.WEEK,  7 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 μήνα, 2 εβδομάδες και 5 ημέρες από τώρα' );
 
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.HOUR,  -1 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 hour ago' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.HOUR,   1 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 hour from now' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.HOUR, -12 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '12 hours ago' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.HOUR,  12 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '12 hours from now' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.HOUR, -24 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 day ago' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.HOUR,  24 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 day from now' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY, -1 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 ημέρα πριν' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY,  1 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 ημέρα από τώρα' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY, -2 ).adjust( Date.HOUR, -6 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '2 ημέρες και 6 ώρες πριν' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY,  2 ).adjust( Date.HOUR,  6 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '2 ημέρες και 6 ώρες από τώρα' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY, -3 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '3 ημέρες πριν' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY,  3 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '3 ημέρες από τώρα' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY, -4 ).adjust( Date.HOUR, -12 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '4 ημέρες και 12 ώρες πριν' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY,  4 ).adjust( Date.HOUR,  12 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '4 ημέρες και 12 ώρες από τώρα' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY, -5 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '5 ημέρες πριν' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY,  5 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '5 ημέρες από τώρα' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY, -6 ).adjust( Date.HOUR, -18 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '6 ημέρες και 18 ώρες πριν' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY,  6 ).adjust( Date.HOUR,  18 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '6 ημέρες και 18 ώρες από τώρα' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY, -7 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 εβδομάδα πριν' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY,  7 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 εβδομάδα από τώρα' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY, -8 ).adjust( Date.HOUR, -22 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 εβδομάδα, 1 ημέρα, 21 ώρες, 59 λεπτά και 59 δευτερόλεπτα πριν' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY,  8 ).adjust( Date.HOUR,  22 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 εβδομάδα, 1 ημέρα, 21 ώρες, 59 λεπτά και 59 δευτερόλεπτα από τώρα' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY, -9 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 εβδομάδα και 2 ημέρες πριν' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY,  9 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 εβδομάδα και 2 ημέρες από τώρα' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY, -10 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 εβδομάδα και 3 ημέρες πριν' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY,  10 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 εβδομάδα και 3 ημέρες από τώρα' );
 
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.MINUTE,  -1 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 minute ago' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.MINUTE,   1 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 minute from now' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.MINUTE, -30 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '30 minutes ago' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.MINUTE,  30 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '30 minutes from now' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.MINUTE, -60 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 hour ago' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.MINUTE,  60 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 hour from now' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.HOUR,  -1 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 ώρα πριν' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.HOUR,   1 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 ώρα από τώρα' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.HOUR, -12 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '12 ώρες πριν' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.HOUR,  12 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '12 ώρες από τώρα' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.HOUR, -24 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 ημέρα πριν' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.HOUR,  24 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 ημέρα από τώρα' );
 
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.SECOND,  -1 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 second ago' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.SECOND,   1 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 second from now' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.SECOND, -30 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '30 seconds ago' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.SECOND,  30 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '30 seconds from now' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.SECOND, -60 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 minute ago' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.SECOND,  60 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 minute from now' );
-		
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( { year : -1, month : -1, week : -1, day : -1, hr : -1, min : -1, sec : -1 } ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 year, 1 month, 1 week, 4 days, 1 hour and 1 minute ago' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( { year :  1, month :  1, week :  1, day :  1, hr :  1, min :  1, sec :  1 } ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 year, 1 month, 1 week, 5 days, 1 hour, 1 minute and 1 second from now' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.MINUTE,  -1 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 λεπτό πριν' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.MINUTE,   1 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 λεπτό από τώρα' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.MINUTE, -30 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '30 λεπτά πριν' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.MINUTE,  30 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '30 λεπτά από τώρα' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.MINUTE, -60 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 ώρα πριν' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.MINUTE,  60 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 ώρα από τώρα' );
+
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.SECOND,  -1 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 δευτερόλεπτο πριν' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.SECOND,   1 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 δευτερόλεπτο από τώρα' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.SECOND, -30 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '30 δευτερόλεπτα πριν' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.SECOND,  30 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '30 δευτερόλεπτα από τώρα' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.SECOND, -60 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 λεπτό πριν' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.SECOND,  60 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 λεπτό από τώρα' );
+
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( { year : -1, month : -1, week : -1, day : -1, hr : -1, min : -1, sec : -1 } ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 χρόνος, 1 μήνα, 1 εβδομάδα, 4 ημέρες, 1 ώρα και 1 λεπτό πριν' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( { year :  1, month :  1, week :  1, day :  1, hr :  1, min :  1, sec :  1 } ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 χρόνος, 1 μήνα, 1 εβδομάδα, 5 ημέρες, 1 ώρα, 1 λεπτό και 1 δευτερόλεπτο από τώρα' );
+
 
 		done();
 	} );
 
 	test( 'Date.prototype.lexicalize `approx`', function( done ) {
-		expect( ( new Date ).lexicalize( 'approx' ) ).to.equal( 'just now' );
+		expect( ( new Date ).lexicalize( 'approx' ) ).to.equal( 'μόλις τώρα' );
 
-		expect( ( new Date( 2011, 0, 1 ) ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'last year' );
-		expect( ( new Date( 2012, 0, 1 ) ).lexicalize( new Date( 2011, 0, 1 ), 'approx' ) ).to.equal( 'next year' );
-		expect( ( new Date( 2001, 0, 1 ) ).lexicalize( new Date( 2011, 11, 30 ), 'approx' ) ).to.equal( '11 years ago' );
-		expect( ( new Date( 2011, 11, 30 ) ).lexicalize( new Date( 2001,  0,  1 ), 'approx' ) ).to.equal( '11 years from now' );
 
-		expect( ( new Date( 2012, 0, 31 ) ).lexicalize( new Date( 2012, 2,  1 ), 'approx' ) ).to.equal( 'last month' );
-		expect( ( new Date( 2012, 2,  1 ) ).lexicalize( new Date( 2012, 0, 31 ), 'approx' ) ).to.equal( 'next month' );
-		expect( ( new Date( 2012, 0,  1 ) ).lexicalize( new Date( 2012, 3,  1 ), 'approx' ) ).to.equal( 'about 3 months ago' );
-		expect( ( new Date( 2012, 3,  1 ) ).lexicalize( new Date( 2012, 0,  1 ), 'approx' ) ).to.equal( 'about 3 months from now' );
+		expect( ( new Date( 2011, 0, 1 ) ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'το περασμένο χρόνος' );
+		expect( ( new Date( 2012, 0, 1 ) ).lexicalize( new Date( 2011, 0, 1 ), 'approx' ) ).to.equal( 'τον επόμενο χρόνος' );
+		expect( ( new Date( 2001, 0, 1 ) ).lexicalize( new Date( 2011, 11, 30 ), 'approx' ) ).to.equal( '11 χρόνια πριν' );
+		expect( ( new Date( 2011, 11, 30 ) ).lexicalize( new Date( 2001,  0,  1 ), 'approx' ) ).to.equal( '11 χρόνια από τώρα' );
 
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.WEEK, -1 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'last week' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.WEEK,  1 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'next week' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.WEEK, -2 ).adjust( Date.DAY, -1 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'just over 2 weeks ago' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.WEEK,  2 ).adjust( Date.DAY,  1 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'just over 2 weeks from now' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.WEEK, -3 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( '3 weeks ago' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.WEEK,  3 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( '3 weeks from now' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.WEEK, -5 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'just over 1 month ago' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.WEEK,  5 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'just over 1 month from now' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.WEEK, -7 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'about 1 and a half months ago' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.WEEK,  7 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'about 1 and a half months from now' );
-		
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY, -1 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'yesterday' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY,  1 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'tomorrow' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY, -2 ).adjust( Date.HOUR, -6 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'almost 2 and a half days ago' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY,  2 ).adjust( Date.HOUR,  6 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'almost 2 and a half days from now' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY, -3 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( '3 days ago' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY,  3 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( '3 days from now' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY, -4 ).adjust( Date.HOUR, -12 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'about 4 and a half days ago' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY,  4 ).adjust( Date.HOUR,  12 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'about 4 and a half days from now' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY, -5 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( '5 days ago' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY,  5 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( '5 days from now' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY, -6 ).adjust( Date.HOUR, -18 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'almost 7 days ago' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY,  6 ).adjust( Date.HOUR,  18 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'almost 7 days from now' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY, -7 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'last week' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY,  7 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'next week' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY, -8 ).adjust( Date.HOUR, -22 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'almost 1 and a half weeks ago' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY,  8 ).adjust( Date.HOUR,  22 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'almost 1 and a half weeks from now' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY, -9 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'almost 1 and a half weeks ago' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY,  9 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'almost 1 and a half weeks from now' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY, -10 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'about 1 and a half weeks ago' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY,  10 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'about 1 and a half weeks from now' );
+		expect( ( new Date( 2012, 0, 31 ) ).lexicalize( new Date( 2012, 2,  1 ), 'approx' ) ).to.equal( 'το περασμένο μήνα' );
+		expect( ( new Date( 2012, 2,  1 ) ).lexicalize( new Date( 2012, 0, 31 ), 'approx' ) ).to.equal( 'τον επόμενο μήνα' );
+		expect( ( new Date( 2012, 0,  1 ) ).lexicalize( new Date( 2012, 3,  1 ), 'approx' ) ).to.equal( 'περίπου 3 μήνες πριν' );
+		expect( ( new Date( 2012, 3,  1 ) ).lexicalize( new Date( 2012, 0,  1 ), 'approx' ) ).to.equal( 'περίπου 3 μήνες από τώρα' );
 
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.HOUR,  -1 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( '1 hour ago' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.HOUR,   1 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( '1 hour from now' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.HOUR, -12 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( '12 hours ago' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.HOUR,  12 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( '12 hours from now' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.HOUR, -24 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'yesterday' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.HOUR,  24 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'tomorrow' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.WEEK, -1 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'το περασμένο εβδομάδα' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.WEEK,  1 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'τον επόμενο εβδομάδα' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.WEEK, -2 ).adjust( Date.DAY, -1 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'λίγο περισσότερο 2 εβδομάδες πριν' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.WEEK,  2 ).adjust( Date.DAY,  1 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'λίγο περισσότερο 2 εβδομάδες από τώρα' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.WEEK, -3 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( '3 εβδομάδες πριν' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.WEEK,  3 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( '3 εβδομάδες από τώρα' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.WEEK, -5 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'λίγο περισσότερο 1 μήνα πριν' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.WEEK,  5 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'λίγο περισσότερο 1 μήνα από τώρα' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.WEEK, -7 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'περίπου 1 και μισή μήνες πριν' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.WEEK,  7 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'περίπου 1 και μισή μήνες από τώρα' );
 
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.MINUTE,  -1 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( '1 minute ago' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.MINUTE,   1 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( '1 minute from now' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.MINUTE, -30 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( '30 minutes ago' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.MINUTE,  30 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( '30 minutes from now' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.MINUTE, -60 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( '1 hour ago' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.MINUTE,  60 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( '1 hour from now' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY, -1 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'εχθές' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY,  1 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'αύριο' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY, -2 ).adjust( Date.HOUR, -6 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'σχεδόν 2 και μισή ημέρες πριν' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY,  2 ).adjust( Date.HOUR,  6 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'σχεδόν 2 και μισή ημέρες από τώρα' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY, -3 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( '3 ημέρες πριν' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY,  3 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( '3 ημέρες από τώρα' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY, -4 ).adjust( Date.HOUR, -12 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'περίπου 4 και μισή ημέρες πριν' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY,  4 ).adjust( Date.HOUR,  12 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'περίπου 4 και μισή ημέρες από τώρα' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY, -5 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( '5 ημέρες πριν' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY,  5 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( '5 ημέρες από τώρα' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY, -6 ).adjust( Date.HOUR, -18 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'σχεδόν 7 ημέρες πριν' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY,  6 ).adjust( Date.HOUR,  18 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'σχεδόν 7 ημέρες από τώρα' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY, -7 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'το περασμένο εβδομάδα' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY,  7 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'τον επόμενο εβδομάδα' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY, -8 ).adjust( Date.HOUR, -22 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'σχεδόν 1 και μισή εβδομάδες πριν' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY,  8 ).adjust( Date.HOUR,  22 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'σχεδόν 1 και μισή εβδομάδες από τώρα' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY, -9 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'σχεδόν 1 και μισή εβδομάδες πριν' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY,  9 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'σχεδόν 1 και μισή εβδομάδες από τώρα' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY, -10 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'περίπου 1 και μισή εβδομάδες πριν' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY,  10 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'περίπου 1 και μισή εβδομάδες από τώρα' );
 
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.SECOND,  -1 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'just now' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.SECOND,   1 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'just now' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.SECOND, -30 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'just now' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.SECOND,  30 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'just now' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.SECOND, -60 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( '1 minute ago' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.SECOND,  60 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( '1 minute from now' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.HOUR,  -1 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( '1 ώρα πριν' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.HOUR,   1 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( '1 ώρα από τώρα' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.HOUR, -12 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( '12 ώρες πριν' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.HOUR,  12 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( '12 ώρες από τώρα' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.HOUR, -24 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'εχθές' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.HOUR,  24 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'αύριο' );
 
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( { year : -1, month : -1, week : -1, day : -1, hr : -1, min : -1, sec : -1 } ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'just over 1 year ago' );
-		expect( ( new Date( 2012, 0, 1 ) ).adjust( { year :  1, month :  1, week :  1, day :  1, hr :  1, min :  1, sec :  1 } ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'just over 1 year from now' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.MINUTE,  -1 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( '1 λεπτό πριν' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.MINUTE,   1 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( '1 λεπτό από τώρα' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.MINUTE, -30 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( '30 λεπτά πριν' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.MINUTE,  30 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( '30 λεπτά από τώρα' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.MINUTE, -60 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( '1 ώρα πριν' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.MINUTE,  60 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( '1 ώρα από τώρα' );
+
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.SECOND,  -1 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'μόλις τώρα' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.SECOND,   1 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'μόλις τώρα' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.SECOND, -30 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'μόλις τώρα' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.SECOND,  30 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'μόλις τώρα' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.SECOND, -60 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( '1 λεπτό πριν' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.SECOND,  60 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( '1 λεπτό από τώρα' );
+
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( { year : -1, month : -1, week : -1, day : -1, hr : -1, min : -1, sec : -1 } ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'λίγο περισσότερο 1 χρόνος πριν' );
+		expect( ( new Date( 2012, 0, 1 ) ).adjust( { year :  1, month :  1, week :  1, day :  1, hr :  1, min :  1, sec :  1 } ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'λίγο περισσότερο 1 χρόνος από τώρα' );
+
 
 		done();
 	} );
 
-	test( 'Date.prototype.format: takes a format String and returns a Date String representation of the Date instance', function( done ) {
+	test( 'Date.prototype.format: takes a format String και returns a Date String representation of the Date instance', function( done ) {
 		function format( s ) { return '{ ' + s.split( ' ' ).map( map ).join( ', ' ) + ' }'; }
 		function map( s ) { return '"<' + s + '>" : "' + s + '"'; }
 
 		var r1 = new Date( 2010, 0, 1, 13, 17, 21, 450 ),
 			r2 = new MockDate( {
 				date :   1, day    :    5, hour : 13, minute : 17, month : 0,
-				ms   : 450, second :   21, str  : 'Fri Jan 01 2010 13:17:21 GMT+0000 (BST)',
+				ms   : 450, second :   21, str  : 'Παρ Ιανουάριος 01 2010 13:17:21 GMT+0000 (BST)',
 				tzo  :   0, year   : 2010
 			} );
 
 		expect( JSON.parse( r1.format( format( 'd D j l N S w z W F m M n t L o Y y a A g G h H i s u U' ) ) ) ).to.eql( {
-			d : '01',      D : 'Fri',  j : '1',   l : 'Friday', N : '5',  S : 'st', w : '5', z : '0',              // day
+			d : '01',        D : 'Παρ',  j : '1',     l : 'Παρασκευή', N : '5',  S : 'ος', w : '5', z : '0',              // day
 			W : '53',                                                                                             // week
-			F : 'January', m : '01',   M : 'Jan',  n : '1',    t : '31',                                          // month
-			L : '0',       o : '2009', Y : '2010', y : '10',                                                      // year
-			a : 'pm',      A : 'PM',   g : '1',    G : '13',   h : '01', H : '13', i : '17', s : '21', u : '450', // time
+			F : 'Ιανουάριος', m : '01',   M : 'Ιαν',  n : '1',       t : '31',                                          // month
+			L : '0',          o : '2009', Y : '2010', y : '10',                                                      // year
+			a : 'μμ',         A : 'μμ'.toLocaleUpperCase(), g : '1', G : '13',   h : '01', H : '13', i : '17', s : '21', u : '450', // time
 			U : '1262351841450'                                                                                   // unix
 		} );
 		expect( JSON.parse( call( 'format', r2, format( 'O P T Z c r' ) ) ) ).to.eql( {
 			O : '+0000', P : '+00:00', T : 'BST', Z : '0',                              // timezone
-			c : '2010-01-01T13:17:21.450Z',       r : 'Fri, 01 Jan 2010 13:17:21 +0000' // full date/ time
+			c : '2010-01-01T13:17:21.450Z',       r : 'Παρ, 01 Ιαν 2010 13:17:21 +0000' // full date/ time
 		} );
 
 		expect( r1.format( 'e' ) ).to.equal( r1.lexicalize( 'exact' ) );
@@ -503,7 +503,7 @@ suite( 'd8 (en-GB/default)', function() {
 
 	test( 'Date.prototype.getGMTOffset: returns the GMT offset of a Date instance', function( done ) {
 		var fn = 'getGMTOffset';
-			
+
 		expect( call( fn, new MockDate( { tzo :    0 } ) ) ).to.eql( '+0000' );
 		expect( call( fn, new MockDate( { tzo :  -60 } ) ) ).to.eql( '+0100' );
 		expect( call( fn, new MockDate( { tzo :   60 } ) ) ).to.eql( '-0100' );
@@ -514,7 +514,7 @@ suite( 'd8 (en-GB/default)', function() {
 		expect( call( fn, new MockDate( { tzo :   60 } ), true ) ).to.eql( '-01:00' );
 		expect( call( fn, new MockDate( { tzo : -600 } ), true ) ).to.eql( '+10:00' );
 		expect( call( fn, new MockDate( { tzo :  600 } ), true ) ).to.eql( '-10:00' );
-		
+
 		done();
 	} );
 
@@ -526,13 +526,13 @@ suite( 'd8 (en-GB/default)', function() {
 		expect( new Date( 2007,  0,  4 ).getISODay() ).to.eql( 4 );
 		expect( new Date( 2007,  0,  5 ).getISODay() ).to.eql( 5 );
 		expect( new Date( 2007,  0,  6 ).getISODay() ).to.eql( 6 );
-		
+
 		done();
 	} );
 
 	test( 'Date.prototype.getISODaysInYear: returns the ISO-8601 number of days in the year', function( done ) {
 		var r = [364, 364, 364, 364, 371, 371, 357, 364, 364, 371, 364];
-			
+
 		[2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010].forEach( function( y, i ) {
 			expect( new Date( y, 1, 1 ).getISODaysInYear() ).to.eql( r[i] );
 		} );
@@ -546,7 +546,7 @@ suite( 'd8 (en-GB/default)', function() {
 		[2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010].forEach( function( y, i ) {
 			expect( new Date( y, 1, 1 ).getISOFirstMondayOfYear().format( 'Y-m-d' ) ).to.eql( r[i].format( 'Y-m-d' ) );
 		} );
-		
+
 		done();
 	} );
 
@@ -562,7 +562,7 @@ suite( 'd8 (en-GB/default)', function() {
 			expect( new Date( y,  7, 30 ).getISOWeek() ).to.eql( aug30[i] );
 			expect( new Date( y, 11, 31 ).getISOWeek() ).to.eql( dec31[i] );
 		} );
-		
+
 		done();
 	} );
 
@@ -572,7 +572,7 @@ suite( 'd8 (en-GB/default)', function() {
 		[2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010].forEach( function( y, i ) {
 			expect( new Date( y, 1, 1 ).getISOWeeksInYear() ).to.eql( r[i] );
 		} );
-				
+
 		done();
 	} );
 
@@ -615,17 +615,17 @@ suite( 'd8 (en-GB/default)', function() {
 		expect( new Date( 2010, 0, 1 ).isLeapYear() ).to.be.false;
 		expect( new Date( 2050, 0, 1 ).isLeapYear() ).to.be.false;
 		expect( new Date( 2100, 0, 1 ).isLeapYear() ).to.be.false;
-		
+
 		done();
 	} );
 
 	test( 'Date.prototype.timezone: returns the timezone portion of a Date instance', function( done ) {
 		var fn = 'timezone';
-		expect( call( fn, new MockDate( { str : 'Thu, 25 Oct 2007 22:53:45 GMT+0800' } ) ) ).to.eql( 'GMT' );
-		expect( call( fn, new MockDate( { str : 'Thu Oct 25 2007 22:55:35 GMT+0800 (Malay Peninsula Standard Time)' } ) ) ).to.eql( 'MPST' );
-		expect( call( fn, new MockDate( { str : 'Thu Oct 25 22:54:35 UTC+0800 2007' } ) ) ).to.eql( 'UTC' );
-		expect( call( fn, new MockDate( { str : 'Thu Oct 25 17:06:37 PDT 2007' } ) ) ).to.eql( 'PDT' );
-		expect( call( fn, new MockDate( { str : 'Tue Apr 20 2010 19:27:18 GMT+0100 (BST)' } ) ) ).to.eql( 'BST' );
+		expect( call( fn, new MockDate( { str : 'Πέμ, 25 Οκτ 2007 22:53:45 GMT+0800' } ) ) ).to.eql( 'GMT' );
+		expect( call( fn, new MockDate( { str : 'Πέμ Οκτ 25 2007 22:55:35 GMT+0800 (Malay Peninsula Stκαιard Time)' } ) ) ).to.eql( 'MPST' );
+		expect( call( fn, new MockDate( { str : 'Πέμ Οκτ 25 22:54:35 UTC+0800 2007' } ) ) ).to.eql( 'UTC' );
+		expect( call( fn, new MockDate( { str : 'Πέμ Οκτ 25 17:06:37 PDT 2007' } ) ) ).to.eql( 'PDT' );
+		expect( call( fn, new MockDate( { str : 'Πέμ Οκτ 20 2010 19:27:18 GMT+0100 (BST)' } ) ) ).to.eql( 'BST' );
 
 		done();
 	} );
@@ -658,4 +658,3 @@ suite( 'd8 (en-GB/default)', function() {
 		done();
 	} );
 } );
-

@@ -10,8 +10,14 @@ currently the only locales available are:
 
 - en-GB (0.9kb gzipped)
 - en-US (0.9kb gzipped)
+- GR    (1.1kb gzipped) **this still needs some work as my Greek is — how you say — "hella-rusty"**
 
 but feel free to create a locale for your specific nationality and submit a pull request! :D
+
+## File size
+
+- d8.js ≅ 8.8kb (gzipped)
+- d8.min.js ≅ 5.2kb (minzipped)
 
 ## Dependencies
 
@@ -28,9 +34,9 @@ Also, since d8.js simply extends the Native Date Class, a reference to **m8 IS N
 
    <script src="/path/to/m8/m8.js" type="text/javascript"></script>
 
-<!-- IMPORTANT: The correct locale must be loaded before d8! -->
-   <script src="/path/to/d8/locale/en-GB.js" type="text/javascript"></script>
    <script src="/path/to/d8/d8.min.js" type="text/javascript"></script>
+<!-- This should now come after the actual library, since it is now possible to have use locales at once -->
+   <script src="/path/to/d8/locale/en-GB.js" type="text/javascript"></script>
 
 ```
 
@@ -38,11 +44,11 @@ Also, since d8.js simply extends the Native Date Class, a reference to **m8 IS N
 
 ```javascript
 
-    require( 'd8/locale/en-GB' ); // IMPORTANT: The correct locale must be loaded before d8!!
     require( 'd8' );
+    require( 'd8/locale/en-GB' ); // NOTE: This should now come after the actual library, since it is now possible to have use locales at once
 
  // if running in a sandboxed environment remember to:
-    require( 'm8' ).x( Date ); // and/ or any other Types that require extending.
+    require( 'm8' ).x( Date/*[, Object, Array, Boolean Function]*/ ); // and/ or any other Types that require extending.
 
 ```
 
@@ -50,7 +56,7 @@ As mentioned above d8 extends JavaScript's native `Date` & `Date.prototype`, so 
 
 ## Support
 
-Tested to work with nodejs, FF4+, Safari 5+, Chrome 7+, IE9+. Should technically work in any browser that supports [ecma 5]( http://kangax.github.com/es5-compat-table/) without throwing any JavaScript errors.
+Tested to work with nodejs, FF4+, Safari 5+, Chrome 7+, IE9+ and Opera — with one exception: `( new Date( [] ) ).valid() )` returns `true` in Opera and false in every other browser — technically **d8** should work in any JavaScript parser that supports [ecma 5]( http://kangax.github.com/es5-compat-table/) without throwing any JavaScript errors.
 
 ## API
 
@@ -167,10 +173,10 @@ The Object will contain any or all of the following properties:
 		<tr><td width="48"><code>tense</code></td><td width="48">Number</td><td>This will either be:
 			<dl>
 				<dt><code>-1</code></dt><dd>The Date instance is less than now or the passed Date, i.e. in the past</dd>
-				<dt><code>0</code></dt><dd>The Date instance is euqal to now or the passed Date, i.e. in the present.<br /><strong>NOTE:</strong> If <code>tense</code> is <code>0</code> then the Object will most probably have no other properties.</dd>
+				<dt><code>0</code></dt><dd>The Date instance is equal to now or the passed Date, i.e. in the present.<br /><strong>NOTE:</strong> If <code>tense</code> is <code>0</code> then the Object will most probably have no other properties, except <code>value</code>, which will be zero.</dd>
 				<dt><code>1</code></dt><dd>The Date instance is greater than now or the passed Date,  i.e. in the future</dd>
 			</dl>
-			<strong>NOTE:</strong> All other properties Numbers will be positive Numbers as you will know if the <code>diff</code> is in the past, present or future by using this property.
+			<strong>NOTE:</strong> To make the <code>diff</code> Object's values easier to work with all other properties will be positive Numbers. You should use the <code>tense</code> property as your reference for the <code>diff</code> being in the past, present or future.
 		</td></tr>
 		<tr><td width="48"><code>value</code></td><td width="48">Number</td><td>The — absolute — number of milliseconds difference between the two Dates.</td></tr>
 		<tr><td width="48"><code>years</code></td><td width="48">Number</td><td>The number of years the Date instance is ahead or behind the passed Date.</td></tr>
@@ -184,9 +190,8 @@ The Object will contain any or all of the following properties:
 	</tbody>
 </table>
 
-**NOTE:** If any of the properties — other than `tense` — is zero it will be removed from the `diff` Object.
+**NOTE:** If any property — other than `tense` & `value` — is zero it will be omitted from the `diff` Object.
 
-**NOTE:** You can supply a **space delimited** a String defining which properties you want to exclude from the result and `diff` will try and round off to the nearest time frame.
 
 ##### Example:
 
@@ -194,15 +199,32 @@ The Object will contain any or all of the following properties:
 
      ( new Date( 2012, 0, 1 ) ).diff( new Date( 2012, 0, 1 ) )             // returns => { tense :  0 }
 
-     ( new Date( 2012, 0, 1 ) ).diff( new Date( 2012, 0, 2 ) )             // returns => { tense : -1, days : 1 }
+     ( new Date( 2012, 0, 1 ) ).diff( new Date( 2012, 0, 2 ) )             // returns => { tense : -1, value : 86400000,    days  : 1 }
 
-     ( new Date( 2012, 0, 2 ) ).diff( new Date( 2012, 0, 1 ) )             // returns => { tense :  1, days : 1 }
+     ( new Date( 2012, 0, 2 ) ).diff( new Date( 2012, 0, 1 ) )             // returns => { tense :  1, value : 86400000,    days  : 1 }
 
-     ( new Date( 2012, 0, 1 ) ).diff( new Date( 2010, 9, 8, 7, 6, 5, 4 ) ) // returns => { tense :  1, years : 1, months : 9, weeks : 2, days : 1, hours : 17, minutes : 6, seconds : 54, ms : 4 }
+     ( new Date( 2012, 0, 1 ) ).diff( new Date( 2010, 9, 8, 7, 6, 5, 4 ) ) // returns => { tense :  1, value : 38858034996, years : 1, months : 2, weeks : 3, days : 3, hours : 17, minutes : 53, seconds : 54, ms : 995 }
 
 ```
 
+**NOTE:** You can supply a **space delimited** String defining which properties you want to exclude from the result and `diff` will either pass the current calculation to the next time unit or, if there are none will round off — up if over .5 or down if less, uses `Math.round` to figure this out — to the previous time unit.
 
+Exclusion codes:
+- `-` will exclude the time unit from the `diff` Object.
+- `+` will include the time unit in the `diff` Object. **Note:** this is the same as not including the time unit in the `exclusions` String.
+- '>' will exclude all time units from this time unit down from the `diff` Object.
+
+##### Example with exclusions:
+
+```javascript
+
+     ( new Date( 2012, 0, 1 ) ).diff( new Date( 2012, 0, 2 ), '-days' )                              // returns => { tense : -1, value : 86400000,    hours  : 24 }
+
+     ( new Date( 2012, 0, 2 ) ).diff( new Date( 2012, 0, 1 ), '-days' )                              // returns => { tense :  1, value : 86400000,    hours  : 24 }
+
+     ( new Date( 2012, 0, 1 ) ).diff( new Date( 2010, 9, 8, 7, 6, 5, 4 ), '-years -weeks >minutes' ) // returns => { tense :  1, value : 38858034996, months : 14, days : 29, hours : 18 }
+
+```
 
 #### format( format:String ):String
 Returns a string representation of the Date instance, based on the passed format. See the [Date formatting and parsing options](#date-formatting-and-parsing-options) below.
@@ -276,6 +298,31 @@ Returns true if the Date instance is within daylight savings time.
 
 #### isLeapYear():Boolean
 Returns true if the Date instance is a leap year.
+
+#### lexicalize( [now:Date, format:String] ):String
+Returns a String representation of the difference between the date instance and now, or the passed `Date`.
+
+#### Available formats
+The default format is `approx`, however this can be over-written by changing the **locale** file and/ or by passing in the desired format to the method.
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+	<tr><td width="96">approx</td><td>Will return an approximate difference. e.g. about 2 days ago; almost 1 and a half years from now.</td>
+	<tr><td width="96">exact</td><td>Will return the exact difference, e.g. 2 days 3 hours and 5 minutes ago; 1 year, 4 months, 2 weeks, 1 day, 5 hours, 3 minutes and 7 seconds from now.</td>
+</table>
+
+##### Example:
+
+```javascript
+
+	var date = new Date( 2012, 0, 1 );
+
+	date.clone().adjust( { hr : -3, day : -2 } ).lexicalize( date, 'approx' ); // returns => "just over 2 days ago"
+	date.clone().adjust( { hr : -3, day : -2 } ).lexicalize( date, 'exact' );  // returns => "2 days and 3 hours ago"
+
+	date.lexicalize( date.clone().adjust( { hr : -6, day : -2 } ), 'approx' ); // returns => "almost 2 and a half days from now"
+	date.lexicalize( date.clone().adjust( { hr : -6, day : -2 } ), 'exact' );  // returns => "2 days and 6 hours from now"
+
+```
 
 #### setWeek():Number(UnixTimeStamp)
 Sets the week of the year from the 1st January.
@@ -364,11 +411,11 @@ If you want to escape characters that are used by the Date parser you can wrap t
 	<tr><td width="32">r</td><td>RFC 2822 formatted date</td></tr>
 	<tr><td width="32">U</td><td>Seconds since the Unix Epoch January 1 1970 00:00:00 GMT</td></tr>
 </table>
-
-## File size
-
-- d8.js ≅ 6.8kb (gzipped)
-- d8.min.js ≅ 3.9kb (minzipped)
+### custom
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+	<tr><td width="32">e</td><td>this is a convenience for `date.lexicalize( 'exact' );`</td></tr>
+	<tr><td width="32">x</td><td>this is a convenience for `date.lexicalize( 'approx' );`</td></tr>
+</table>
 
 ## License
 

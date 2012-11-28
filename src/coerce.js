@@ -3,10 +3,12 @@
 	}
 
 	function buildParser( date_format ) {
-		if ( cache_parse[date_format] ) return cache_parse[date_format];
-		var parsers = {}, keys = [], i = -1, part,
-			parts   = date_format.replace( re_add_nr, NOREPLACE_RB ).replace( re_add_enr, NOREPLACE_RE ).split( re_split ),
-			l       = parts.length, re = [];
+		var LID = Type.locale.id, i, keys, l, parsers, part, parts, re;
+
+		if ( cache_parse[LID][date_format] ) return cache_parse[LID][date_format];
+
+		parts = date_format.replace( re_add_nr, NOREPLACE_RB ).replace( re_add_enr, NOREPLACE_RE ).split( re_split );
+		keys  = []; i = -1; l = parts.length; parsers = {}; re = [];
 
 		while ( ++i < l ) {
 			part = parts[i];
@@ -22,15 +24,15 @@
 					if ( _p.fn ) parsers[_p.k] = _p.fn;
 				}
 				if ( _p.combo ) {
-					_k  = pluck( _p.combo, 'k' );
-					_fn = associate( pluck( _p.combo, 'fn' ), _k );
+					_k  = _p.combo.pluck( 'k' );
+					_fn = associate( _p.combo.pluck( 'fn' ), _k );
 					keys.push.apply( keys, _k );
 					util.copy( parsers, _fn, true );
 				}
 				if ( _p.re ) re.push( p1, _p.re, p3 );
 			} );
 		}
-		return cache_parse[date_format] = parse.bind( null, new RegExp( re.join( '' ) ), keys, parsers );
+		return cache_parse[LID][date_format] = parse.bind( null, new RegExp( re.join( '' ) ), keys, parsers );
 	}
 
 	function parse( re, keys, fn, s ) {
@@ -54,15 +56,15 @@
 	}
 
 	function parse_setDate( date, parsers ) {
-		var dayweek, i = -1, l, leapyr, ordinal;
+		var L = Type.locale, dayweek, i = -1, l, leapyr, ordinal;
 
 		if ( date_members.every( util.has.bind( null, parsers ) ) ) return; //  only set the date if there's one to set (i.e. the format is not just for time)
 
 		if ( isNaN( parsers[YEAR] ) ) parsers[YEAR] = date.getFullYear();
 
 		if ( isNaN( parsers[MONTH] ) ) {
-			leapyr  = LOCALE.isLeapYear( parsers[YEAR] ) ? 1 : 0;
-			ordinal = LOCALE.ordinal_day_count[leapyr];
+			leapyr  = L.isLeapYear( parsers[YEAR] ) ? 1 : 0;
+			ordinal = L.ordinal_day_count[leapyr];
 			l       = ordinal.length;
 			parsers[MONTH] = 0;
 
