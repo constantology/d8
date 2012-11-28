@@ -340,7 +340,7 @@ suite( 'd8 (en-GB/default)', function() {
 		expect( ( new Date( 2012, 0, 31 ) ).lexicalize( new Date( 2012, 2,  1 ), 'exact' ) ).to.equal( '1 month ago' );
 		expect( ( new Date( 2012, 2,  1 ) ).lexicalize( new Date( 2012, 0, 31 ), 'exact' ) ).to.equal( '1 month from now' );
 		expect( ( new Date( 2012, 0,  1 ) ).lexicalize( ( new Date( 2012, 2,  31, 1, 0, 1 ) ), 'exact' ) ).to.equal( '3 months ago' );
-		expect( ( new Date( 2012, 3,  1 ) ).adjust( Date.HOUR, -23 ).lexicalize( new Date( 2012, 0,  1 ), 'exact' ) ).to.equal( '3 months from now' );
+		expect( ( new Date( 2012, 2,  31, 1, 0, 1 ) ).lexicalize( new Date( 2012, 0,  1 ), 'exact' ) ).to.equal( '3 months from now' );
 
 		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.WEEK, -1 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 week ago' );
 		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.WEEK,  1 ).lexicalize( new Date( 2012, 0, 1 ), 'exact' ) ).to.equal( '1 week from now' );
