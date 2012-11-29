@@ -212,7 +212,7 @@ The Object will contain any or all of the following properties:
 Exclusion codes:
 - `-` will exclude the time unit from the `diff` Object.
 - `+` will include the time unit in the `diff` Object. **Note:** this is the same as not including the time unit in the `exclusions` String.
-- '>' will exclude all time units from this time unit down from the `diff` Object.
+- `>` will exclude all time units from this time unit down from the `diff` Object.
 
 ##### Example with exclusions:
 
