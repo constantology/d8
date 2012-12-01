@@ -212,32 +212,32 @@ suite( 'd8 (en-GB/default)', function() {
 	} );
 
 	test( 'Date.prototype.diff with no exclusions', function( done ) {
-		var date_1, date_2, diff, now = Date.now();
+		var date_1, date_2, diff;
 
-		expect( new Date( now ).diff( new Date( now ) ) ).to.eql( { tense : 0, value : 0 } );
+		expect( new Date( 2012, 10, 1 ).diff( new Date( 2012, 10, 1 ) ) ).to.eql( { tense : 0, value : 0 } );
 
-		expect( new Date( now ).diff( new Date( now ).adjust( Date.YEAR, 1 ) ) ).to.eql( { tense : -1, value : Date.MS_YEAR, years : 1 } );
+		expect( new Date( 2012, 10, 1 ).diff( new Date( 2012, 10, 1 ).adjust( Date.YEAR, 1 ) ) ).to.eql( { tense : -1, value : Date.MS_YEAR, years : 1 } );
 		expect( new Date( 2012, 0, 1 ).diff( new Date( 2011, 0, 1 ) ) ).to.eql( { tense : 1, value : Date.MS_YEAR, years : 1 } );
 
-		expect( new Date( now ).diff( new Date( now ).adjust( Date.MONTH, 1 ) ) ).to.eql( { tense : -1, value : Date.MS_MONTH, months : 1 } );
+		expect( new Date( 2012, 10, 1 ).diff( new Date( 2012, 10, 1 ).adjust( Date.MONTH, 1 ) ) ).to.eql( { tense : -1, value : Date.MS_MONTH, months : 1 } );
 		expect( new Date( 2012, 9, 1 ).diff( new Date( 2012, 8, 1 ) ) ).to.eql( { tense : 1, value : Date.MS_MONTH, months : 1 } );
 
-		expect( new Date( now ).diff( new Date( now ).adjust( Date.WEEK, 1 ) ) ).to.eql( { tense : -1, value : Date.MS_WEEK, weeks : 1 } );
+		expect( new Date( 2012, 10, 1 ).diff( new Date( 2012, 10, 1 ).adjust( Date.WEEK, 1 ) ) ).to.eql( { tense : -1, value : Date.MS_WEEK, weeks : 1 } );
 		expect( new Date( 2012, 0, 8 ).diff( new Date( 2012, 0, 1 ) ) ).to.eql( { tense : 1, value : Date.MS_WEEK, weeks : 1 } );
 
-		expect( new Date( now ).diff( new Date( now ).adjust( Date.DAY, 1 ) ) ).to.eql( { tense : -1, value : Date.MS_DAY, days : 1 } );
+		expect( new Date( 2012, 10, 1 ).diff( new Date( 2012, 10, 1 ).adjust( Date.DAY, 1 ) ) ).to.eql( { tense : -1, value : Date.MS_DAY, days : 1 } );
 		expect( new Date( 2012, 0, 2 ).diff( new Date( 2012, 0, 1 ) ) ).to.eql( { tense : 1, value : Date.MS_DAY, days : 1 } );
 
-		expect( new Date( now ).diff( new Date( now ).adjust( Date.HOUR, 1 ) ) ).to.eql( { tense : -1, value : Date.MS_HOUR, hours : 1 } );
+		expect( new Date( 2012, 10, 1 ).diff( new Date( 2012, 10, 1 ).adjust( Date.HOUR, 1 ) ) ).to.eql( { tense : -1, value : Date.MS_HOUR, hours : 1 } );
 		expect( new Date( 2012, 0, 1, 1 ).diff( new Date( 2012, 0, 1 ) ) ).to.eql( { tense : 1, value : Date.MS_HOUR, hours : 1 } );
 
-		expect( new Date( now ).diff( new Date( now ).adjust( Date.MINUTE, 1 ) ) ).to.eql( { tense : -1, value : Date.MS_MINUTE, minutes : 1 } );
+		expect( new Date( 2012, 10, 1 ).diff( new Date( 2012, 10, 1 ).adjust( Date.MINUTE, 1 ) ) ).to.eql( { tense : -1, value : Date.MS_MINUTE, minutes : 1 } );
 		expect( new Date( 2012, 0, 1, 0, 1 ).diff( new Date( 2012, 0, 1 ) ) ).to.eql( { tense : 1, value : Date.MS_MINUTE, minutes : 1 } );
 
-		expect( new Date( now ).diff( new Date( now ).adjust( Date.SECOND, 1 ) ) ).to.eql( { tense : -1, value : Date.MS_SECOND, seconds : 1 } );
+		expect( new Date( 2012, 10, 1 ).diff( new Date( 2012, 10, 1 ).adjust( Date.SECOND, 1 ) ) ).to.eql( { tense : -1, value : Date.MS_SECOND, seconds : 1 } );
 		expect( new Date( 2012, 0, 1, 0, 0, 1 ).diff( new Date( 2012, 0, 1 ) ) ).to.eql( { tense : 1, value : Date.MS_SECOND, seconds : 1 } );
 
-		expect( new Date( now ).diff( new Date( now ).adjust( Date.MILLISECOND, 100 ) ) ).to.eql( { tense : -1, value : 100, ms : 100 } );
+		expect( new Date( 2012, 10, 1 ).diff( new Date( 2012, 10, 1 ).adjust( Date.MILLISECOND, 100 ) ) ).to.eql( { tense : -1, value : 100, ms : 100 } );
 		expect( new Date( 2012, 0, 1, 0, 0, 0, 100 ).diff( new Date( 2012, 0, 1 ) ) ).to.eql( { tense : 1, value : 100, ms : 100 } );
 
 		date_1 = new Date( 2012, 11, 10, 9, 8, 7, 600 );
@@ -270,7 +270,7 @@ suite( 'd8 (en-GB/default)', function() {
 	} );
 
 	test( 'Date.prototype.diff with exclusions', function( done ) {
-		var date_1, date_2, diff, now = Date.now();
+		var date_1, date_2, diff;
 
 		date_1 = new Date( 2012, 11, 10, 9, 8, 7, 600 );
 		date_2 = date_1.clone().adjust( { year : 1, month : 1, week : 1, day : 1, hr : 1, min : 1, sec : 1, ms : 100 } );
