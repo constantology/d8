@@ -2,7 +2,10 @@
 	"use strict";
 	util.x.cache( 'Date', function( Type ) {
 
+
+
 /*~  src/utils.js  ~*/
+
 // utility methods
 	function _indexOf( o, k ) { var i = o.indexOf( k ); return i == -1 ? null : i; }
 	function _lc( o ) { return o.toLocaleLowerCase(); }
@@ -17,7 +20,10 @@
 	}
 	function sum( v, i ) { return v + i; }
 
+
+
 /*~  src/vars.js  ~*/
+
 	var U,
 // DAY_OFFSETS is the amount of days from the current day to the Monday of the week it belongs to
 		DAY_OFFSETS  = [9, 1, 0, -1, -2, 4, 3],    MS_DAY       = 864e5,     MS_HOUR = 3600000,   MS_MINUTE = 60000,
@@ -49,7 +55,10 @@
 		],
 		time_props   = time_map.pluck( 0 );
 
+
+
 /*~  src/coerce.js  ~*/
+
 	function coerce( date_str, date_format ) {
 		return buildParser( date_format )( date_str );
 	}
@@ -154,7 +163,10 @@
 		!between_equalto( tzoffset, -43200, 50400 ) || date.adjust( Type.SECOND, ( -date.getTimezoneOffset() * 60 ) - tzoffset );
 	}
 
+
+
 /*~  src/diff.js  ~*/
+
 	function diff( now, props ) { //noinspection FallthroughInSwitchStatementJS
 		switch ( util.ntype( now ) ) {
 			case 'number' : case 'string' :
@@ -293,7 +305,10 @@
 		} ).pluck( 1 );
 	}
 
+
+
 /*~  src/fns.js  ~*/
+
 // private methods
 	function _24hrTime( o, res ) { return ( o = Number( o ) ) < 12 && _lc( res.ampm ) == _lc( Type.locale.PM ) ? o += 12 : o; }
 	function _adjust( d, v, k ) { return d.adjust( k, v ); }
@@ -346,7 +361,7 @@
 		return date;
 	}
 
-	function between( l, h ) { return this >= l && this <= h; }
+	function between( l, h ) { return +this >= +l && +this <= +h; }
 
 	function clearTime() {
 		this.setHours( 0 ); this.setMinutes( 0 ); this.setSeconds( 0 ); this.setMilliseconds( 0 );
@@ -402,7 +417,10 @@
 
 	function valid( date ) { return util.ntype( date ) == 'date' && !isNaN( +date ); }
 
+
+
 /*~  src/format.js  ~*/
+
 	function buildTemplate( date_format ) {
 		var LID = Type.locale.id, fn, i, l, part, parts, re_invalid;
 
@@ -432,7 +450,10 @@
 
 	function tplOut( s ) { return 'out.push( \'' + s + '\' );'; }
 
+
+
 /*~  src/lexicalize.js  ~*/
+
 	function lexicalize( now, precision ) {
 		if ( !valid( now ) ) {
 			if ( valid( new Type( now ) ) )
@@ -540,7 +561,10 @@
 		return typeof this.exact == 'function' ? this.exact.call( this, parts, diff ) : lexicalize_exact.call( this, parts, diff );
 	};
 
+
+
 /*~  src/localize.js  ~*/
+
 	function localize( locale ) { //noinspection FallthroughInSwitchStatementJS
 		switch ( util.ntype( locale ) ) {
 			case 'object' :
@@ -577,7 +601,10 @@
 		return Type;
 	}
 
+
+
 /*~  src/filters.js  ~*/
+
 	function localize_filters( L ) {
 		var F = {
 // day
@@ -643,7 +670,10 @@
 		return F;
 	}
 
+
+
 /*~  src/formats.js  ~*/
+
 	function localize_formats( L ) {
 		var F = util.copy( {
 			ISO_8601 : 'Y-m-d<T>H:i:s.u<Z>', ISO_8601_SHORT : 'Y-m-d',
@@ -658,7 +688,10 @@
 		return F;
 	}
 
+
+
 /*~  src/parsers.js  ~*/
+
 	function localize_parsers( L ) {
 		var P = {
 		// day
@@ -719,7 +752,10 @@
 		return P;
 	}
 
+
+
 /*~  src/expose.js  ~*/
+
 // instance methods
 	util.defs( Type.prototype, {
 		adjust       : adjust,              between            : between,              clearTime               : clearTime,
@@ -747,6 +783,8 @@
 		coerce       : coerce,              diffKeys           : diff_keys,            localize                : localize,
 		toDate       : coerce,              valid              : valid
 	}, 'r' );
+
+
 
 	} ).x( Date );
 // at this point we don't know if util is available or not, and as such do not know what environment we are in.

@@ -50,7 +50,7 @@
 		return date;
 	}
 
-	function between( l, h ) { return this >= l && this <= h; }
+	function between( l, h ) { return +this >= +l && +this <= +h; }
 
 	function clearTime() {
 		this.setHours( 0 ); this.setMinutes( 0 ); this.setSeconds( 0 ); this.setMilliseconds( 0 );
