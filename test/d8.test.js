@@ -424,7 +424,9 @@ suite( 'd8 (en-GB/default)', function() {
 		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.WEEK,  7 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'about 1 and a half months from now' );
 		
 		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY, -1 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'yesterday' );
+		expect( ( new Date( 2012, 0, 1, 12 ) ).adjust( Date.HOUR, -18 ).lexicalize( new Date( 2012, 0, 1, 12 ), 'approx' ) ).to.equal( 'yesterday' );
 		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY,  1 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'tomorrow' );
+		expect( ( new Date( 2012, 0, 1, 12 ) ).adjust( Date.HOUR, 18 ).lexicalize( new Date( 2012, 0, 1, 12 ), 'approx' ) ).to.equal( 'tomorrow' );
 		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY, -2 ).adjust( Date.HOUR, -6 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'almost 2 and a half days ago' );
 		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY,  2 ).adjust( Date.HOUR,  6 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'almost 2 and a half days from now' );
 		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY, -3 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( '3 days ago' );

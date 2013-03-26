@@ -423,7 +423,9 @@ suite( 'd8 (greek-"ish")', function() {
 		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.WEEK,  7 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'περίπου 1 και μισή μήνες από τώρα' );
 
 		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY, -1 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'εχθές' );
+		expect( ( new Date( 2012, 0, 1, 12 ) ).adjust( Date.HOUR, -18 ).lexicalize( new Date( 2012, 0, 1, 12 ), 'approx' ) ).to.equal( 'εχθές' );
 		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY,  1 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'αύριο' );
+		expect( ( new Date( 2012, 0, 1, 12 ) ).adjust( Date.HOUR, 18 ).lexicalize( new Date( 2012, 0, 1, 12 ), 'approx' ) ).to.equal( 'αύριο' );
 		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY, -2 ).adjust( Date.HOUR, -6 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'σχεδόν 2 και μισή ημέρες πριν' );
 		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY,  2 ).adjust( Date.HOUR,  6 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( 'σχεδόν 2 και μισή ημέρες από τώρα' );
 		expect( ( new Date( 2012, 0, 1 ) ).adjust( Date.DAY, -3 ).lexicalize( new Date( 2012, 0, 1 ), 'approx' ) ).to.equal( '3 ημέρες πριν' );

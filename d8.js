@@ -513,7 +513,8 @@
 								use_noun = today || dkeys[1] != 'hours' || diff.hours < 25;
 							 }
 							 index       = 3; break;
-			case 'hours'   : use_noun    = diff.hours / 24 >= .75;
+			case 'hours'   : today       = date.format( 'l' ) === now.format( 'l' );
+							 use_noun    = diff.hours / 24 >= .75;
 							 determiner  = this.an;
 							 index       = 4; break;
 			case 'minutes' : index       = 5; break;
