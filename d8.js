@@ -6,6 +6,7 @@
 
 /*~  src/utils.js  ~*/
 
+
 // utility methods
 	function _indexOf( o, k ) { var i = o.indexOf( k ); return i == -1 ? null : i; }
 	function _lc( o ) { return o.toLocaleLowerCase(); }
@@ -22,7 +23,9 @@
 
 
 
+
 /*~  src/vars.js  ~*/
+
 
 	var U,
 // DAY_OFFSETS is the amount of days from the current day to the Monday of the week it belongs to
@@ -57,7 +60,9 @@
 
 
 
+
 /*~  src/coerce.js  ~*/
+
 
 	function coerce( date_str, date_format ) {
 		return buildParser( date_format )( date_str );
@@ -165,7 +170,9 @@
 
 
 
+
 /*~  src/diff.js  ~*/
+
 
 	function diff( now, props ) { //noinspection FallthroughInSwitchStatementJS
 		switch ( util.ntype( now ) ) {
@@ -307,7 +314,9 @@
 
 
 
+
 /*~  src/fns.js  ~*/
+
 
 // private methods
 	function _24hrTime( o, res ) { return ( o = Number( o ) ) < 12 && _lc( res.ampm ) == _lc( Type.locale.PM ) ? o += 12 : o; }
@@ -419,7 +428,9 @@
 
 
 
+
 /*~  src/format.js  ~*/
+
 
 	function buildTemplate( date_format ) {
 		var LID = Type.locale.id, fn, i, l, part, parts, re_invalid;
@@ -452,7 +463,9 @@
 
 
 
+
 /*~  src/lexicalize.js  ~*/
+
 
 	function lexicalize( now, precision ) {
 		if ( !valid( now ) ) {
@@ -486,27 +499,30 @@
 		var	adverb, bal, determiner = this.a,
 			diff  = date.diff( now ),
 			dkeys = Type.diffKeys( diff ), index, parts, tense,
-			tm    = Type.time_map, tu = this.time_units, use_noun;
+			tm    = Type.time_map, tu = this.time_units, today, use_noun;
 
 		if ( diff.value < Type.MS_MINUTE )
 			return this.just_now;
 
 		switch ( dkeys[0] ) {
-			case 'years'   : index      = 0; break;
-			case 'months'  : index      = 1; break;
-			case 'weeks'   : index      = 2; break;
-			case 'days'    : use_noun   = diff.days === 1 && ( dkeys[1] != 'hours' || diff.hours / 24 < .25 );
-							 index      = 3; break;
-			case 'hours'   : use_noun   = diff.hours / 24 >= .75;
-							 determiner = this.an;
-							 index      = 4; break;
-			case 'minutes' : index      = 5; break;
+			case 'years'   : index       = 0; break;
+			case 'months'  : index       = 1; break;
+			case 'weeks'   : index       = 2; break;
+			case 'days'    : if ( diff.days < 2 ) {
+								today    = date.format( 'l' ) === now.format( 'l' );
+								use_noun = today || dkeys[1] != 'hours' || diff.hours < 25;
+							 }
+							 index       = 3; break;
+			case 'hours'   : use_noun    = diff.hours / 24 >= .75;
+							 determiner  = this.an;
+							 index       = 4; break;
+			case 'minutes' : index       = 5; break;
 		}
 
 		bal  = ( diff.value - tm[index][1] * diff[dkeys[0]] ) / tm[index][1];
 
 		if ( use_noun )
-			return diff.tense > 0 ? this.tomorrow : index === 4 ? this.today : this.yesterday;
+			return today ? this.today : diff.tense > 0 ? this.tomorrow : this.yesterday;
 
 		parts = [];
 		tense = diff.tense > 0 ? this.from_now : this.ago;
@@ -563,7 +579,9 @@
 
 
 
+
 /*~  src/localize.js  ~*/
+
 
 	function localize( locale ) { //noinspection FallthroughInSwitchStatementJS
 		switch ( util.ntype( locale ) ) {
@@ -603,7 +621,9 @@
 
 
 
+
 /*~  src/filters.js  ~*/
+
 
 	function localize_filters( L ) {
 		var F = {
@@ -672,7 +692,9 @@
 
 
 
+
 /*~  src/formats.js  ~*/
+
 
 	function localize_formats( L ) {
 		var F = util.copy( {
@@ -690,7 +712,9 @@
 
 
 
+
 /*~  src/parsers.js  ~*/
+
 
 	function localize_parsers( L ) {
 		var P = {
@@ -754,7 +778,9 @@
 
 
 
+
 /*~  src/expose.js  ~*/
+
 
 // instance methods
 	util.defs( Type.prototype, {
@@ -783,6 +809,7 @@
 		coerce       : coerce,              diffKeys           : diff_keys,            localize                : localize,
 		toDate       : coerce,              valid              : valid
 	}, 'r' );
+
 
 
 

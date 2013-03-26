@@ -30,27 +30,30 @@
 		var	adverb, bal, determiner = this.a,
 			diff  = date.diff( now ),
 			dkeys = Type.diffKeys( diff ), index, parts, tense,
-			tm    = Type.time_map, tu = this.time_units, use_noun;
+			tm    = Type.time_map, tu = this.time_units, today, use_noun;
 
 		if ( diff.value < Type.MS_MINUTE )
 			return this.just_now;
 
 		switch ( dkeys[0] ) {
-			case 'years'   : index      = 0; break;
-			case 'months'  : index      = 1; break;
-			case 'weeks'   : index      = 2; break;
-			case 'days'    : use_noun   = diff.days === 1 && ( dkeys[1] != 'hours' || diff.hours / 24 < .25 );
-							 index      = 3; break;
-			case 'hours'   : use_noun   = diff.hours / 24 >= .75;
-							 determiner = this.an;
-							 index      = 4; break;
-			case 'minutes' : index      = 5; break;
+			case 'years'   : index       = 0; break;
+			case 'months'  : index       = 1; break;
+			case 'weeks'   : index       = 2; break;
+			case 'days'    : if ( diff.days < 2 ) {
+								today    = date.format( 'l' ) === now.format( 'l' );
+								use_noun = today || dkeys[1] != 'hours' || diff.hours < 25;
+							 }
+							 index       = 3; break;
+			case 'hours'   : use_noun    = diff.hours / 24 >= .75;
+							 determiner  = this.an;
+							 index       = 4; break;
+			case 'minutes' : index       = 5; break;
 		}
 
 		bal  = ( diff.value - tm[index][1] * diff[dkeys[0]] ) / tm[index][1];
 
 		if ( use_noun )
-			return diff.tense > 0 ? this.tomorrow : index === 4 ? this.today : this.yesterday;
+			return today ? this.today : diff.tense > 0 ? this.tomorrow : this.yesterday;
 
 		parts = [];
 		tense = diff.tense > 0 ? this.from_now : this.ago;
