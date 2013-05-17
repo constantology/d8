@@ -122,6 +122,11 @@ suite( 'd8 (en-GB/default)', function() {
 		expect( Date.coerce( '2010-08-30T10:10:10.010+04:00Z', 'c' ) ).to.eql( new Date( 2010, 7, 30,  6 + offset, 10, 10, 10 ) );
 		expect( Date.coerce( '2010-08-30T10:10:10.010-08:00Z', 'c' ) ).to.eql( new Date( 2010, 7, 30, 18 + offset, 10, 10, 10 ) );
 
+		expect( Date.coerce( '2010-08-30T10:10:10.010+0000', 'c' ) ).to.eql( new Date( 2010, 7, 30, ( 10 + offset ), 10, 10, 10 ) );
+		expect( Date.coerce( '2010-08-30T10:10:10.010+0000', 'c' ) ).to.eql( new Date( 2010, 7, 30, 10 + offset, 10, 10, 10 ) );
+		expect( Date.coerce( '2010-08-30T10:10:10.010+0400', 'c' ) ).to.eql( new Date( 2010, 7, 30,  6 + offset, 10, 10, 10 ) );
+		expect( Date.coerce( '2010-08-30T10:10:10.010-0800', 'c' ) ).to.eql( new Date( 2010, 7, 30, 18 + offset, 10, 10, 10 ) );
+
 		done();
 	} );
 
