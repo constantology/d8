@@ -52,6 +52,9 @@
 			parse_setTimezoneOffset( date, parsers[TIMEZONE] );
 		}
 
+//		if ( date.isDST() )
+//			date.setHours( date.getHours() + 1 );
+
 		return date;
 	}
 

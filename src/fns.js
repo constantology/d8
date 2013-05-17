@@ -12,7 +12,11 @@
 		}, util.obj() );
 	}
 	function _dayOffset( d ) { return Math.floor( ( d - getISOFirstMondayOfYear.call( d ) ) / MS_DAY ); }
+	function _hours( d ) { return d.getHours() + ( d.isDST() ? 1 : 0 ); }
 	function _timezoneOffset( o ) {
+		if ( o == 'Z' ) {
+			o = '0000';
+		}
 		var t = !!o.indexOf( '-' ),
 			m = o.match( re_tz_off ),
 			v = ( Number( m[1] ) + ( m[2] / 60 ) ) * 3600;

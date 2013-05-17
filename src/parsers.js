@@ -39,14 +39,14 @@
 			O : { k  : TIMEZONE,    fn : _timezoneOffset,                       re : '([\\+-][0-9]{4})' },
 			P : { k  : TIMEZONE,    fn : _timezoneOffset,                       re : '([\\+-][0-9]{2}:[0-9]{2})' },
 			T : { re : '[A-Z]{1,4}' },
-			Z : { k  : TIMEZONE,    fn : Number,                                re : '([\\+-]?[0-9]{5})' },
+			Z : { k  : TIMEZONE,    fn : _timezoneOffset,                       re : '(Z|[\\+-]?[0-9]{2}:?[0-9]{2})' },
 		// full date/time
 			U : { k  : UNIX,        fn : Number,                                re : '(-?[0-9]{1,})'  }
 		};
 
 		P.c = {
 			combo : [P.Y, P.m, P.d, P.H, P.i, P.s, P.u, P.P],
-			re    : [P.Y.re, '-', P.m.re, '-', P.d.re, 'T', P.H.re, ':', P.i.re, ':', P.s.re, '(?:\\.', P.u.re, '){0,1}', P.P.re, '{0,1}'].join( '' )
+			re    : [P.Y.re, '-', P.m.re, '-', P.d.re, 'T', P.H.re, ':', P.i.re, ':', P.s.re, '(?:\\.', P.u.re, '){0,1}', P.Z.re, '{0,1}'].join( '' )
 		};
 		P.r = {
 			combo : [P.D, P.d, P.M, P.Y, P.H, P.i, P.s, P.O],

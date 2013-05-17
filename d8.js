@@ -6,7 +6,6 @@
 
 /*~  src/utils.js  ~*/
 
-
 // utility methods
 	function _indexOf( o, k ) { var i = o.indexOf( k ); return i == -1 ? null : i; }
 	function _lc( o ) { return o.toLocaleLowerCase(); }
@@ -23,9 +22,7 @@
 
 
 
-
 /*~  src/vars.js  ~*/
-
 
 	var U,
 // DAY_OFFSETS is the amount of days from the current day to the Monday of the week it belongs to
@@ -60,9 +57,7 @@
 
 
 
-
 /*~  src/coerce.js  ~*/
-
 
 	function coerce( date_str, date_format ) {
 		return buildParser( date_format )( date_str );
@@ -118,6 +113,9 @@
 			parse_setTimezoneOffset( date, parsers[TIMEZONE] );
 		}
 
+//		if ( date.isDST() )
+//			date.setHours( date.getHours() + 1 );
+
 		return date;
 	}
 
@@ -170,9 +168,7 @@
 
 
 
-
 /*~  src/diff.js  ~*/
-
 
 	function diff( now, props ) { //noinspection FallthroughInSwitchStatementJS
 		switch ( util.ntype( now ) ) {
@@ -314,9 +310,7 @@
 
 
 
-
 /*~  src/fns.js  ~*/
-
 
 // private methods
 	function _24hrTime( o, res ) { return ( o = Number( o ) ) < 12 && _lc( res.ampm ) == _lc( Type.locale.PM ) ? o += 12 : o; }
@@ -332,7 +326,11 @@
 		}, util.obj() );
 	}
 	function _dayOffset( d ) { return Math.floor( ( d - getISOFirstMondayOfYear.call( d ) ) / MS_DAY ); }
+	function _hours( d ) { return d.getHours() + ( d.isDST() ? 1 : 0 ); }
 	function _timezoneOffset( o ) {
+		if ( o == 'Z' ) {
+			o = '0000';
+		}
 		var t = !!o.indexOf( '-' ),
 			m = o.match( re_tz_off ),
 			v = ( Number( m[1] ) + ( m[2] / 60 ) ) * 3600;
@@ -428,9 +426,7 @@
 
 
 
-
 /*~  src/format.js  ~*/
-
 
 	function buildTemplate( date_format ) {
 		var LID = Type.locale.id, fn, i, l, part, parts, re_invalid;
@@ -463,9 +459,7 @@
 
 
 
-
 /*~  src/lexicalize.js  ~*/
-
 
 	function lexicalize( now, precision ) {
 		if ( !valid( now ) ) {
@@ -580,9 +574,7 @@
 
 
 
-
 /*~  src/localize.js  ~*/
-
 
 	function localize( locale ) { //noinspection FallthroughInSwitchStatementJS
 		switch ( util.ntype( locale ) ) {
@@ -622,9 +614,7 @@
 
 
 
-
 /*~  src/filters.js  ~*/
-
 
 	function localize_filters( L ) {
 		var F = {
@@ -693,14 +683,12 @@
 
 
 
-
 /*~  src/formats.js  ~*/
-
 
 	function localize_formats( L ) {
 		var F = util.copy( {
 			ISO_8601 : 'Y-m-d<T>H:i:s.u<Z>', ISO_8601_SHORT : 'Y-m-d',
-			RFC_850  : 'l, d-M-y H:i:s T',   RFC_2822       : 'D, d M Y H:i:s O',
+			RFC_850  : 'l, d-M-y H:i:s T', RFC_2822       : 'D, d M Y H:i:s O',
 			sortable : 'Y-m-d H:i:sO'
 		}, L.formats );
 
@@ -713,9 +701,7 @@
 
 
 
-
 /*~  src/parsers.js  ~*/
-
 
 	function localize_parsers( L ) {
 		var P = {
@@ -758,14 +744,14 @@
 			O : { k  : TIMEZONE,    fn : _timezoneOffset,                       re : '([\\+-][0-9]{4})' },
 			P : { k  : TIMEZONE,    fn : _timezoneOffset,                       re : '([\\+-][0-9]{2}:[0-9]{2})' },
 			T : { re : '[A-Z]{1,4}' },
-			Z : { k  : TIMEZONE,    fn : Number,                                re : '([\\+-]?[0-9]{5})' },
+			Z : { k  : TIMEZONE,    fn : _timezoneOffset,                       re : '(Z|[\\+-]?[0-9]{2}:?[0-9]{2})' },
 		// full date/time
 			U : { k  : UNIX,        fn : Number,                                re : '(-?[0-9]{1,})'  }
 		};
 
 		P.c = {
 			combo : [P.Y, P.m, P.d, P.H, P.i, P.s, P.u, P.P],
-			re    : [P.Y.re, '-', P.m.re, '-', P.d.re, 'T', P.H.re, ':', P.i.re, ':', P.s.re, '(?:\\.', P.u.re, '){0,1}', P.P.re, '{0,1}'].join( '' )
+			re    : [P.Y.re, '-', P.m.re, '-', P.d.re, 'T', P.H.re, ':', P.i.re, ':', P.s.re, '(?:\\.', P.u.re, '){0,1}', P.Z.re, '{0,1}'].join( '' )
 		};
 		P.r = {
 			combo : [P.D, P.d, P.M, P.Y, P.H, P.i, P.s, P.O],
@@ -779,9 +765,7 @@
 
 
 
-
 /*~  src/expose.js  ~*/
-
 
 // instance methods
 	util.defs( Type.prototype, {
@@ -810,7 +794,6 @@
 		coerce       : coerce,              diffKeys           : diff_keys,            localize                : localize,
 		toDate       : coerce,              valid              : valid
 	}, 'r' );
-
 
 
 
