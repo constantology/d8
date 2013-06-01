@@ -94,7 +94,7 @@
 
 		if ( isNaN( parsers[DAY] ) ) parsers[DAY] = 1;
 
-		date.setYear( parsers[YEAR] ); date.setMonth( parsers[MONTH] ); date.setDate( parsers[DAY] );
+		date.setDate( parsers[DAY] ); date.setYear( parsers[YEAR] ); date.setMonth( parsers[MONTH] );
 
 	}
 	function parse_setTime( date, hr, min, sec, ms ) {
