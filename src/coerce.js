@@ -36,7 +36,7 @@
 	}
 
 	function parse( re, keys, fn, s ) {
-		var date    = new Type( 0 ), parts = s.match( re ),
+		var date    = new Type( 0, 0, 1, 0, 0, 0, 0 ), parts = s.match( re ),
 			parsers = associate( parts.slice( 1 ), keys );
 
 		Object.reduce( parsers, function( n, v, k ) {

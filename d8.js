@@ -97,7 +97,7 @@
 	}
 
 	function parse( re, keys, fn, s ) {
-		var date    = new Type( 0 ), parts = s.match( re ),
+		var date    = new Type( 0, 0, 1, 0, 0, 0, 0 ), parts = s.match( re ),
 			parsers = associate( parts.slice( 1 ), keys );
 
 		Object.reduce( parsers, function( n, v, k ) {
@@ -152,7 +152,7 @@
 
 		if ( isNaN( parsers[DAY] ) ) parsers[DAY] = 1;
 
-		date.setDate( parsers[DAY] ); date.setMonth( parsers[MONTH] ); date.setYear( parsers[YEAR] ); 
+		date.setYear( parsers[YEAR] ); date.setMonth( parsers[MONTH] ); date.setDate( parsers[DAY] );
 
 	}
 	function parse_setTime( date, hr, min, sec, ms ) {
