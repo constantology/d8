@@ -36,7 +36,7 @@
 	}
 
 	function parse( re, keys, fn, s ) {
-		var date    = new Type(), parts = s.match( re ),
+		var date    = new Type( 0 ), parts = s.match( re ),
 			parsers = associate( parts.slice( 1 ), keys );
 
 		Object.reduce( parsers, function( n, v, k ) {
@@ -51,9 +51,6 @@
 			parse_setDate( date, parsers );
 			parse_setTimezoneOffset( date, parsers[TIMEZONE] );
 		}
-
-//		if ( date.isDST() )
-//			date.setHours( date.getHours() + 1 );
 
 		return date;
 	}
@@ -94,7 +91,7 @@
 
 		if ( isNaN( parsers[DAY] ) ) parsers[DAY] = 1;
 
-		date.setDate( parsers[DAY] ); date.setYear( parsers[YEAR] ); date.setMonth( parsers[MONTH] );
+		date.setYear( parsers[YEAR] ); date.setMonth( parsers[MONTH] ); date.setDate( parsers[DAY] );
 
 	}
 	function parse_setTime( date, hr, min, sec, ms ) {
